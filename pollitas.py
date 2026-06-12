@@ -1,4 +1,8 @@
 
-# Suma del 1 al 10
-suma = sum(range(1, 11))
-print(f"La suma del 1 al 10 es: {suma}")
+# Multiplicación del 1 al 10 usando un bucle
+producto = 1
+for i in range(1, 11):
+    producto *= i
+print(f"El producto del 1 al 10 es: {producto}")
+
+
