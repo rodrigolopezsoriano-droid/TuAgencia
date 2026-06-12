@@ -17,8 +17,8 @@ from datetime import datetime
 # ─────────────────────────────────────────────
 # CONFIGURACIÓN (el único dato variable por cliente)
 # ─────────────────────────────────────────────
-GOOGLE_API_KEY = "CLAVE_API"  # Google Places API, ~0.02€ por búsqueda
-NOMBRE_NEGOCIO = "Buccarum - Clínica Dental"  # Cambiar por cada demo
+API_KEY = "API_KEY"  # Google Places API, ~0.02€ por búsqueda
+NOMBRE_NEGOCIO = "Clínica Dental La Garena, Alcalá de Henares"  # Cambiar por cada demo
 NOMBRE_CLIENTE = "Dr. García"             # Para personalizar el PDF
 
 
@@ -29,10 +29,11 @@ def buscar_place_id(nombre_negocio: str) -> str:
         "input": nombre_negocio,
         "inputtype": "textquery",
         "fields": "place_id,name,rating,user_ratings_total",
-        "key": GOOGLE_API_KEY
+        "key": API_KEY
     }
     response = requests.get(url, params=params)
     data = response.json()
+    print("Respuesta de Google:", data)
     
     if data["candidates"]:
         lugar = data["candidates"][0]
@@ -51,7 +52,7 @@ def obtener_resenas(place_id: str) -> list:
         "place_id": place_id,
         "fields": "reviews",
         "language": "es",
-        "key": GOOGLE_API_KEY
+        "key": API_KEY
     }
     response = requests.get(url, params=params)
     data = response.json()
