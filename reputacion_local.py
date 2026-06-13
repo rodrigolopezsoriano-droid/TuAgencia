@@ -18,7 +18,7 @@ from datetime import datetime
 # CONFIGURACIÓN (el único dato variable por cliente)
 # ─────────────────────────────────────────────
 API_KEY = "API_KEY"  # Google Places API, ~0.02€ por búsqueda
-NOMBRE_NEGOCIO = "Clínica Dental La Garena, Alcalá de Henares"  # Cambiar por cada demo
+NOMBRE_NEGOCIO = "Clínica Dental Siglo XXI Alcalá de Henares"  # Cambiar por cada demo
 NOMBRE_CLIENTE = "Dr. García"             # Para personalizar el PDF
 
 
@@ -146,7 +146,7 @@ def generar_pdf_informe(info_negocio: dict, analisis: dict, impacto: dict, nombr
     
     datos_metricas = [
         ['📊 Métrica', '📈 Valor', '⚠️ Diagnóstico'],
-        ['Reseñas analizadas', str(analisis['total']), 'Muestra representativa'],
+        ['Muestra de Reseñas', str(analisis['total']), 'Muestra representativa'],
         ['Puntuación media', str(info_negocio.get('rating', 'N/A')), 
          '✓ Buena' if info_negocio.get('rating', 0) >= 4.0 else '⚠ Mejorable'],
         ['Reseñas negativas', f"{analisis['negativas']} ({analisis['porcentaje_riesgo']}%)",
