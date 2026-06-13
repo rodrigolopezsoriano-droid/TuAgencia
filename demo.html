@@ -6,66 +6,62 @@
     <title>Tu Informe de Reputación | TuAgencia</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-900 text-white font-sans antialiased h-screen flex flex-col overflow-hidden">
+<body class="bg-slate-900 text-white font-sans antialiased h-screen flex flex-col md:flex-row overflow-hidden">
 
-    <!-- Cabecera de Impacto -->
-    <header class="bg-slate-800 border-b border-slate-700 py-4 px-6 flex justify-between items-center shrink-0">
-        <div>
-            <h1 class="text-xl font-bold text-white">Auditoría de Automatización</h1>
-            <p class="text-sm text-slate-400">Generado de forma automatizada por el script en Python de TuAgencia.</p>
-        </div>
-        <!-- En el futuro, cambiarás este mailto por un enlace a Calendly -->
-        <a href="mailto:hola@tuagencia.com?subject=Quiero implementar este sistema" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded font-bold shadow-[0_0_15px_rgba(37,99,235,0.5)] transition">
-            Implementar Solución Completa
-        </a>
-    </header>
-
-    <!-- Contenedor Principal Divisible -->
-    <main class="flex-grow flex flex-col md:flex-row w-full h-full">
+    <div class="w-full md:w-[35%] lg:w-[30%] bg-slate-900 flex flex-col h-[50vh] md:h-screen shrink-0 border-r border-slate-800 order-last md:order-first relative z-10 shadow-2xl">
         
-        <!-- Columna Izquierda: Mensaje de Ventas (30%) -->
-        <div class="w-full md:w-1/3 bg-slate-900 p-8 overflow-y-auto shrink-0 border-r border-slate-800">
-            <h2 class="text-2xl font-extrabold text-blue-400 mb-4">El código ha detectado pérdidas de clientes.</h2>
-            <p class="text-slate-300 mb-6 leading-relaxed">
-                A tu derecha puedes ver el informe generado por nuestro bot de extracción. Hemos analizado la presencia digital de tu negocio y detectado fricciones que están costando dinero.
+        <div class="p-6 md:p-8 border-b border-slate-800 bg-slate-900/95 sticky top-0 backdrop-blur-sm">
+            <h1 class="text-xs font-bold text-slate-400 tracking-widest uppercase mb-2">Auditoría Generada</h1>
+            <h2 class="text-2xl font-extrabold text-white leading-tight">El código ha detectado <span class="text-blue-500">pérdidas de clientes</span>.</h2>
+        </div>
+
+        <div class="p-6 md:p-8 overflow-y-auto flex-grow scrollbar-hide">
+            <p class="text-slate-300 mb-8 leading-relaxed text-sm md:text-base">
+                El informe adjunto revela puntos de fricción reales en tu presencia digital. Esto es lo que automatizaremos para solucionarlo:
             </p>
             
-            <div class="bg-slate-800 rounded-lg p-5 mb-6 border border-slate-700">
-                <h3 class="font-bold text-white mb-2">¿Cómo arreglamos esto?</h3>
-                <ul class="text-sm text-slate-400 space-y-3">
-                    <li class="flex items-start">
-                        <span class="text-green-400 mr-2">✓</span>
-                        Script de respuestas automáticas basado en el sentimiento de la reseña.
-                    </li>
-                    <li class="flex items-start">
-                        <span class="text-green-400 mr-2">✓</span>
-                        Alerta en tiempo real a tu WhatsApp cuando entra una valoración negativa de 1 estrella.
-                    </li>
-                    <li class="flex items-start">
-                        <span class="text-green-400 mr-2">✓</span>
-                        Sistema automatizado de petición de reseñas a pacientes satisfechos.
-                    </li>
-                </ul>
-            </div>
-
-            <p class="text-slate-400 text-sm mb-6">
-                Este informe es solo la demostración visual. La verdadera magia ocurre en el servidor conectando tus herramientas sin intervención humana.
-            </p>
-        </div>
-
-        <!-- Columna Derecha: El PDF (70%) -->
-        <div class="w-full md:w-2/3 h-full bg-slate-200">
-            <!-- AQUÍ SE CARGA EL PDF. Debe llamarse "informe_demo.pdf" y estar en la misma carpeta que este HTML -->
-            <object data="informe_demo.pdf" type="application/pdf" width="100%" height="100%">
-                <div class="flex items-center justify-center h-full bg-slate-100 flex-col p-8 text-center text-slate-800">
-                    <p class="mb-4">Tu navegador no soporta la previsualización directa de PDFs.</p>
-                    <a href="informe_demo.pdf" download class="bg-slate-800 text-white px-6 py-2 rounded">
-                        Descargar Informe Seguro (PDF)
-                    </a>
+            <div class="space-y-4 mb-8">
+                <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700/50 flex gap-4">
+                    <div class="text-green-400 mt-1"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                    <div>
+                        <h4 class="font-bold text-slate-100 text-sm">Respuestas IA</h4>
+                        <p class="text-xs text-slate-400 mt-1">Script que clasifica y responde reseñas automáticamente según el sentimiento.</p>
+                    </div>
                 </div>
-            </object>
+
+                <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700/50 flex gap-4">
+                    <div class="text-green-400 mt-1"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                    <div>
+                        <h4 class="font-bold text-slate-100 text-sm">Alertas WhatsApp</h4>
+                        <p class="text-xs text-slate-400 mt-1">Notificación en tiempo real a tu teléfono ante cualquier reseña de 1 estrella.</p>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <div class="p-6 border-t border-slate-800 bg-slate-900 sticky bottom-0">
+            <a href="mailto:hola@tuagencia.com?subject=Quiero implementar este sistema" class="w-full flex justify-center items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white py-4 rounded-xl font-bold shadow-[0_0_20px_rgba(37,99,235,0.3)] transition-all hover:-translate-y-0.5">
+                Integrar esta Solución
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </a>
+        </div>
+    </div>
+
+    <div class="w-full md:w-[65%] lg:w-[70%] h-[50vh] md:h-screen bg-slate-200 order-first md:order-last relative z-0">
+        <div class="md:hidden absolute bottom-4 left-1/2 -translate-x-1/2 bg-slate-900/80 text-white text-xs px-4 py-2 rounded-full backdrop-blur-md z-20 flex items-center gap-2 pointer-events-none">
+            Ver solución abajo <svg class="w-3 h-3 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+        </div>
+
+        <object data="informe_demo.pdf" type="application/pdf" width="100%" height="100%" class="w-full h-full">
+            <div class="flex items-center justify-center h-full bg-slate-100 flex-col p-8 text-center text-slate-800">
+                <svg class="w-16 h-16 text-slate-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                <p class="mb-6 font-medium">El navegador no soporta la vista previa.</p>
+                <a href="informe_demo.pdf" download class="bg-slate-800 text-white px-6 py-3 rounded-lg font-semibold hover:bg-slate-700 transition">
+                    Descargar PDF Seguro
+                </a>
+            </div>
+        </object>
+    </div>
         
-    </main>
 </body>
 </html>

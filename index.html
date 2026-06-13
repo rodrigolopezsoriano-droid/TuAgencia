@@ -3,66 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TuAgencia | Automatización para PYMEs</title>
+    <title>TuAgencia | Automatización Rentable para PYMEs</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans antialiased">
+<body class="bg-slate-50 text-slate-900 font-sans antialiased selection:bg-blue-200">
 
-    <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-        <div class="text-2xl font-bold text-slate-900">
+    <nav class="container mx-auto px-6 py-5 flex justify-between items-center">
+        <div class="text-2xl font-extrabold tracking-tighter text-slate-900">
             TuAgencia<span class="text-blue-600">.</span>
         </div>
-        <a href="contacto.html" class="bg-blue-600 text-white px-5 py-2 rounded-md font-semibold hover:bg-blue-700 transition">
+        <a href="contacto.html" class="hidden md:inline-flex bg-white text-slate-700 px-5 py-2 rounded-lg font-semibold border border-slate-200 hover:border-slate-300 hover:shadow-sm transition-all text-sm">
             Auditoría Gratuita
         </a>
     </nav>
 
-    <header class="container mx-auto px-6 py-24 text-center">
-        <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight mb-6">
-            Recupera <span class="text-blue-600">10 horas a la semana</span> en tu negocio.
+    <header class="container mx-auto px-6 pt-16 pb-24 text-center max-w-4xl flex flex-col items-center">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-sm font-semibold tracking-wide mb-6 border border-blue-100">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-600"></span>
+            </span>
+            Operando en Alcalá de Henares y Madrid
+        </div>
+        
+        <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 leading-tight text-slate-900">
+            Recupera <span class="text-blue-600 underline decoration-blue-200 decoration-8 underline-offset-4">10 horas semanales</span> en tu negocio.
         </h1>
-        <p class="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
-            Construimos scripts de automatización a medida para clínicas, inmobiliarias y academias. Eliminamos el trabajo manual repetitivo para que te centres en facturar.
+        
+        <p class="text-xl text-slate-600 mb-10 max-w-2xl leading-relaxed">
+            Construimos scripts de automatización a medida para clínicas, inmobiliarias y academias. Eliminamos el trabajo manual para que te centres exclusivamente en facturar.
         </p>
-        <div class="flex justify-center gap-4">
-            <a href="contacto.html" class="bg-slate-900 text-white px-8 py-3 rounded-md font-semibold text-lg hover:bg-slate-800 transition shadow-lg">
-                Contactar a TuAgencia
+        
+        <div class="flex flex-col sm:flex-row w-full sm:w-auto gap-4">
+            <a href="contacto.html" class="w-full sm:w-auto bg-blue-600 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-blue-700 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-600/30 transition-all focus:ring-4 focus:ring-blue-100">
+                Solicitar Script de Prueba Gratis
             </a>
         </div>
-        <p class="mt-4 text-sm text-gray-500">📍 Operando de forma presencial en Alcalá de Henares y Madrid.</p>
+        <p class="mt-5 text-sm text-slate-500 font-medium flex items-center gap-2">
+            <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            Sin compromiso. Si no ahorras tiempo, no pagas.
+        </p>
     </header>
 
-    <section class="bg-white py-20 border-y border-gray-200">
-        <div class="container mx-auto px-6">
-            <h2 class="text-3xl font-bold text-center mb-16">¿Qué estamos automatizando ahora mismo?</h2>
+    <section class="bg-white py-24 border-y border-slate-200">
+        <div class="container mx-auto px-6 max-w-6xl">
+            <h2 class="text-3xl font-extrabold text-center mb-16 text-slate-900 tracking-tight">El código trabaja más rápido que tus empleados</h2>
             
-            <div class="grid md:grid-cols-3 gap-12">
-                <div class="p-6 rounded-xl bg-gray-50 border border-gray-100 shadow-sm">
-                    <h3 class="text-xl font-bold mb-3 text-blue-600">Monitor de Reputación</h3>
-                    <p class="text-gray-600">Extraemos todas tus reseñas de Google Maps automáticamente, analizamos quejas recurrentes y generamos un informe PDF semanal sin que muevas un dedo.</p>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="group p-8 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:border-blue-100 transition-all duration-300 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-transparent group-hover:bg-blue-600 transition-colors"></div>
+                    <div class="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <span class="text-2xl text-blue-600">📊</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-slate-900">Monitor de Reputación</h3>
+                    <p class="text-slate-600 leading-relaxed">Extraemos todas tus reseñas de Google Maps, analizamos quejas recurrentes y generamos un PDF semanal sin que muevas un dedo.</p>
                 </div>
                 
-                <div class="p-6 rounded-xl bg-gray-50 border border-gray-100 shadow-sm">
-                    <h3 class="text-xl font-bold mb-3 text-blue-600">Gestión de Leads</h3>
-                    <p class="text-gray-600">Conectamos tus formularios web o correos entrantes directamente con tu Excel/CRM. Se acabaron los errores al copiar y pegar datos de clientes potenciales.</p>
+                <div class="group p-8 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:border-blue-100 transition-all duration-300 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-transparent group-hover:bg-blue-600 transition-colors"></div>
+                    <div class="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <span class="text-2xl text-blue-600">⚡</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-slate-900">Gestión de Leads Cero Errores</h3>
+                    <p class="text-slate-600 leading-relaxed">Conectamos tus formularios web o correos directamente con tu CRM. Se acabaron los errores al copiar y pegar datos de potenciales clientes.</p>
                 </div>
                 
-                <div class="p-6 rounded-xl bg-gray-50 border border-gray-100 shadow-sm">
-                    <h3 class="text-xl font-bold mb-3 text-blue-600">Flujos de Email</h3>
-                    <p class="text-gray-600">Scripts que leen tu calendario y envían recordatorios automáticos de citas a tus clientes, reduciendo el ausentismo en tu clínica o academia.</p>
+                <div class="group p-8 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:border-blue-100 transition-all duration-300 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-transparent group-hover:bg-blue-600 transition-colors"></div>
+                    <div class="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <span class="text-2xl text-blue-600">✉️</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-slate-900">Flujos de Email Anti-Ausentismo</h3>
+                    <p class="text-slate-600 leading-relaxed">Scripts que leen tu calendario y envían recordatorios automáticos de citas por email y WhatsApp, reduciendo las sillas vacías.</p>
                 </div>
             </div>
         </div>
-    </section>
-
-    <section id="contacto" class="container mx-auto px-6 py-20 text-center">
-        <h2 class="text-3xl font-bold mb-6">El código trabaja más rápido que tus empleados.</h2>
-        <p class="text-lg text-gray-600 mb-8 max-w-xl mx-auto">
-            Cuéntanos cuál es la tarea más aburrida que haces todos los días. Programaremos un script de demostración específico para tu negocio. <b>Si no te ahorra tiempo, no pagas.</b>
-        </p>
-        <a href="contacto.html" class="inline-block bg-blue-600 text-white px-8 py-3 rounded-md font-semibold text-lg hover:bg-blue-700 transition">
-            Solicitar Script de Prueba
-        </a>
     </section>
 
 </body>
