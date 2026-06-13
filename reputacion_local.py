@@ -232,7 +232,7 @@ if __name__ == "__main__":
     analisis = analizar_sentimiento(resenas)
     impacto = calcular_impacto_economico(info["total_reviews"], analisis["porcentaje_riesgo"])
     
-    nombre_archivo = f"informe_{NOMBRE_NEGOCIO.replace(' ', '_').lower()}.pdf"
+    nombre_archivo = "informe_demo.pdf"
     generar_pdf_informe(info, analisis, impacto, nombre_archivo)
     
     print(f"\n📋 RESUMEN EJECUTIVO:")
