@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tu Informe de Reputación | TuAgencia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-white font-sans antialiased h-screen flex flex-col overflow-hidden">
+
+    <!-- Cabecera de Impacto -->
+    <header class="bg-slate-800 border-b border-slate-700 py-4 px-6 flex justify-between items-center shrink-0">
+        <div>
+            <h1 class="text-xl font-bold text-white">Auditoría de Automatización</h1>
+            <p class="text-sm text-slate-400">Generado de forma automatizada por el script en Python de TuAgencia.</p>
+        </div>
+        <!-- En el futuro, cambiarás este mailto por un enlace a Calendly -->
+        <a href="mailto:hola@tuagencia.com?subject=Quiero implementar este sistema" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded font-bold shadow-[0_0_15px_rgba(37,99,235,0.5)] transition">
+            Implementar Solución Completa
+        </a>
+    </header>
+
+    <!-- Contenedor Principal Divisible -->
+    <main class="flex-grow flex flex-col md:flex-row w-full h-full">
+        
+        <!-- Columna Izquierda: Mensaje de Ventas (30%) -->
+        <div class="w-full md:w-1/3 bg-slate-900 p-8 overflow-y-auto shrink-0 border-r border-slate-800">
+            <h2 class="text-2xl font-extrabold text-blue-400 mb-4">El código ha detectado pérdidas de clientes.</h2>
+            <p class="text-slate-300 mb-6 leading-relaxed">
+                A tu derecha puedes ver el informe generado por nuestro bot de extracción. Hemos analizado la presencia digital de tu negocio y detectado fricciones que están costando dinero.
+            </p>
+            
+            <div class="bg-slate-800 rounded-lg p-5 mb-6 border border-slate-700">
+                <h3 class="font-bold text-white mb-2">¿Cómo arreglamos esto?</h3>
+                <ul class="text-sm text-slate-400 space-y-3">
+                    <li class="flex items-start">
+                        <span class="text-green-400 mr-2">✓</span>
+                        Script de respuestas automáticas basado en el sentimiento de la reseña.
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-green-400 mr-2">✓</span>
+                        Alerta en tiempo real a tu WhatsApp cuando entra una valoración negativa de 1 estrella.
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-green-400 mr-2">✓</span>
+                        Sistema automatizado de petición de reseñas a pacientes satisfechos.
+                    </li>
+                </ul>
+            </div>
+
+            <p class="text-slate-400 text-sm mb-6">
+                Este informe es solo la demostración visual. La verdadera magia ocurre en el servidor conectando tus herramientas sin intervención humana.
+            </p>
+        </div>
+
+        <!-- Columna Derecha: El PDF (70%) -->
+        <div class="w-full md:w-2/3 h-full bg-slate-200">
+            <!-- AQUÍ SE CARGA EL PDF. Debe llamarse "informe_demo.pdf" y estar en la misma carpeta que este HTML -->
+            <object data="informe_demo.pdf" type="application/pdf" width="100%" height="100%">
+                <div class="flex items-center justify-center h-full bg-slate-100 flex-col p-8 text-center text-slate-800">
+                    <p class="mb-4">Tu navegador no soporta la previsualización directa de PDFs.</p>
+                    <a href="informe_demo.pdf" download class="bg-slate-800 text-white px-6 py-2 rounded">
+                        Descargar Informe Seguro (PDF)
+                    </a>
+                </div>
+            </object>
+        </div>
+        
+    </main>
+</body>
+</html>
