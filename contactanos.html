@@ -26,40 +26,37 @@
         </p>
 
         <!-- FORMULARIO DE CUALIFICACIÓN -->
-        <form action="#" method="POST" class="bg-white p-8 md:p-10 rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 text-left">
-            
-            <div class="mb-6">
-                <label class="block text-sm font-bold text-slate-800 mb-2">Nombre de tu negocio</label>
-                <input type="text" required placeholder="Ej: Clínica Dental San José" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all">
-            </div>
+<form action="https://formspree.io/f/xojzpzyv" method="POST" class="bg-white p-8 md:p-10 rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 text-left">
+    
+    <input type="hidden" name="_next" value="https://tuweb.com/gracias.html" />
 
-            <div class="mb-6">
-                <label class="block text-sm font-bold text-slate-800 mb-2">Email corporativo</label>
-                <input type="email" required placeholder="nombre@tuempresa.com" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all">
-            </div>
+    <div class="mb-6">
+        <label class="block text-sm font-bold text-slate-800 mb-2">Nombre de tu negocio</label>
+        <input type="text" name="Negocio" required placeholder="Ej: Clínica Dental San José" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all">
+    </div>
 
-            <div class="mb-8">
-                <label class="block text-sm font-bold text-slate-800 mb-2">¿Cuál es tu proceso más lento hoy?</label>
-                <select class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all">
-                    <option>Gestión de citas y reservas</option>
-                    <option>Atención al cliente / Reseñas</option>
-                    <option>Facturación y gestión de leads</option>
-                    <option>Flujos de email y recordatorios</option>
-                    <option>Gestión de inventario y stock</option>
-                    <option>Procesos de onboarding de clientes</option>
-                    <option>Otro</option>
-                </select>
-            </div>
+    <div class="mb-6">
+        <label class="block text-sm font-bold text-slate-800 mb-2">Email corporativo</label>
+        <input type="email" name="Email" required placeholder="nombre@tuempresa.com" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all">
+    </div>
 
-            <button type="submit" class="w-full bg-blue-600 text-white font-bold text-lg py-4 rounded-xl hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-600/30 transition-all focus:ring-4 focus:ring-blue-100">
-                Solicitar análisis de viabilidad
-            </button>
+    <div class="mb-8">
+        <label class="block text-sm font-bold text-slate-800 mb-2">¿Cuál es tu proceso más lento hoy?</label>
+        <select name="Proceso" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all">
+            <option>Gestión de citas y reservas</option>
+            <option>Atención al cliente / Reseñas</option>
+            <option>Facturación y gestión de leads</option>
+            <option>Flujos de email y recordatorios</option>
+            <option>Gestión de inventario y stock</option>
+            <option>Procesos de onboarding de clientes</option>
+            <option>Otro</option>
+        </select>
+    </div>
 
-            <p class="text-center text-xs text-slate-400 mt-6 flex items-center justify-center gap-2">
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM10 18a8 8 0 100-16 8 8 0 000 16z" clip-rule="evenodd"/></svg>
-                Solo contactamos si identificamos una oportunidad clara de mejora.
-            </p>
-        </form>
+    <button type="submit" class="w-full bg-blue-600 text-white font-bold text-lg py-4 rounded-xl hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-600/30 transition-all focus:ring-4 focus:ring-blue-100">
+        Solicitar análisis de viabilidad
+    </button>
+    </form>
     </main>
 
 </body>
