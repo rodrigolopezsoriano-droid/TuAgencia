@@ -17,9 +17,9 @@ from datetime import datetime
 # ─────────────────────────────────────────────
 # CONFIGURACIÓN (el único dato variable por cliente)
 # ─────────────────────────────────────────────
-API_KEY = "api_key"  # Google Places API, ~0.02€ por búsqueda
-NOMBRE_NEGOCIO = "Clínica Dental Siglo XXI Alcalá de Henares"  # Cambiar por cada demo
-NOMBRE_CLIENTE = "Dr. García"             # Para personalizar el PDF
+API_KEY = "API_KEY"  # Google Places API, ~0.02€ por búsqueda
+NOMBRE_NEGOCIO = "Clínica Dental Milenium Av. de la Alcarria"  # Cambiar por cada demo
+NOMBRE_CLIENTE = "Sanitas"             # Para personalizar el PDF
 
 
 def buscar_place_id(nombre_negocio: str) -> str:
@@ -78,8 +78,27 @@ def analizar_sentimiento(resenas: list) -> dict:
             # Extraer sustantivos/adjetivos relevantes de reseñas negativas
             palabras = re.findall(r'\b[a-záéíóúñ]{4,}\b', texto.lower())
             # Filtrar stopwords básicas
-            stopwords = {'para', 'pero', 'como', 'este', 'esta', 'todo', 'bien',
-                        'muy', 'más', 'que', 'los', 'las', 'por', 'con', 'una', 'del'}
+            stopwords = {
+                # Conectores y adverbios
+                'para', 'pero', 'como', 'este', 'esta', 'todo', 'bien', 'muy', 'más', 
+                'que', 'los', 'las', 'por', 'con', 'una', 'del', 'desde', 'hasta', 
+                'sobre', 'entre', 'porque', 'cuando', 'luego', 'solo', 'unos', 'unas',
+                'nada', 'poco', 'mucho', 'algo', 'también', 'tampoco', 'donde', 
+                'esto', 'eso', 'aquello', 'allí', 'aquí', 'ahí', 'allá', 'acá', 
+                'allí', 'allá', 'acá', 'allí', 'allá', 'acá',
+                # Verbos genéricos sin valor de queja
+                'estaba', 'tenía', 'tiene', 'tienen', 'hacer', 'fui', 'fueron', 
+                'hace', 'son', 'está', 'había', 'hizo', 'vamos', 'decir', 'dijo',
+                'puedo', 'puede', 'quiero', 'quiere', 'parece', 'fuimos', 'tengo', 
+                'tienen', 'fue', 'ser', 'estar', 'haber', 'ir', 'venir', 'ver', 'dar',
+                'decir', 'saber', 'poder', 'querer', 'llegar', 'pasar', 'deber',
+                'poner', 'parecer', 'quedar', 'creer', 'hablar', 'llevar', 'dejar', 
+                'seguir', 'encontrar', 'llamar', 'añadir', 'salir', 'volver', 'tomar', 
+                'conocer', 'vivir', 'sentir',
+                # Nombres genéricos del sector que no son quejas
+                'sitio', 'lugar', 'clínica', 'empresa', 'negocio', 'local', 
+                'centro', 'doctor', 'médico', 'chica', 'chico', 'personal', 'gente',
+            }
             palabras_negativas.extend([p for p in palabras if p not in stopwords])
     
     quejas_frecuentes = Counter(palabras_negativas).most_common(5)
