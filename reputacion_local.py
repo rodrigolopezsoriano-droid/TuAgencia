@@ -17,7 +17,7 @@ from datetime import datetime
 # ─────────────────────────────────────────────
 # CONFIGURACIÓN (el único dato variable por cliente)
 # ─────────────────────────────────────────────
-API_KEY = "AIzaSyBd3KdMNvvg_QNPMkI-4kGEO2hjOIkSzq0"  # Google Places API, ~0.02€ por búsqueda
+API_KEY = "api_key"  # Google Places API, ~0.02€ por búsqueda
 NOMBRE_NEGOCIO = "Clínica Dental Siglo XXI Alcalá de Henares"  # Cambiar por cada demo
 NOMBRE_CLIENTE = "Dr. García"             # Para personalizar el PDF
 
