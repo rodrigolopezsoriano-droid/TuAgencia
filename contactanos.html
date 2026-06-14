@@ -3,61 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solicita tu Auditoría | TuAgencia</title>
+    <title>Auditoría de Viabilidad | TuAgencia</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<body class="bg-slate-50 text-slate-900 font-sans antialiased min-h-screen flex flex-col">
 
-<body class="bg-slate-50 text-slate-900 font-sans antialiased">
-
-    <nav class="container mx-auto px-6 py-6">
-        <a href="index.html" class="text-slate-400 hover:text-slate-900 transition-colors font-medium text-sm flex items-center gap-2">
-            ← Volver
+    <!-- NAV MINIMALISTA -->
+    <nav class="container mx-auto px-6 py-6 absolute top-0 w-full z-10">
+        <a href="index.html" class="text-slate-500 hover:text-slate-900 transition-colors font-medium text-sm flex items-center gap-2 w-max bg-white/50 backdrop-blur-md px-3 py-1.5 rounded-lg">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Volver
         </a>
     </nav>
 
-    <main class="container mx-auto px-6 py-12 max-w-xl text-center">
-        <!-- H1 con enfoque agresivo -->
-        <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-6">
-            Déjanos tus datos y <span class="text-blue-600">analizaremos tu negocio.</span>
-        </h1>
+    <!-- ESTRUCTURA SPLIT-SCREEN B2B -->
+    <main class="flex-grow flex flex-col md:flex-row w-full">
         
-        <p class="text-lg text-slate-600 mb-12 leading-relaxed">
-            No somos una consultora que pierde el tiempo. Rellena el formulario y, si vemos potencial de automatización, seremos nosotros quienes contactemos contigo para mostrarte el ahorro real.
-        </p>
+        <!-- PANEL IZQUIERDO: Propuesta de Valor y Confianza -->
+        <div class="w-full md:w-5/12 bg-slate-900 text-white flex flex-col justify-center px-8 md:px-16 py-20 md:py-12 relative overflow-hidden">
+            <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#3b82f6 1px, transparent 1px); background-size: 24px 24px;"></div>
+            
+            <div class="relative z-10 max-w-md">
+                <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-6 leading-tight">
+                    El primer paso para recuperar <span class="text-blue-500">tu tiempo.</span>
+                </h1>
+                <p class="text-lg text-slate-400 mb-10 leading-relaxed">
+                    No aceptamos a todos los clientes. Rellena este breve formulario para que nuestro equipo técnico evalúe si tu modelo de negocio permite una automatización rentable.
+                </p>
 
-        <!-- FORMULARIO DE CUALIFICACIÓN -->
-<form action="https://formspree.io/f/xojzpzyv" method="POST" class="bg-white p-8 md:p-10 rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 text-left">
-    
-    <input type="hidden" name="_next" value="https://tuweb.com/gracias.html" />
+                <!-- Checkmarks de Autoridad -->
+                <ul class="space-y-5 text-slate-300 font-medium">
+                    <li class="flex items-start gap-3">
+                        <svg class="w-6 h-6 text-green-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Análisis manual por un ingeniero, no por un comercial.
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <svg class="w-6 h-6 text-green-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Respuesta garantizada en 24 horas laborables.
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <svg class="w-6 h-6 text-green-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Datos 100% encriptados y protegidos (GDPR).
+                    </li>
+                </ul>
+            </div>
+        </div>
 
-    <div class="mb-6">
-        <label class="block text-sm font-bold text-slate-800 mb-2">Nombre de tu negocio</label>
-        <input type="text" name="Negocio" required placeholder="Ej: Clínica Dental San José" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all">
-    </div>
+        <!-- PANEL DERECHO: El Formulario (Fricción Cero) -->
+        <div class="w-full md:w-7/12 bg-slate-50 flex items-center justify-center px-6 py-16 md:p-12">
+            <div class="w-full max-w-lg">
+                <form action="https://formspree.io/f/xojzpzyv" method="POST" class="bg-white p-8 md:p-10 rounded-2xl shadow-xl shadow-slate-200/40 border border-slate-100">
+                    
+                    <input type="hidden" name="_next" value="https://tuweb.com/gracias.html" />
 
-    <div class="mb-6">
-        <label class="block text-sm font-bold text-slate-800 mb-2">Email corporativo</label>
-        <input type="email" name="Email" required placeholder="nombre@tuempresa.com" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all">
-    </div>
+                    <div class="mb-6">
+                        <label class="block text-sm font-bold text-slate-800 mb-2">Nombre de tu negocio</label>
+                        <input type="text" name="Negocio" required placeholder="Ej: Clínica Dental San José" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all placeholder:text-slate-400 text-slate-900">
+                    </div>
 
-    <div class="mb-8">
-        <label class="block text-sm font-bold text-slate-800 mb-2">¿Cuál es tu proceso más lento hoy?</label>
-        <select name="Proceso" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all">
-            <option>Gestión de citas y reservas</option>
-            <option>Atención al cliente / Reseñas</option>
-            <option>Facturación y gestión de leads</option>
-            <option>Flujos de email y recordatorios</option>
-            <option>Gestión de inventario y stock</option>
-            <option>Procesos de onboarding de clientes</option>
-            <option>Otro</option>
-        </select>
-    </div>
+                    <div class="mb-6">
+                        <label class="block text-sm font-bold text-slate-800 mb-2">Email corporativo</label>
+                        <input type="email" name="Email" required placeholder="nombre@tuempresa.com" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all placeholder:text-slate-400 text-slate-900">
+                    </div>
 
-    <button type="submit" class="w-full bg-blue-600 text-white font-bold text-lg py-4 rounded-xl hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-600/30 transition-all focus:ring-4 focus:ring-blue-100">
-        Solicitar análisis de viabilidad
-    </button>
-    </form>
+                    <!-- DESPLEGABLE DINÁMICO -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-bold text-slate-800 mb-2">¿Qué proceso te roba más horas?</label>
+                        <div class="relative">
+                            <select id="procesoSelect" name="Proceso" onchange="mostrarCampoOtro()" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all appearance-none cursor-pointer text-slate-800 font-medium">
+                                <option value="" disabled selected>Selecciona tu cuello de botella...</option>
+                                <option value="Citas">Gestión de citas y reservas</option>
+                                <option value="Reseñas">Atención al cliente / Reseñas</option>
+                                <option value="Facturacion">Facturación y gestión de leads</option>
+                                <option value="Emails">Flujos de email y recordatorios</option>
+                                <option value="Inventario">Gestión de inventario y stock</option>
+                                <option value="Onboarding">Procesos de onboarding de clientes</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </div>
+                        </div>
+
+                        <!-- TEXTAREA OCULTO (Aparece al pulsar 'Otro') -->
+                        <div id="campoOtroContainer" class="hidden mt-4 transition-all duration-300">
+                            <label class="block text-sm font-bold text-slate-800 mb-2">Por favor, especifica el proceso:</label>
+                            <textarea name="Proceso_Especifico" rows="3" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none resize-none transition-all placeholder:text-slate-400 text-slate-900" placeholder="Ej: Copiamos datos de presupuestos en PDF a mano hacia un Excel..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- CASILLA DE PRIVACIDAD LEGAL (RGPD) -->
+                    <div class="mb-8 flex items-start gap-3 bg-slate-50 p-4 rounded-lg border border-slate-100">
+                        <div class="flex items-center h-5 mt-0.5">
+                            <input id="privacidad" name="Acepta_Privacidad" type="checkbox" required class="w-4 h-4 border-slate-300 rounded cursor-pointer accent-blue-600">
+                        </div>
+                        <label for="privacidad" class="text-sm text-slate-600 cursor-pointer leading-relaxed">
+                            He leído y acepto la <a href="privacidad.html" target="_blank" class="text-blue-600 font-semibold hover:underline">Política de Privacidad</a> y el <a href="avisolegal.html" target="_blank" class="text-blue-600 font-semibold hover:underline">Aviso Legal</a>. Entiendo que mis datos serán tratados para evaluar la viabilidad del servicio.
+                        </label>
+                    </div>
+
+                    <button type="submit" class="w-full bg-blue-600 text-white font-bold text-lg py-4 rounded-xl hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-600/30 transition-all focus:ring-4 focus:ring-blue-100 flex items-center justify-center gap-2 group">
+                        Enviar Solicitud
+                        <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </button>
+
+                </form>
+            </div>
+        </div>
     </main>
 
+    <!-- SCRIPT PARA EL SELECT DINÁMICO -->
+    <script>
+        function mostrarCampoOtro() {
+            const select = document.getElementById('procesoSelect');
+            const campoOtro = document.getElementById('campoOtroContainer');
+            const textarea = campoOtro.querySelector('textarea');
+            
+            if (select.value === 'Otro') {
+                campoOtro.classList.remove('hidden');
+                textarea.setAttribute('required', 'true');
+                textarea.focus();
+            } else {
+                campoOtro.classList.add('hidden');
+                textarea.removeAttribute('required');
+                textarea.value = ''; 
+            }
+        }
+    </script>
 </body>
 </html>
