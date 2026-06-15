@@ -6,9 +6,9 @@
     <title>TuAgencia | Automatización Rentable para PYMEs</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-50 text-slate-900 font-sans antialiased selection:bg-blue-200">
+<body class="bg-slate-50 text-slate-900 font-sans antialiased selection:bg-blue-200 selection:text-slate-900 flex flex-col min-h-screen">
 
-    <nav class="container mx-auto px-6 py-5 flex justify-between items-center">
+    <nav class="container mx-auto px-6 py-5 flex justify-between items-center shrink-0">
         <div class="text-2xl font-extrabold tracking-tighter text-slate-900">
             TuAgencia<span class="text-blue-600">.</span>
         </div>
@@ -26,8 +26,9 @@
             Operando en Alcalá de Henares y Madrid
         </div>
         
-        <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 leading-tight text-slate-900">
-            Recupera <span class="text-blue-600 underline decoration-blue-200 decoration-8 underline-offset-4">10 horas semanales</span> en tu negocio.
+        <!-- EL FIX DEFINITIVO: leading-tight para no asfixiar el texto y shadow-inset para el marcador -->
+        <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-8 leading-tight text-slate-900">
+            Recupera <span class="text-blue-600 shadow-[inset_0_-0.35em_0_0_#bfdbfe] transition-all">10 horas semanales</span> en tu negocio.
         </h1>
         
         <p class="text-xl text-slate-600 mb-10 max-w-2xl leading-relaxed">
@@ -56,7 +57,7 @@
         </div>
     </div>
 
-    <section class="bg-slate-50 py-24">
+    <section class="bg-slate-50 py-24 flex-grow">
         <div class="container mx-auto px-6 max-w-6xl">
             <h2 class="text-3xl font-extrabold text-center mb-16 text-slate-900 tracking-tight">El código trabaja más rápido que tus empleados</h2>
             
@@ -91,7 +92,7 @@
         </div>
     </section>
 
-    <section class="py-24 bg-slate-900 text-white text-center border-t border-slate-800">
+    <section class="py-24 bg-slate-900 text-white text-center border-t border-slate-800 shrink-0">
         <div class="container mx-auto px-6 max-w-2xl">
             <h2 class="text-3xl md:text-4xl font-extrabold mb-6 tracking-tight">¿Tu negocio sigue perdiendo tiempo en tareas manuales?</h2>
             <p class="text-slate-400 mb-10 text-lg leading-relaxed">
@@ -107,7 +108,7 @@
         </div>
     </section>
 
-    <footer class="bg-white border-t border-slate-200 py-10">
+    <footer class="bg-white border-t border-slate-200 py-10 shrink-0">
         <div class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="text-2xl font-extrabold tracking-tighter text-slate-300">
                 TuAgencia<span class="text-blue-600">.</span>
@@ -116,7 +117,7 @@
                 &copy; 2026 TuAgencia. Operando desde Madrid. Todos los derechos reservados.
             </div>
             <div class="flex gap-4 text-sm text-slate-500 font-medium">
-                <a href="avisolegal.html" class="hover:text-slate-900 transition-colors">Aviso Legal</a>
+                <a href="aviso-legal.html" class="hover:text-slate-900 transition-colors">Aviso Legal</a>
                 <a href="privacidad.html" class="hover:text-slate-900 transition-colors">Privacidad</a>
             </div>
         </div>
