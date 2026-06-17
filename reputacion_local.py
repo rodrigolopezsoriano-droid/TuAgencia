@@ -95,9 +95,13 @@ def analizar_sentimiento(resenas: list) -> dict:
                 'poner', 'parecer', 'quedar', 'creer', 'hablar', 'llevar', 'dejar', 
                 'seguir', 'encontrar', 'llamar', 'añadir', 'salir', 'volver', 'tomar', 
                 'conocer', 'vivir', 'sentir',
-                # Nombres genéricos del sector que no son quejas
+                # Nombres genéricos del sector que no son quejas                
                 'sitio', 'lugar', 'clínica', 'empresa', 'negocio', 'local', 
                 'centro', 'doctor', 'médico', 'chica', 'chico', 'personal', 'gente',
+                'muela', 'muelas', 'diente', 'dientes', 'endodoncia', 'empaste',
+                'cita', 'citas', 'consulta', 'boca', 'tratamiento', 'paciente',
+                'segunda', 'primera', 'tercera', 'cuarta', 'quinta', 'sexta', 'séptima',
+                'octava', 'novena', 'décima', 'onceava', 'final', 'inicio', 'principio', 'fin', 'comienzo'
             }
             palabras_negativas.extend([p for p in palabras if p not in stopwords])
     
