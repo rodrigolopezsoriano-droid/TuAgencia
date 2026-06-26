@@ -18,8 +18,8 @@ from datetime import datetime
 # CONFIGURACIÓN (el único dato variable por cliente)
 # ─────────────────────────────────────────────
 API_KEY = "API_KEY"  # Google Places API, ~0.02€ por búsqueda
-NOMBRE_NEGOCIO = "Clínica Dental Siglo XXI Alcalá de Henares"  # Cambiar por cada demo
-NOMBRE_CLIENTE = "Dr. García"             # Para personalizar el PDF
+NOMBRE_NEGOCIO = "Ruano Policlínica Dental, Alcala de Henares"  # Cambiar por cada demo
+NOMBRE_CLIENTE = "Ruano"             # Para personalizar el PDF
 
 
 def buscar_place_id(nombre_negocio: str) -> str:
@@ -78,8 +78,63 @@ def analizar_sentimiento(resenas: list) -> dict:
             # Extraer sustantivos/adjetivos relevantes de reseñas negativas
             palabras = re.findall(r'\b[a-záéíóúñ]{4,}\b', texto.lower())
             # Filtrar stopwords básicas
-            stopwords = {'para', 'pero', 'como', 'este', 'esta', 'todo', 'bien',
-                        'muy', 'más', 'que', 'los', 'las', 'por', 'con', 'una', 'del'}
+            stopwords = {
+                            # 1. ARTÍCULOS, PREPOSICIONES Y CONJUNCIONES
+                            "el", "la", "los", "las", "un", "una", "unos", "unas", "lo", "al", "del",
+                            "y", "o", "u", "e", "ni", "pero", "aunque", "mas", "sino", "porque", "pues", "que",
+                            "de", "en", "a", "por", "para", "con", "sin", "sobre", "tras", "hacia", "hasta", "desde",
+                            
+                            # 2. PRONOMBRES Y DETERMINANTES
+                            "yo", "tu", "tú", "el", "él", "ella", "ello", "nosotros", "nosotras", "vosotros", "vosotras", "ellos", "ellas",
+                            "mi", "mis", "mio", "mío", "mia", "mía", "tu", "tus", "tuyo", "tuya", "su", "sus", "suyo", "suya",
+                            "me", "te", "se", "nos", "os", "le", "les",
+                            "este", "esta", "estos", "estas", "ese", "esa", "esos", "esas", "aquel", "aquella", "aquellos", "aquellas",
+                            "esto", "eso", "aquello",
+                            
+                            # 3. ADVERBIOS, CANTIDADES Y RELLENO
+                            "muy", "mucho", "mucha", "muchos", "muchas", "poco", "poca", "pocos", "pocas", "bastante", "demasiado",
+                            "mas", "más", "menos", "tan", "tanto", "tanta", "tantos", "tantas",
+                            "nada", "todo", "toda", "todos", "todas", "algo", "alguien", "nadie", "ningun", "ningún", "ninguno", "ninguna", "cualquier", "cualquiera",
+                            "si", "sí", "no", "nunca", "jamas", "jamás", "siempre", "casi", "tambien", "también", "tampoco",
+                            "aqui", "aquí", "alli", "allí", "alla", "allá", "aca", "acá", "donde", "como", "cuando", "cuanto", "cuánto", "cual", "cuál",
+                            "ya", "aun", "aún", "todavia", "todavía", "ahora", "antes", "despues", "después", "luego", "entonces", "ademas", "además",
+                            "solo", "sólo", "solamente", "asi", "así", "bien", "mal", "peor", "mejor",
+                            
+                            # 4. VERBOS COMUNES Y AUXILIARES (Todos los tiempos problemáticos)
+                            # Ser / Estar
+                            "ser", "siendo", "sido", "es", "son", "soy", "eres", "era", "eran", "fui", "fue", "fueron", "sere", "seré", "seran", "serán", "sea", "sean",
+                            "estar", "estando", "estado", "estoy", "esta", "está", "estan", "están", "estamos", "estaba", "estaban", "estuve", "estuvo", "estuvieron",
+                            # Tener / Haber
+                            "tener", "teniendo", "tenido", "tengo", "tiene", "tienen", "tenemos", "tenia", "tenía", "tenian", "tenían", "tuve", "tuvo", "tuvieron", "tendra", "tendrá",
+                            "haber", "habiendo", "habido", "he", "has", "ha", "han", "hemos", "habia", "había", "habian", "habían", "hube", "hubo", "hubieron", "hay",
+                            # Hacer / Poder / Querer
+                            "hacer", "haciendo", "hecho", "hago", "hace", "hacen", "hacemos", "hacia", "hacía", "hacian", "hacían", "hice", "hizo", "hicieron", "hara", "hará",
+                            "poder", "pudiendo", "podido", "puedo", "puede", "pueden", "podemos", "podia", "podía", "podian", "podían", "pude", "pudo", "pudieron",
+                            "querer", "queriendo", "querido", "quiero", "quiere", "quieren", "queria", "quería", "querian", "querían", "quise", "quiso", "quisieron",
+                            # Ir / Venir / Dar / Decir / Ver / Parecer
+                            "ir", "yendo", "ido", "voy", "va", "van", "vamos", "iba", "iban", "fui", "fue", "fueron", "ire", "iré",
+                            "venir", "viniendo", "venido", "vengo", "viene", "vienen", "vine", "vino", "vinieron",
+                            "dar", "dando", "dado", "doy", "da", "dan", "daba", "daban", "di", "dio", "dieron",
+                            "decir", "diciendo", "dicho", "digo", "dice", "dicen", "decia", "decía", "decian", "decían", "dije", "dijo", "dijeron",
+                            "ver", "viendo", "visto", "veo", "ve", "ven", "veia", "veía", "veian", "veían", "vi", "vio", "vieron",
+                            "parecer", "pareciendo", "parecido", "parece", "parecen", "parecia", "parecía", "parecio", "pareció",
+                            "pasar", "pasando", "pasado", "pasa", "pasan", "paso", "pasó", "pasaba", "llevar", "llevo", "lleva", "llevan",
+                            
+                            # 5. PALABRAS DE TIEMPO SIN CONTEXTO (No son fricción por sí solas)
+                            "ano", "año", "anos", "años", "dia", "día", "dias", "días", "mes", "meses", "semana", "semanas", 
+                            "hora", "horas", "minuto", "minutos", "vez", "veces", "tiempo", "rato", "momento",
+                            
+                            # 6. STOPWORDS DE DOMINIO Y RELLENO GENÉRICO (Crucial para filtrar ruido)
+                            "sitio", "lugar", "local", "negocio", "empresa", "establecimiento", "centro", "parte", "partes",
+                            "clinica", "clínica", "peluqueria", "peluquería", "salon", "salón", "barberia", "barbería", "taller", "academia",
+                            "persona", "personas", "gente", "chico", "chica", "chicos", "chicas", "hombre", "mujer", "cliente", "clientes",
+                            "cosa", "cosas", "caso", "tema", "verdad", "realidad",
+                            "experiencia", "servicio", "atencion", "atención", "trato", "cita", "niño", "niñas", "hijo", "padre", "madre", "familia", "amigo", "amigos",
+                            "paloma", "juan", "maria", "jose", "ana", "carlos", "luis", "laura", "david", "marta", "javier", "sara", "pablo", "lucia", "alvaro", "sofia", "miguel", "paula", "roberto", "isabel",
+                            "ruano",
+
+                            "uno", "una", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve", "diez"
+                        }
             palabras_negativas.extend([p for p in palabras if p not in stopwords])
     
     quejas_frecuentes = Counter(palabras_negativas).most_common(5)
@@ -129,7 +184,7 @@ def generar_pdf_informe(info_negocio: dict, analisis: dict, impacto: dict, nombr
     # Colores semánticos
     c_danger = colors.HexColor('#ef4444')
     c_warning = colors.HexColor('#f59e0b')
-    c_success = colors.HexColor('#10b981'
+    c_success = colors.HexColor('#10b981')
     # Configuración del documento (márgenes amplios para respirar)
     doc = SimpleDocTemplate(nombre_archivo, pagesize=A4,
                             rightMargin=2.5*cm, leftMargin=2.5*cm,
