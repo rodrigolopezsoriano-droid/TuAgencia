@@ -18,8 +18,8 @@ from datetime import datetime
 # CONFIGURACIÓN (el único dato variable por cliente)
 # ─────────────────────────────────────────────
 API_KEY = "API_KEY"  # Google Places API, ~0.02€ por búsqueda
-NOMBRE_NEGOCIO = "Ruano Policlínica Dental, Alcala de Henares"  # Cambiar por cada demo
-NOMBRE_CLIENTE = "Ruano"             # Para personalizar el PDF
+NOMBRE_NEGOCIO = "Academia Magistral Alcala de Henares"  # Cambiar por cada demo
+NOMBRE_CLIENTE = "Academia Magistral"             # Para personalizar el PDF
 
 
 def buscar_place_id(nombre_negocio: str) -> str:
@@ -118,7 +118,8 @@ def analizar_sentimiento(resenas: list) -> dict:
                             "decir", "diciendo", "dicho", "digo", "dice", "dicen", "decia", "decía", "decian", "decían", "dije", "dijo", "dijeron",
                             "ver", "viendo", "visto", "veo", "ve", "ven", "veia", "veía", "veian", "veían", "vi", "vio", "vieron",
                             "parecer", "pareciendo", "parecido", "parece", "parecen", "parecia", "parecía", "parecio", "pareció",
-                            "pasar", "pasando", "pasado", "pasa", "pasan", "paso", "pasó", "pasaba", "llevar", "llevo", "lleva", "llevan",
+                            "pasar", "pasando", "pasado", "pasa", "pasan", "paso", "pasó", "pasaba", "llevar", "llevo", "lleva", "llevan", "llevaba", "llevaba", "llevaban", "llevé", "llevó", "llevamos",
+                            "realizar", "realizando", "realizado", "realiza", "realizan", "realizó", "realizará", "cambiar",
                             
                             # 5. PALABRAS DE TIEMPO SIN CONTEXTO (No son fricción por sí solas)
                             "ano", "año", "anos", "años", "dia", "día", "dias", "días", "mes", "meses", "semana", "semanas", 
@@ -134,6 +135,9 @@ def analizar_sentimiento(resenas: list) -> dict:
                             "ruano",
 
                             "uno", "una", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve", "diez"
+
+                            #7. Inmobiliaria
+                            "realizar", "realizado", "realiza", "visita", "visitas", "piso", "casa", "vivienda", "inmueble", "agencia", "inmobiliaria", "comprar", "vender", "alquiler", "comercial"
                         }
             palabras_negativas.extend([p for p in palabras if p not in stopwords])
     
