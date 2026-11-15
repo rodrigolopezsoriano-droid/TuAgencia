@@ -62,6 +62,7 @@ import { SITE } from '../data/site';
 </script>
 <script>
   import { supabase } from '../scripts/supabase';
+  import { autocompletar } from '../scripts/perfil';
   const form = document.querySelector<HTMLFormElement>('[data-form]');
   const status = document.querySelector<HTMLElement>('[data-status]');
   const params = new URLSearchParams(location.search);
@@ -72,6 +73,9 @@ import { SITE } from '../data/site';
   if (msg && params.get('plan')) msg.value = `Me interesa el plan ${params.get('plan')}.\n`;
   const sol = params.get('solucion');
   if (sol) form?.querySelector<HTMLSelectElement>('#f-interes')?.querySelectorAll('option').forEach((o) => { if (o.value === sol) o.selected = true; });
+
+  // Si ya has iniciado sesión, te rellenamos tus datos
+  autocompletar({ '#f-nombre': 'nombre', '#f-negocio': 'negocio', '#f-email': 'email', '#f-tel': 'telefono' });
 
   const say = (t: string, cls: 'ok' | 'err') => { if (status) { status.textContent = t; status.className = `status ${cls}`; } };
 

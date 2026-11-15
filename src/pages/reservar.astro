@@ -111,6 +111,7 @@ import { AGENDA } from '../data/agenda';
 </style>
 
 <script>
+  import { autocompletar } from '../scripts/perfil';
   const raiz = document.querySelector<HTMLElement>('[data-agenda]')!;
   const q = <T extends HTMLElement>(s: string) => raiz.querySelector<T>(s)!;
   const paso = (n: string) => q<HTMLElement>(`[data-paso="${n}"]`);
@@ -245,6 +246,9 @@ import { AGENDA } from '../data/agenda';
     paso('ok').hidden = false;
     paso('ok').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
+
+  // Si ya has iniciado sesión, te rellenamos tus datos
+  autocompletar({ '#r-nombre': 'nombre', '#r-email': 'email', '#r-tel': 'telefono' });
 
   cargar();
 </script>
