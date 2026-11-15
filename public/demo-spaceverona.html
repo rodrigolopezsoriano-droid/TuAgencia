@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>SpaceVerona · Panel técnico — TuAgencia</title>
+<style>
+:root{
+  --bg:#f6f5f2; --surface:#ffffff; --surface-2:#fbfaf8; --border:#e7e4de; --border-strong:#d9d5cd;
+  --text:#18181a; --text-2:#3b3a38; --muted:#77736c; --faint:#a29d94;
+  --brand:#7a1a14; --brand-2:#9b2a21; --brand-soft:#f5eae8; --brand-softer:#faf4f3;
+  --green:#1d7f55; --green-soft:#e6f3ec; --amber:#a86a12; --amber-soft:#fbf1df;
+  --blue:#2c5fd0; --blue-soft:#e8eefb; --violet:#6847c9; --violet-soft:#efebfb;
+  --red:#c2372d; --red-soft:#fbe9e7;
+  --radius:12px; --radius-sm:8px;
+  --shadow:0 1px 2px rgba(24,24,26,.04),0 1px 1px rgba(24,24,26,.03);
+  --shadow-lg:0 12px 32px -8px rgba(24,24,26,.18),0 2px 6px rgba(24,24,26,.06);
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,"Helvetica Neue",Arial,sans-serif;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer}
+input,select,textarea{font:inherit;color:inherit}
+.app{display:grid;grid-template-columns:248px 1fr;min-height:100vh}
+
+/* Sidebar */
+.sidebar{background:var(--surface-2);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+.agency{display:flex;align-items:center;gap:10px;padding:18px 18px 10px}
+.agency-logo{width:26px;height:26px;border-radius:7px;background:var(--text);color:#fff;display:grid;place-items:center;font-weight:700;font-size:12px;letter-spacing:-.02em}
+.agency-name{font-weight:650;letter-spacing:-.01em}
+.agency-name small{display:block;font-weight:450;color:var(--muted);font-size:11.5px;letter-spacing:0}
+.workspace{margin:8px 12px 14px;padding:10px;border:1px solid var(--border);border-radius:10px;background:var(--surface);display:flex;align-items:center;gap:10px;box-shadow:var(--shadow)}
+.ws-mark{width:32px;height:32px;border-radius:8px;background:var(--brand);color:#f6efe6;display:grid;place-items:center;font-family:var(--serif);font-style:italic;font-size:15px}
+.ws-name{font-weight:600;font-size:13.5px}
+.ws-sub{color:var(--muted);font-size:11.5px;display:flex;align-items:center;gap:6px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;box-shadow:0 0 0 3px rgba(29,127,85,.12)}
+.nav{padding:4px 10px;display:flex;flex-direction:column;gap:2px}
+.nav-label{font-size:11px;color:var(--faint);text-transform:uppercase;letter-spacing:.08em;padding:14px 10px 6px}
+.nav button{display:flex;align-items:center;gap:10px;padding:8px 10px;border:0;background:none;border-radius:8px;color:var(--text-2);text-align:left;font-size:13.5px;transition:background .15s,color .15s}
+.nav button:hover{background:#f0eee9}
+.nav button.active{background:var(--surface);color:var(--text);box-shadow:var(--shadow),inset 0 0 0 1px var(--border);font-weight:550}
+.nav button.active svg{color:var(--brand)}
+.nav svg{width:17px;height:17px;flex:none;color:var(--muted)}
+.nav .badge{margin-left:auto;font-size:11px;background:var(--brand-soft);color:var(--brand);padding:1px 7px;border-radius:20px;font-weight:600}
+.sidebar-foot{margin-top:auto;padding:14px 16px;border-top:1px solid var(--border);font-size:12px;color:var(--muted)}
+.pillars{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.pillars div{display:flex;gap:8px;align-items:center}
+.pillars i{width:6px;height:6px;border-radius:2px;display:inline-block}
+
+/* Main */
+.main{min-width:0;display:flex;flex-direction:column}
+.topbar{height:58px;display:flex;align-items:center;gap:14px;padding:0 28px;border-bottom:1px solid var(--border);background:rgba(246,245,242,.85);backdrop-filter:saturate(1.4) blur(10px);position:sticky;top:0;z-index:20}
+.crumbs{color:var(--muted);font-size:13px}
+.crumbs b{color:var(--text);font-weight:600}
+.search{margin-left:auto;display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:6px 10px;width:260px;color:var(--muted)}
+.search input{border:0;outline:0;background:none;width:100%;font-size:13px}
+.kbd{font-family:var(--mono);font-size:10.5px;border:1px solid var(--border);border-radius:4px;padding:0 5px;color:var(--faint)}
+.icon-btn{width:34px;height:34px;border-radius:8px;border:1px solid var(--border);background:var(--surface);display:grid;place-items:center;position:relative}
+.icon-btn svg{width:16px;height:16px;color:var(--text-2)}
+.icon-btn .ping{position:absolute;top:6px;right:7px;width:7px;height:7px;border-radius:50%;background:var(--brand);border:2px solid var(--surface)}
+.avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#2a2a2e,#55524c);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:600}
+.content{padding:28px;max-width:1320px;width:100%;margin:0 auto}
+.page{display:none;animation:fade .35s ease}
+.page.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.page-head{display:flex;align-items:flex-end;gap:16px;margin-bottom:22px;flex-wrap:wrap}
+.page-head h1{font-size:24px;letter-spacing:-.02em;margin:0 0 4px;font-weight:650}
+.page-head p{margin:0;color:var(--muted);max-width:640px}
+.page-head .actions{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+.eyebrow{font-size:11.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--brand);font-weight:650;margin-bottom:6px}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--border-strong);background:var(--surface);padding:7px 12px;border-radius:8px;font-size:13px;font-weight:550;box-shadow:var(--shadow);transition:transform .08s,background .15s,border-color .15s}
+.btn:hover{background:#f7f6f3}
+.btn:active{transform:translateY(1px)}
+.btn svg{width:15px;height:15px}
+.btn.primary{background:var(--text);color:#fff;border-color:var(--text)}
+.btn.primary:hover{background:#2c2c30}
+.btn.brand{background:var(--brand);color:#fff;border-color:var(--brand)}
+.btn.brand:hover{background:var(--brand-2)}
+.btn.ghost{background:none;box-shadow:none;border-color:transparent}
+.btn.sm{padding:5px 9px;font-size:12px}
+.btn[disabled]{opacity:.55;pointer-events:none}
+
+/* Cards */
+.grid{display:grid;gap:16px}
+.g-4{grid-template-columns:repeat(4,1fr)}
+.g-3{grid-template-columns:repeat(3,1fr)}
+.g-2{grid-template-columns:repeat(2,1fr)}
+.g-21{grid-template-columns:2fr 1fr}
+.g-12{grid-template-columns:1fr 2fr}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);min-width:0}
+.card-pad{padding:18px}
+.card-head{display:flex;align-items:center;gap:10px;padding:16px 18px 0}
+.card-head h3{margin:0;font-size:14px;font-weight:620;letter-spacing:-.005em}
+.card-head .sub{color:var(--muted);font-size:12.5px}
+.card-head .right{margin-left:auto;display:flex;gap:6px;align-items:center}
+.kpi{padding:16px 18px;position:relative;overflow:hidden}
+.kpi .label{color:var(--muted);font-size:12.5px;display:flex;align-items:center;gap:6px}
+.kpi .value{font-size:26px;font-weight:650;letter-spacing:-.025em;margin-top:6px;font-variant-numeric:tabular-nums}
+.kpi .delta{font-size:12px;margin-top:4px;color:var(--muted)}
+.up{color:var(--green);font-weight:600}
+.kpi .spark{position:absolute;right:14px;bottom:14px;width:84px;height:30px}
+.kpi.flash .value{animation:flash 1s ease}
+@keyframes flash{0%{color:var(--brand)}100%{color:var(--text)}}
+
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;padding:2px 8px;border-radius:20px;background:#f1efea;color:var(--text-2);font-weight:550;white-space:nowrap;border:1px solid transparent}
+.chip.brand{background:var(--brand-soft);color:var(--brand)}
+.chip.green{background:var(--green-soft);color:var(--green)}
+.chip.amber{background:var(--amber-soft);color:var(--amber)}
+.chip.blue{background:var(--blue-soft);color:var(--blue)}
+.chip.violet{background:var(--violet-soft);color:var(--violet)}
+.chip.red{background:var(--red-soft);color:var(--red)}
+.chip.outline{background:var(--surface);border-color:var(--border)}
+.status{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:550}
+.status::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.status.ok{color:var(--green)} .status.warn{color:var(--amber)} .status.err{color:var(--red)} .status.off{color:var(--faint)}
+
+/* Pillar banner */
+.pillar-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px}
+.pillar{display:flex;gap:12px;padding:16px 18px;align-items:flex-start;cursor:pointer;transition:border-color .2s,transform .2s}
+.pillar:hover{border-color:var(--border-strong);transform:translateY(-1px)}
+.pillar .n{font-family:var(--serif);font-style:italic;font-size:22px;color:var(--brand);line-height:1}
+.pillar h4{margin:0 0 3px;font-size:13px;letter-spacing:.02em;text-transform:uppercase}
+.pillar p{margin:0;color:var(--muted);font-size:12.5px}
+
+/* Feed */
+.feed{list-style:none;margin:0;padding:6px 0}
+.feed li{display:flex;gap:12px;padding:10px 18px;align-items:flex-start;animation:fade .4s ease}
+.feed .fi{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;flex:none}
+.feed .fi svg{width:15px;height:15px}
+.feed .ft{font-size:13px}
+.feed .fm{font-size:11.5px;color:var(--faint)}
+
+/* Charts */
+.chart{width:100%;display:block}
+.chart text{font-family:var(--font);font-size:11px;fill:var(--faint)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.legend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px}
+.tip{position:fixed;pointer-events:none;background:var(--text);color:#fff;font-size:12px;padding:6px 9px;border-radius:7px;box-shadow:var(--shadow-lg);z-index:100;opacity:0;transition:opacity .12s;white-space:nowrap}
+
+/* Table */
+.toolbar{display:flex;gap:8px;align-items:center;padding:14px 18px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{border:1px solid var(--border);background:var(--surface);border-radius:20px;padding:5px 11px;font-size:12.5px;color:var(--text-2);display:flex;gap:6px;align-items:center}
+.seg button b{font-weight:600;color:var(--faint);font-variant-numeric:tabular-nums}
+.seg button.on{background:var(--text);color:#fff;border-color:var(--text)}
+.seg button.on b{color:#bdbab3}
+.tsearch{margin-left:auto;display:flex;gap:6px;align-items:center;border:1px solid var(--border);border-radius:8px;padding:5px 9px;color:var(--muted)}
+.tsearch input{border:0;outline:0;width:170px;font-size:13px;background:none}
+.table-wrap{overflow:auto;max-height:560px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{position:sticky;top:0;background:var(--surface-2);text-align:left;font-weight:550;color:var(--muted);font-size:12px;padding:9px 14px;border-bottom:1px solid var(--border);white-space:nowrap;z-index:1}
+td{padding:10px 14px;border-bottom:1px solid #f0eee9;white-space:nowrap}
+tbody tr{cursor:pointer;transition:background .12s}
+tbody tr:hover{background:var(--brand-softer)}
+tr.new-row{animation:newrow 2.4s ease}
+@keyframes newrow{0%{background:#f3e3e0}100%{background:transparent}}
+.person{display:flex;align-items:center;gap:10px}
+.pa{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:650;color:#fff;flex:none}
+.num{font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.tags{display:flex;gap:4px}
+
+/* Drawer */
+.scrim{position:fixed;inset:0;background:rgba(20,18,16,.28);opacity:0;pointer-events:none;transition:opacity .25s;z-index:60}
+.scrim.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;height:100vh;width:440px;max-width:100%;background:var(--surface);box-shadow:var(--shadow-lg);transform:translateX(100%);transition:transform .32s cubic-bezier(.2,.8,.2,1);z-index:61;display:flex;flex-direction:column}
+.drawer.on{transform:none}
+.drawer-head{padding:20px;border-bottom:1px solid var(--border);display:flex;gap:14px;align-items:center}
+.drawer-body{padding:20px;overflow:auto;flex:1}
+.dl{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.dl div{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:10px 12px}
+.dl span{display:block;font-size:11.5px;color:var(--muted)}
+.dl b{font-size:15px;font-variant-numeric:tabular-nums}
+.timeline{list-style:none;padding:0;margin:0;position:relative}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:1px;background:var(--border)}
+.timeline li{position:relative;padding:0 0 16px 26px;font-size:13px}
+.timeline li::before{content:"";position:absolute;left:3px;top:5px;width:9px;height:9px;border-radius:50%;background:var(--surface);border:2px solid var(--brand)}
+.timeline small{display:block;color:var(--faint);font-size:11.5px}
+.h5{font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:18px 0 10px;font-weight:600}
+
+/* QR flow */
+.flow{display:grid;grid-template-columns:repeat(6,1fr);gap:0;padding:22px 18px 18px;counter-reset:s}
+.fstep{position:relative;text-align:center;padding:0 6px}
+.fstep::after{content:"";position:absolute;top:21px;left:calc(50% + 24px);right:calc(-50% + 24px);height:2px;background:repeating-linear-gradient(90deg,var(--border-strong) 0 5px,transparent 5px 9px)}
+.fstep:last-child::after{display:none}
+.fstep .ico{width:44px;height:44px;border-radius:12px;margin:0 auto 10px;display:grid;place-items:center;background:var(--surface-2);border:1px solid var(--border);color:var(--muted);transition:all .35s}
+.fstep .ico svg{width:20px;height:20px}
+.fstep b{display:block;font-size:12.5px;font-weight:600}
+.fstep small{color:var(--muted);font-size:11.5px}
+.fstep.lit .ico{background:var(--brand);border-color:var(--brand);color:#fff;box-shadow:0 0 0 5px var(--brand-soft)}
+.fstep.done .ico{background:var(--brand-soft);border-color:#ead3cf;color:var(--brand)}
+.fstep.done::after,.fstep.lit::after{background:var(--brand)}
+
+/* Phone */
+.phone{width:300px;margin:0 auto;border-radius:38px;background:#111;padding:10px;box-shadow:var(--shadow-lg)}
+.screen{border-radius:30px;background:#f4f1ea;overflow:hidden;height:560px;position:relative;display:flex;flex-direction:column}
+.notch{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:90px;height:24px;border-radius:20px;background:#111;z-index:3}
+.sv-head{background:#7a1a14;color:#f4ece2;padding:46px 20px 18px;text-align:center}
+.sv-logo{font-family:var(--serif);font-style:italic;font-size:26px;letter-spacing:-.01em}
+.sv-tag{font-size:10px;letter-spacing:.2em;text-transform:uppercase;opacity:.75;margin-top:4px}
+.sv-body{padding:16px 18px;flex:1;overflow:auto}
+.sv-body h4{font-family:var(--serif);font-style:italic;color:#7a1a14;font-size:19px;margin:0 0 4px;font-weight:500}
+.sv-body p{font-size:11.5px;color:#6b625a;margin:0 0 12px}
+.sv-field{margin-bottom:9px}
+.sv-field label{display:block;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#7b7168;margin-bottom:3px}
+.sv-field input,.sv-field select{width:100%;border:1px solid #d9d0c4;background:#fffdf9;border-radius:6px;padding:8px 10px;font-size:13px;outline:none}
+.sv-field input:focus,.sv-field select:focus{border-color:#7a1a14}
+.sv-check{display:flex;gap:7px;font-size:10.5px;color:#6b625a;margin:10px 0 12px;align-items:flex-start}
+.sv-btn{width:100%;background:#7a1a14;color:#f4ece2;border:0;border-radius:6px;padding:11px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:600}
+.sv-ok{position:absolute;inset:0;background:#f4f1ea;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;opacity:0;pointer-events:none;transition:opacity .4s;z-index:2}
+.sv-ok.on{opacity:1;pointer-events:auto}
+.sv-ok .seal{width:70px;height:70px;border-radius:50%;background:#7a1a14;color:#f4ece2;display:grid;place-items:center;margin-bottom:16px;animation:pop .5s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{from{transform:scale(.4);opacity:0}to{transform:none;opacity:1}}
+.sv-ok h4{font-family:var(--serif);font-style:italic;color:#7a1a14;font-size:22px;margin:0 0 6px;font-weight:500}
+.sv-ok p{font-size:12px;color:#6b625a;margin:0 0 4px}
+
+/* QR */
+.qr{width:150px;height:150px;padding:10px;background:#fff;border:1px solid var(--border);border-radius:12px;display:block;margin:0 auto}
+
+/* Event */
+.event-hero{padding:22px;display:flex;gap:22px;align-items:center;background:linear-gradient(120deg,#2b0907 0%,#7a1a14 55%,#9b3a26 100%);color:#f6eee4;border:0;overflow:hidden;position:relative}
+.event-hero::after{content:"";position:absolute;right:-60px;top:-60px;width:260px;height:260px;border-radius:50%;border:1px solid rgba(255,255,255,.12);box-shadow:0 0 0 40px rgba(255,255,255,.03),0 0 0 80px rgba(255,255,255,.02)}
+.event-hero h2{margin:4px 0 6px;font-size:24px;letter-spacing:.01em}
+.event-hero .meta{display:flex;gap:18px;font-size:13px;opacity:.85;flex-wrap:wrap}
+.event-hero .chip{background:rgba(255,255,255,.14);color:#fff}
+.funnel{padding:18px;display:flex;flex-direction:column;gap:10px}
+.fbar{display:grid;grid-template-columns:140px 1fr 70px;align-items:center;gap:12px;font-size:13px}
+.fbar .track{height:28px;border-radius:7px;background:var(--surface-2);overflow:hidden;border:1px solid var(--border)}
+.fbar .fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--brand),#b4473b);transition:width 1s cubic-bezier(.2,.8,.2,1)}
+.fbar b{text-align:right;font-variant-numeric:tabular-nums}
+.tabs{display:flex;gap:4px;padding:4px;background:#efede8;border-radius:10px;width:max-content}
+.tabs button{border:0;background:none;padding:6px 14px;border-radius:7px;font-size:13px;color:var(--muted);font-weight:550}
+.tabs button.on{background:var(--surface);color:var(--text);box-shadow:var(--shadow)}
+.phase{display:none;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;padding:16px 18px 18px}
+.phase.on{display:grid}
+.pcard{border:1px solid var(--border);border-radius:10px;padding:14px;background:var(--surface-2);display:flex;gap:10px;align-items:flex-start}
+.pcard .ck{width:20px;height:20px;border-radius:6px;background:var(--green-soft);color:var(--green);display:grid;place-items:center;flex:none}
+.pcard .ck svg{width:13px;height:13px}
+.pcard b{display:block;font-size:13px}
+.pcard small{color:var(--muted);font-size:12px}
+.msg-phone .screen{background:#ece5dd}
+.chat-head{background:#f7f7f7;padding:44px 14px 10px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #ddd}
+.chat-body{padding:14px;display:flex;flex-direction:column;gap:8px;flex:1;overflow:auto}
+.bubble{background:#fff;border-radius:12px 12px 12px 3px;padding:9px 11px;font-size:12.5px;max-width:88%;box-shadow:0 1px 1px rgba(0,0,0,.06);line-height:1.4}
+.bubble small{display:block;text-align:right;color:#999;font-size:10px;margin-top:3px}
+.gallery{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:6px}
+.gallery div{aspect-ratio:1;border-radius:6px;position:relative;overflow:hidden}
+.gallery div span{position:absolute;bottom:4px;left:6px;font-size:9.5px;color:rgba(255,255,255,.85);letter-spacing:.05em}
+.gallery .play::after{content:"";position:absolute;left:50%;top:50%;transform:translate(-40%,-50%);border-left:12px solid rgba(255,255,255,.9);border-top:8px solid transparent;border-bottom:8px solid transparent}
+
+/* Automations */
+.auto-layout{display:grid;grid-template-columns:330px 1fr;gap:16px}
+.alist{display:flex;flex-direction:column}
+.aitem{display:flex;gap:12px;align-items:center;padding:12px 16px;border-bottom:1px solid #f0eee9;cursor:pointer;transition:background .12s}
+.aitem:last-child{border-bottom:0}
+.aitem:hover{background:var(--surface-2)}
+.aitem.sel{background:var(--brand-softer);box-shadow:inset 3px 0 0 var(--brand)}
+.aitem .ai{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;flex:none}
+.aitem .ai svg{width:16px;height:16px}
+.aitem b{font-size:13px;font-weight:600;display:block}
+.aitem small{color:var(--muted);font-size:12px}
+.toggle{margin-left:auto;width:34px;height:20px;border-radius:20px;background:#d8d4cc;border:0;position:relative;flex:none;transition:background .2s;padding:0}
+.toggle::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2);transition:transform .2s}
+.toggle.on{background:var(--green)}
+.toggle.on::after{transform:translateX(14px)}
+.canvas{background-color:#fcfbf9;background-image:radial-gradient(#e2ded6 1px,transparent 1px);background-size:18px 18px;border-radius:0 0 var(--radius) var(--radius);padding:30px 20px 34px;min-height:380px;display:flex;flex-direction:column;align-items:center}
+.node{width:340px;max-width:100%;background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:12px 14px;display:flex;gap:12px;align-items:center;position:relative;transition:all .3s}
+.node .nt{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;font-weight:650}
+.node b{display:block;font-size:13.5px;font-weight:600}
+.node .ni{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;flex:none}
+.node .ni svg{width:17px;height:17px}
+.node .ns{margin-left:auto;font-size:11px;color:var(--faint);white-space:nowrap}
+.node.running{border-color:var(--brand);box-shadow:0 0 0 4px var(--brand-soft),var(--shadow)}
+.node.ok{border-color:#bfe0cf}
+.node.ok .ns{color:var(--green);font-weight:600}
+.node.trigger .ni{background:var(--violet-soft);color:var(--violet)} .node.trigger .nt{color:var(--violet)}
+.node.cond .ni{background:var(--amber-soft);color:var(--amber)} .node.cond .nt{color:var(--amber)}
+.node.wait .ni{background:var(--blue-soft);color:var(--blue)} .node.wait .nt{color:var(--blue)}
+.node.action .ni{background:var(--green-soft);color:var(--green)} .node.action .nt{color:var(--green)}
+.edge{width:2px;height:30px;background:var(--border-strong);position:relative}
+.edge::after{content:"";position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);border-top:6px solid var(--border-strong);border-left:5px solid transparent;border-right:5px solid transparent}
+.edge.lit{background:var(--brand)} .edge.lit::after{border-top-color:var(--brand)}
+.edge .pulse{position:absolute;left:-3px;width:8px;height:8px;border-radius:50%;background:var(--brand);top:0;opacity:0}
+.edge.lit .pulse{animation:travel .45s linear}
+@keyframes travel{0%{top:0;opacity:1}100%{top:26px;opacity:1}}
+.edge-label{font-size:10.5px;color:var(--green);background:var(--green-soft);padding:1px 7px;border-radius:10px;position:absolute;left:12px;top:8px;white-space:nowrap;font-weight:600}
+.edge-label.no{left:auto;right:12px;color:var(--muted);background:#f0eee9}
+.edge.tall{height:40px}.edge.tall .pulse{}
+.branch{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;justify-content:center}
+.runlog{font-family:var(--mono);font-size:11.5px;background:#18181a;color:#cfcac0;border-radius:10px;padding:12px 14px;height:150px;overflow:auto;margin:0 18px 18px}
+.runlog .ok{color:#7fd3a6} .runlog .t{color:#7d786f}
+.canvas.paused .node{opacity:.55;filter:grayscale(.5)}
+.paused-banner{display:none;margin-bottom:16px;font-size:12.5px;background:var(--amber-soft);color:var(--amber);padding:6px 12px;border-radius:8px;font-weight:550}
+.canvas.paused .paused-banner{display:block}
+
+/* Systems */
+.svc{display:flex;align-items:center;gap:12px;padding:11px 18px;border-top:1px solid #f0eee9;font-size:13px}
+.svc:first-of-type{border-top:0}
+.svc .si{width:30px;height:30px;border-radius:8px;background:var(--surface-2);border:1px solid var(--border);display:grid;place-items:center;flex:none;color:var(--text-2)}
+.svc .si svg{width:15px;height:15px}
+.svc small{display:block;color:var(--muted);font-size:12px}
+.svc .r{margin-left:auto;text-align:right}
+.uptime{display:flex;gap:2px;height:26px;align-items:stretch;padding:0 18px 4px}
+.uptime i{flex:1;border-radius:2px;background:#4fb486;opacity:.85}
+.uptime i.w{background:#e2a23a}
+.gauge{display:flex;gap:16px;padding:16px 18px;align-items:center}
+.ring{width:84px;height:84px;flex:none}
+.checking .svc .status{color:var(--faint)}
+.spinner{width:13px;height:13px;border-radius:50%;border:2px solid var(--border-strong);border-top-color:var(--brand);animation:spin .7s linear infinite;display:inline-block;vertical-align:-2px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.dns{font-family:var(--mono);font-size:11.5px;width:100%}
+.dns td{padding:7px 18px;border-bottom:1px solid #f3f1ec}
+.task{display:flex;gap:10px;padding:10px 18px;align-items:center;border-top:1px solid #f0eee9;font-size:13px}
+.task input{accent-color:var(--brand)}
+.task.done span{text-decoration:line-through;color:var(--faint)}
+
+/* Report */
+.report-sheet{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px 30px;box-shadow:var(--shadow)}
+.rs-head{display:flex;align-items:flex-start;gap:16px;border-bottom:1px solid var(--border);padding-bottom:18px;margin-bottom:18px}
+.rs-head h2{margin:0;font-size:20px;letter-spacing:-.01em}
+.rs-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.rs-kpis div{border-left:2px solid var(--brand);padding:2px 0 2px 12px}
+.rs-kpis span{display:block;font-size:12px;color:var(--muted)}
+.rs-kpis b{font-size:22px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.bars-h{display:flex;flex-direction:column;gap:9px;padding:6px 0}
+.bh{display:grid;grid-template-columns:170px 1fr 104px;gap:10px;align-items:center;font-size:12.5px}
+.bh .t{height:10px;background:var(--surface-2);border-radius:5px;overflow:hidden;border:1px solid var(--border)}
+.bh .t i{display:block;height:100%;background:var(--brand);border-radius:5px;transition:width 1s ease}
+.bh b{text-align:right;font-variant-numeric:tabular-nums}
+
+/* Modal + toast */
+.modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-46%) scale(.98);opacity:0;pointer-events:none;transition:all .25s;z-index:62;width:420px;max-width:calc(100% - 32px);background:var(--surface);border-radius:14px;box-shadow:var(--shadow-lg);padding:22px}
+.modal.on{opacity:1;pointer-events:auto;transform:translate(-50%,-50%)}
+.modal h3{margin:0 0 6px}
+.progress{height:6px;background:var(--surface-2);border:1px solid var(--border);border-radius:6px;overflow:hidden;margin:16px 0 8px}
+.progress i{display:block;height:100%;width:0;background:var(--brand);transition:width .3s}
+.toasts{position:fixed;bottom:20px;right:20px;display:flex;flex-direction:column;gap:8px;z-index:90}
+.toast{background:var(--text);color:#fff;border-radius:10px;padding:11px 14px;font-size:13px;box-shadow:var(--shadow-lg);display:flex;gap:10px;align-items:center;min-width:260px;max-width:360px;animation:tin .3s cubic-bezier(.2,.9,.3,1.2)}
+.toast svg{width:16px;height:16px;flex:none;color:#86d9ae}
+.toast small{display:block;color:#a9a59d;font-size:11.5px}
+@keyframes tin{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:none}}
+.notif-panel{position:fixed;top:62px;right:28px;width:340px;background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lg);z-index:70;display:none}
+.notif-panel.on{display:block;animation:fade .2s}
+.notif-panel h4{margin:0;padding:14px 16px;border-bottom:1px solid var(--border);font-size:13px}
+.demo-flag{position:fixed;left:16px;bottom:16px;font-size:11px;color:var(--muted);background:var(--surface);border:1px solid var(--border);padding:4px 10px;border-radius:20px;z-index:5;box-shadow:var(--shadow)}
+
+@media (max-width:1100px){.g-4{grid-template-columns:repeat(2,1fr)}.g-21,.g-12,.auto-layout{grid-template-columns:1fr}.flow{grid-template-columns:repeat(3,1fr);row-gap:20px}.fstep:nth-child(3)::after{display:none}.rs-kpis{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:820px){
+  .app{grid-template-columns:1fr}
+  .sidebar{position:sticky;top:0;height:auto;z-index:30;flex-direction:row;align-items:center;overflow-x:auto;border-right:0;border-bottom:1px solid var(--border)}
+  .agency,.workspace,.nav-label,.sidebar-foot{display:none}
+  .nav{flex-direction:row;padding:8px}
+  .nav button{white-space:nowrap}
+  .topbar{display:none}
+  .content{padding:18px 14px}
+  .g-3,.g-2,.pillar-row{grid-template-columns:1fr}
+  .g-4{grid-template-columns:1fr 1fr}
+  .flow{grid-template-columns:repeat(2,1fr)}.fstep::after{display:none}
+  .fbar{grid-template-columns:100px 1fr 50px}
+  .bh{grid-template-columns:120px 1fr 44px}
+  .demo-flag{display:none}
+}
+@media print{
+  .sidebar,.topbar,.page-head .actions,.demo-flag,.toasts,.no-print{display:none!important}
+  .app{display:block}.page{display:none!important}#page-reports{display:block!important}
+  body{background:#fff}.card,.report-sheet{box-shadow:none}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="agency">
+      <div class="agency-logo">TA</div>
+      <div class="agency-name">TuAgencia<small>Departamento técnico externo</small></div>
+    </div>
+    <div class="workspace">
+      <div class="ws-mark">SV</div>
+      <div><div class="ws-name">SpaceVerona</div><div class="ws-sub"><span class="dot"></span>Todos los sistemas operativos</div></div>
+    </div>
+    <nav class="nav" id="nav">
+      <div class="nav-label">General</div>
+      <button data-page="dashboard" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>Dashboard</button>
+      <div class="nav-label">Comunidad</div>
+      <button data-page="crm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c2 .7 3.2 2.4 3.6 5.2"/></svg>CRM y clientes</button>
+      <button data-page="club"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.8z"/></svg>Honor Club<span class="badge" id="navClub">+0</span></button>
+      <button data-page="events"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Eventos</button>
+      <div class="nav-label">Operaciones</div>
+      <button data-page="auto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="5" cy="6" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M7.5 6h9M6.2 8.2l4.6 7.6M17.8 8.2l-4.6 7.6"/></svg>Automatizaciones</button>
+      <button data-page="systems"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="7" rx="1.5"/><rect x="3" y="13" width="18" height="7" rx="1.5"/><path d="M7 7.5h.01M7 16.5h.01"/></svg>Shopify y sistemas</button>
+      <button data-page="reports"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Informes</button>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="pillars">
+        <div><i style="background:var(--text)"></i>Nos encargamos de la tecnología</div>
+        <div><i style="background:var(--brand)"></i>Organizamos y conocemos a los clientes</div>
+        <div><i style="background:var(--green)"></i>Automatizamos los procesos</div>
+      </div>
+      Gestionado por TuAgencia · tuagencia.tech
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="crumbs">SpaceVerona / <b id="crumb">Dashboard</b></div><span class="chip outline" style="font-size:11px" title="Sin conexión a Shopify ni a servicios reales">Demo · datos ficticios</span>
+      <label class="search"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="globalSearch" placeholder="Buscar clientes…"><span class="kbd">⌘K</span></label>
+      <button class="icon-btn" id="bell" aria-label="Notificaciones"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg><span class="ping"></span></button>
+      <div class="avatar" title="TuAgencia">TA</div>
+    </header>
+
+    <main class="content">
+
+<!-- ============ DASHBOARD ============ -->
+<section class="page active" id="page-dashboard">
+  <div class="page-head">
+    <div>
+      <div class="eyebrow">Buenos días, equipo SpaceVerona</div>
+      <h1>Todo en orden. Vuestra comunidad sigue creciendo.</h1>
+      <p>Resumen de clientes, comunidad, automatizaciones y sistemas. Vosotros creáis la marca; nosotros nos encargamos de que la tecnología funcione.</p>
+    </div>
+    <div class="actions">
+      <button class="btn" data-goto="reports"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7"/></svg>Ver informe semanal</button>
+      <button class="btn brand" id="dashSim"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4v16l13-8z"/></svg>Simular registro QR</button>
+    </div>
+  </div>
+
+  <div class="pillar-row">
+    <div class="card pillar" data-goto="systems"><div class="n">01</div><div><h4>Nos encargamos de la tecnología</h4><p>Web, Shopify, dominio, correo, seguridad y mantenimiento.</p></div></div>
+    <div class="card pillar" data-goto="crm"><div class="n">02</div><div><h4>Organizamos y conocemos a los clientes</h4><p>CRM, Honor Club, segmentación e historial.</p></div></div>
+    <div class="card pillar" data-goto="auto"><div class="n">03</div><div><h4>Automatizamos los procesos</h4><p>Eventos, registros, comunicaciones, stock e informes.</p></div></div>
+  </div>
+
+  <div class="grid g-4" id="kpis"></div>
+
+  <div class="grid g-21" style="margin-top:16px">
+    <div class="card">
+      <div class="card-head"><h3>Evolución del Honor Club</h3><span class="sub">Miembros acumulados · últimos 12 meses</span><div class="right"><span class="chip brand" id="clubGrowthChip"></span></div></div>
+      <div style="padding:8px 10px 10px" id="chartClub"></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>Procedencia de los registros</h3></div>
+      <div style="padding:10px 18px 18px" id="chartSource"></div>
+    </div>
+  </div>
+
+  <div class="grid g-3" style="margin-top:16px">
+    <div class="card">
+      <div class="card-head"><h3>Nuevos registros por semana</h3><div class="right"><span class="sub">8 semanas</span></div></div>
+      <div style="padding:8px 10px 10px" id="chartWeekly"></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>Actividad de clientes</h3><div class="right"><span class="sub">Interacciones por día</span></div></div>
+      <div style="padding:8px 10px 10px" id="chartActivity"></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>Estado de los sistemas</h3><div class="right"><span class="status ok">Operativo</span></div></div>
+      <div style="padding:8px 0 6px" id="dashSystems"></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <div class="card-head"><h3>Actividad reciente</h3><span class="sub">En tiempo real</span><div class="right"><span class="status ok" style="font-size:12px">En directo</span></div></div>
+    <ul class="feed" id="feed"></ul>
+  </div>
+</section>
+
+<!-- ============ CRM ============ -->
+<section class="page" id="page-crm">
+  <div class="page-head">
+    <div><div class="eyebrow">Organizamos y conocemos a los clientes</div><h1>CRM y clientes</h1><p>Una ficha única por persona: compras, eventos, Honor Club y actividad. Los segmentos se actualizan solos.</p></div>
+    <div class="actions"><button class="btn" id="crmExport"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Exportar segmento</button></div>
+  </div>
+  <div class="grid g-4" id="crmKpis" style="margin-bottom:16px"></div>
+  <div class="card">
+    <div class="toolbar">
+      <div class="seg" id="segments"></div>
+      <label class="tsearch"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="crmSearch" placeholder="Buscar por nombre o email"></label>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Cliente</th><th>Registro</th><th>Compras</th><th>Última compra</th><th>Valor acumulado</th><th>Etiquetas</th><th>Estado</th></tr></thead>
+        <tbody id="crmBody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HONOR CLUB ============ -->
+<section class="page" id="page-club">
+  <div class="page-head">
+    <div><div class="eyebrow">Comunidad privada</div><h1>Honor Club</h1><p>La comunidad de SpaceVerona: acceso anticipado a los drops y experiencias exclusivas. Cada persona que llega a un evento se queda en la comunidad.</p></div>
+    <div class="actions"><button class="btn" data-goto="events">Ver último evento</button></div>
+  </div>
+  <div class="grid g-4" id="clubKpis"></div>
+
+  <div class="card" style="margin-top:16px">
+    <div class="card-head"><h3>Cómo funciona el registro con QR</h3><span class="sub">De asistente a miembro, sin trabajo manual</span><div class="right"><button class="btn sm" id="playFlow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4v16l13-8z"/></svg>Reproducir</button></div></div>
+    <div class="flow" id="flow"></div>
+  </div>
+
+  <div class="grid g-12" style="margin-top:16px">
+    <div class="card card-pad" style="display:flex;flex-direction:column;align-items:center;gap:14px">
+      <div style="text-align:center"><h3 style="margin:0 0 4px;font-size:14px">Formulario del evento</h3><div class="sub muted" style="font-size:12.5px">Lo que ve el asistente al escanear el QR. Pruébalo.</div></div>
+      <div class="phone"><div class="screen">
+        <div class="notch"></div>
+        <div class="sv-head"><div class="sv-logo">SpaceVerona</div><div class="sv-tag">Honor Club · Community Event</div></div>
+        <form class="sv-body" id="clubForm" autocomplete="off">
+          <h4>Únete al Honor Club</h4>
+          <p>Acceso anticipado a los drops, eventos privados y ventajas exclusivas.</p>
+          <div class="sv-field"><label>Nombre</label><input id="fName" placeholder="Ej. Lucía Martín" required></div>
+          <div class="sv-field"><label>Email</label><input id="fEmail" type="email" placeholder="lucia@ejemplo.com" required></div>
+          <div class="sv-field"><label>Instagram</label><input id="fIg" placeholder="@usuario"></div>
+          <div class="sv-field"><label>Talla habitual</label><select id="fSize"><option>S</option><option selected>M</option><option>L</option><option>XL</option></select></div>
+          <label class="sv-check"><input type="checkbox" required checked> Acepto recibir comunicaciones de SpaceVerona y la política de privacidad.</label>
+          <button class="sv-btn" type="submit">Unirme</button>
+          <div style="text-align:center;margin-top:8px"><a href="#" id="autofill" style="font-size:10.5px;color:#7a1a14">Rellenar con datos de ejemplo</a></div>
+        </form>
+        <div class="sv-ok" id="svOk">
+          <div class="seal"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+          <h4>Benvenuto, <span id="okName"></span></h4>
+          <p>Ya formas parte del Honor Club.</p>
+          <p>Mañana te enviaremos las fotos y vídeos del evento.</p>
+          <button class="sv-btn" style="margin-top:18px;width:auto;padding:9px 18px" id="okAgain">Nuevo registro</button>
+        </div>
+      </div></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>Miembros del Honor Club</h3><span class="sub" id="clubCount"></span><div class="right"><button class="btn sm" data-goto="crm">Abrir en CRM</button></div></div>
+      <div class="table-wrap" style="max-height:640px;margin-top:12px">
+        <table><thead><tr><th>Miembro</th><th>Alta</th><th>Procedencia</th><th>Etiquetas</th><th>Eventos</th></tr></thead><tbody id="clubBody"></tbody></table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EVENTS ============ -->
+<section class="page" id="page-events">
+  <div class="page-head">
+    <div><div class="eyebrow">Hilo conductor</div><h1>Eventos</h1><p>Una experiencia presencial que se convierte en comunidad, datos organizados y relaciones a largo plazo. El objetivo no es vender: es que nadie que venga se pierda.</p></div>
+    <div class="actions"><button class="btn" id="simScan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3M4 12h16"/></svg>Simular escaneo</button><button class="btn brand" data-goto="reports" data-report="1">Informe del evento</button></div>
+  </div>
+
+  <div class="card event-hero">
+    <div style="position:relative;z-index:1;flex:1">
+      <span class="chip">Finalizado · Comunidad</span>
+      <h2>COMMUNITY EVENT — HONOR CLUB</h2>
+      <div class="meta"><span>Sábado 21 de noviembre</span><span>Madrid</span><span>Etiqueta CRM: <b>evento-community-nov</b></span></div>
+    </div>
+    <svg class="qr" style="position:relative;z-index:1;width:110px;height:110px" id="qrSmall" viewBox="0 0 29 29"></svg>
+  </div>
+
+  <div class="grid g-4" id="eventKpis" style="margin-top:16px"></div>
+
+  <div class="grid g-21" style="margin-top:16px">
+    <div class="card">
+      <div class="card-head"><h3>Del evento a la comunidad</h3><span class="sub">Embudo del evento</span></div>
+      <div class="funnel" id="funnel"></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>Composición de los registrados</h3></div>
+      <div style="padding:10px 18px 18px" id="chartEventMix"></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <div class="card-head"><h3>Recorrido del evento</h3><div class="right"><div class="tabs" id="phaseTabs"><button class="on" data-ph="0">Antes</button><button data-ph="1">Durante</button><button data-ph="2">Después</button></div></div></div>
+    <div id="phases"></div>
+  </div>
+
+  <div class="grid g-12" style="margin-top:16px">
+    <div class="card card-pad">
+      <h3 style="margin:0 0 4px;font-size:14px">Mensaje de agradecimiento</h3>
+      <p class="muted" style="margin:0 0 14px;font-size:12.5px">Se envía automáticamente 24 h después del evento a todos los asistentes registrados.</p>
+      <div class="phone msg-phone"><div class="screen">
+        <div class="notch"></div>
+        <div class="chat-head"><div class="ws-mark" style="width:30px;height:30px;font-size:12px">SV</div><div><b style="font-size:13px">SpaceVerona</b><div style="font-size:10.5px;color:#888">Cuenta de empresa</div></div></div>
+        <div class="chat-body" id="chatBody"></div>
+      </div></div>
+      <div style="display:flex;justify-content:center;margin-top:14px"><button class="btn" id="replayMsg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4h4"/></svg>Ver envío</button></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>Retorno a futuros eventos</h3><span class="sub">Asistentes que vuelven</span></div>
+      <div style="padding:8px 10px 6px" id="chartReturn"></div>
+      <div class="card-head" style="padding-top:6px"><h3>Últimos registros del evento</h3></div>
+      <ul class="feed" id="eventFeed"></ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ AUTOMATIONS ============ -->
+<section class="page" id="page-auto">
+  <div class="page-head">
+    <div><div class="eyebrow">Automatizamos los procesos</div><h1>Automatizaciones</h1><p>Flujos que trabajan solos: registros, comunicaciones, stock e informes. Activa, desactiva o ejecuta una simulación.</p></div>
+    <div class="actions"><span class="chip green" id="autoCount"></span></div>
+  </div>
+  <div class="auto-layout">
+    <div class="card"><div class="alist" id="alist"></div></div>
+    <div class="card">
+      <div class="card-head"><div><h3 id="aTitle"></h3><div class="sub" id="aDesc"></div></div><div class="right"><span id="aState"></span><button class="btn brand sm" id="runAuto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4v16l13-8z"/></svg>Ejecutar simulación</button></div></div>
+      <div class="grid g-3" style="padding:14px 18px 0;gap:10px" id="aStats"></div>
+      <div class="canvas" id="canvas" style="margin-top:14px"></div>
+      <div class="runlog" id="runlog"><span class="t">// Registro de ejecución (simulado). Pulsa «Ejecutar simulación».</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SYSTEMS ============ -->
+<section class="page" id="page-systems">
+  <div class="page-head">
+    <div><div class="eyebrow">Nos encargamos de la tecnología</div><h1>Shopify y sistemas</h1><p>Consola de monitorización: tienda, dominio, correo corporativo, seguridad y mantenimiento.</p></div>
+    <div class="actions"><span class="sub muted" id="lastCheck" style="align-self:center;font-size:12.5px"></span><button class="btn primary" id="runCheck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4h4"/></svg>Ejecutar revisión</button></div>
+  </div>
+  <div class="grid g-4" id="sysKpis"></div>
+  <div class="grid g-2" style="margin-top:16px" id="sysGrid"></div>
+</section>
+
+<!-- ============ REPORTS ============ -->
+<section class="page" id="page-reports">
+  <div class="page-head">
+    <div><div class="eyebrow">Informes</div><h1>Informes y estadísticas</h1><p>Crecimiento de la comunidad, eventos y rendimiento de las automatizaciones. Se generan solos cada semana.</p></div>
+    <div class="actions"><div class="tabs" id="repTabs"><button class="on" data-r="0">General</button><button data-r="1">Último evento</button></div><button class="btn primary" id="exportBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Exportar informe</button></div>
+  </div>
+  <div id="rep0">
+    <div class="grid g-4" id="repKpis"></div>
+    <div class="grid g-2" style="margin-top:16px">
+      <div class="card"><div class="card-head"><h3>Crecimiento del Honor Club</h3><div class="right"><div class="legend"><span><i style="background:var(--brand)"></i>Total</span><span><i style="background:#d9b3ad"></i>Nuevos</span></div></div></div><div style="padding:8px 10px 10px" id="repClub"></div></div>
+      <div class="card"><div class="card-head"><h3>Registros por evento</h3></div><div style="padding:8px 10px 10px" id="repEvents"></div></div>
+    </div>
+    <div class="grid g-3" style="margin-top:16px">
+      <div class="card"><div class="card-head"><h3>Nuevos vs. ya miembros</h3></div><div style="padding:10px 18px 18px" id="repNew"></div></div>
+      <div class="card"><div class="card-head"><h3>Participación en eventos</h3></div><div style="padding:8px 10px 10px" id="repPart"></div></div>
+      <div class="card"><div class="card-head"><h3>Compras posteriores de asistentes</h3></div><div style="padding:8px 10px 10px" id="repAfter"></div></div>
+    </div>
+    <div class="card" style="margin-top:16px"><div class="card-head"><h3>Rendimiento de automatizaciones</h3><span class="sub">Últimos 30 días</span></div><div style="padding:12px 18px 18px" class="bars-h" id="repAuto"></div></div>
+  </div>
+  <div id="rep1" style="display:none">
+    <div class="report-sheet">
+      <div class="rs-head">
+        <div class="ws-mark" style="width:44px;height:44px;font-size:18px">SV</div>
+        <div><div class="eyebrow" style="margin:0">Informe de evento</div><h2>COMMUNITY EVENT — HONOR CLUB</h2><div class="muted" style="font-size:12.5px">Sábado 21 de noviembre · Madrid · Preparado por TuAgencia</div></div>
+        <span class="chip green" style="margin-left:auto">Datos de demostración</span>
+      </div>
+      <div class="rs-kpis" id="rsKpis"></div>
+      <div class="grid g-2">
+        <div><div class="h5" style="margin-top:0">Registros durante la noche</div><div id="rsHourly"></div></div>
+        <div><div class="h5" style="margin-top:0">Resultados clave</div><div class="bars-h" id="rsBars"></div></div>
+      </div>
+      <div class="h5">Conclusiones</div>
+      <ul style="margin:0;padding-left:18px;color:var(--text-2);font-size:13.5px;line-height:1.7" id="rsConc"></ul>
+      <div class="h5">Próximos pasos</div>
+      <ul style="margin:0;padding-left:18px;color:var(--text-2);font-size:13.5px;line-height:1.7">
+        <li>Invitar a los nuevos miembros al próximo evento con acceso prioritario.</li>
+        <li>Enviar aviso exclusivo del próximo drop al segmento «Asistentes a eventos».</li>
+        <li>Medir el retorno de asistentes en el siguiente encuentro.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+    </main>
+  </div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer"></aside>
+<div class="modal" id="modal"></div>
+<div class="notif-panel" id="notifPanel"><h4>Notificaciones</h4><ul class="feed" id="notifList"></ul></div>
+<div class="toasts" id="toasts"></div>
+<div class="tip" id="tip"></div>
+
+<script>
+(function(){
+"use strict";
+/* ---------- utils ---------- */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const fmt=n=>n.toLocaleString('es-ES');
+const eur=n=>n.toLocaleString('es-ES',{style:'currency',currency:'EUR',maximumFractionDigits:0});
+let seed=7; const rnd=()=>{seed=(seed*16807)%2147483647;return (seed-1)/2147483646};
+const pick=a=>a[Math.floor(rnd()*a.length)];
+const ri=(a,b)=>Math.floor(a+rnd()*(b-a+1));
+const MONTHS=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+const today=new Date(2026,10,23);
+const dstr=d=>d.getDate()+' '+MONTHS[d.getMonth()]+' '+d.getFullYear();
+const dshort=d=>d.getDate()+' '+MONTHS[d.getMonth()];
+const daysAgo=n=>{const d=new Date(today);d.setDate(d.getDate()-n);return d};
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ICON={
+  user:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>',
+  star:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.8z"/></svg>',
+  qr:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3M21 14v7h-7"/></svg>',
+  mail:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>',
+  box:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4v10l-9 4-9-4z"/><path d="M3 7l9 4 9-4M12 11v10"/></svg>',
+  chart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7"/></svg>',
+  bolt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>',
+  clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+  split:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3v6a6 6 0 0 0 6 6h6M18 15l-3-3M18 15l-3 3M6 21v-6"/></svg>',
+  tag:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12V3h9l9 9-9 9z"/><circle cx="8" cy="8" r="1.5"/></svg>',
+  send:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg>',
+  img:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>',
+  bell:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15z"/></svg>',
+  moon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+  form:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>',
+  db:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg>',
+  people:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c2 .7 3.2 2.4 3.6 5.2"/></svg>',
+  shop:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>',
+  globe:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>',
+  lock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>',
+  server:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="7" rx="1.5"/><rect x="3" y="13" width="18" height="7" rx="1.5"/><path d="M7 7.5h.01M7 16.5h.01"/></svg>',
+  save:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3h11l3 3v15H5z"/><path d="M8 3v5h8V3M8 21v-7h8v7"/></svg>',
+  speed:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 18a8 8 0 1 1 16 0"/><path d="M12 18l4-6"/></svg>'
+};
+
+/* ---------- data ---------- */
+const FN=['Lucía','Martina','Sofía','Paula','Valeria','Julia','Carla','Alba','Noa','Irene','Marta','Elena','Claudia','Daniela','Sara','Hugo','Mateo','Leo','Pablo','Álvaro','Daniel','Adrián','Marco','Alejandro','Diego','Javier','Nicolás','Iker','Bruno','Gonzalo','Rodrigo','Aitana','Nerea','Carmen','Andrea','Samuel','Óscar','Rubén','Teo','Gabriel'];
+const LN=['García','Martín','López','Sánchez','Romero','Navarro','Torres','Ruiz','Díaz','Moreno','Álvarez','Gil','Serrano','Molina','Ortega','Castro','Rubio','Marín','Vidal','Iglesias','Ferrer','Cano','Prieto','Lozano','Herrera'];
+const COLORS=['#7a1a14','#2c5fd0','#1d7f55','#6847c9','#a86a12','#3b3a38','#b4473b','#0f766e','#9d4b8a'];
+const SOURCES=['Evento QR','Web','Instagram','Compra online'];
+const PRODUCTS=['Polo Héritage','Waffle Longsleeve Héritage','Camiseta Borgia','Sudadera Amore Eterno','Pack Dúo Amore Eterno'];
+const PRICES={'Polo Héritage':37.99,'Waffle Longsleeve Héritage':39.99,'Camiseta Borgia':29.99,'Sudadera Amore Eterno':44.99,'Pack Dúo Amore Eterno':79.99};
+let uid=0;
+function makeCustomer(o={}){
+  const fn=o.fn||pick(FN), ln=o.ln||pick(LN);
+  const regAgo=o.regAgo??ri(1,420);
+  const src=o.src||(rnd()<.38?'Evento QR':pick(SOURCES));
+  const purchases=o.purchases??(rnd()<.18?0:ri(1,rnd()<.2?11:5));
+  const orders=[]; let total=0;
+  for(let i=0;i<purchases;i++){const p=pick(PRODUCTS);const ago=Math.max(0,Math.floor(regAgo*(1-(i+1)/(purchases+1)))-ri(0,8));orders.push({p,ago,amount:PRICES[p]});total+=PRICES[p];}
+  orders.sort((a,b)=>a.ago-b.ago);
+  const lastAgo=orders.length?orders[0].ago:null;
+  const club=o.club??(src==='Evento QR'||rnd()<.5);
+  const events=o.events??(src==='Evento QR'?ri(1,3):(rnd()<.18?1:0));
+  const c={id:++uid,name:fn+' '+ln,email:(fn[0]+'.'+ln).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')+(ri(1,99))+'@correo-demo.es',
+    ig:'@'+(fn+ln.slice(0,3)).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')+ri(1,99),
+    reg:daysAgo(regAgo),regAgo,src,purchases,orders,total,lastAgo,club,events,size:pick(['S','M','M','L','L','XL']),color:pick(COLORS),fresh:!!o.fresh,lastEvent:o.lastEvent||(src==='Evento QR'&&rnd()<.55)};
+  return c;
+}
+let customers=[];
+for(let i=0;i<64;i++) customers.push(makeCustomer());
+// last-event attendees
+for(let i=0;i<14;i++) customers.push(makeCustomer({regAgo:2,src:'Evento QR',club:true,events:1,purchases:rnd()<.25?1:0,lastEvent:true}));
+customers.forEach(c=>{if(c.lastEvent&&c.regAgo<=2){c.orders.forEach(o=>o.ago=Math.min(o.ago,1));c.lastAgo=c.orders.length?c.orders[0].ago:null;}});
+
+function tagsOf(c){
+  const t=[];
+  if(c.club) t.push(['Honor Club','brand']);
+  if(c.total>=200||c.purchases>=6) t.push(['VIP','violet']);
+  if(c.events>0) t.push([c.lastEvent?'Community Event':'Eventos','blue']);
+  if(c.purchases>=2) t.push(['Recurrente','green']);
+  if(c.regAgo<=30) t.push(['Nuevo','amber']);
+  if(c.purchases>0&&c.lastAgo>120) t.push(['Inactivo','red']);
+  return t;
+}
+function stateOf(c){
+  if(c.purchases>0&&c.lastAgo>120) return ['Inactivo','off'];
+  if(c.regAgo<=30) return ['Nuevo','warn'];
+  return ['Activo','ok'];
+}
+const SEGMENTS=[
+  ['all','Todos',()=>true],
+  ['best','Mejores clientes',c=>c.total>=200||c.purchases>=6],
+  ['club','Honor Club',c=>c.club],
+  ['events','Asistentes a eventos',c=>c.events>0],
+  ['inactive','Inactivos',c=>c.purchases>0&&c.lastAgo>120],
+  ['new','Nuevos',c=>c.regAgo<=30],
+  ['rec','Recurrentes',c=>c.purchases>=2]
+];
+
+const BASE={registered:1186,club:598,eventNew:0,autos:0,recurring:0,attributed:16240};
+const state={seg:'all',q:'',newRegs:0,scans:128,eventRegs:93,eventExisting:31,attendees:248,activity:[],notifs:[],autoSel:0,running:false};
+const clubTotal=()=>BASE.club+customers.filter(c=>c.fresh).length;
+const registeredTotal=()=>BASE.registered+customers.filter(c=>c.fresh).length;
+
+/* ---------- tooltip ---------- */
+const tip=$('#tip');
+document.addEventListener('mousemove',e=>{const t=e.target.closest('[data-tip]');if(t){tip.textContent=t.dataset.tip;tip.style.opacity=1;tip.style.left=(e.clientX+12)+'px';tip.style.top=(e.clientY-34)+'px'}else tip.style.opacity=0});
+
+/* ---------- charts (pure SVG) ---------- */
+function lineChart(el,series,labels,opts={}){
+  const W=el.clientWidth>200?el.clientWidth-20:(opts.w||640),H=opts.h||220,P={l:38,r:14,t:14,b:26};
+  const all=series.flatMap(s=>s.data);const max=opts.max||Math.ceil(Math.max(...all)*1.12/50)*50||10;const min=0;
+  const x=i=>P.l+i*(W-P.l-P.r)/(labels.length-1), y=v=>H-P.b-(v-min)/(max-min)*(H-P.t-P.b);
+  let g='';
+  for(let k=0;k<=4;k++){const v=min+(max-min)*k/4;g+=`<line x1="${P.l}" x2="${W-P.r}" y1="${y(v)}" y2="${y(v)}" stroke="#eeebe5"/><text x="${P.l-8}" y="${y(v)+4}" text-anchor="end">${fmt(Math.round(v))}</text>`}
+  labels.forEach((l,i)=>{if(labels.length<=12||i%2===0)g+=`<text x="${x(i)}" y="${H-6}" text-anchor="middle">${l}</text>`});
+  series.forEach((s,si)=>{
+    const pts=s.data.map((v,i)=>[x(i),y(v)]);
+    const d=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+    if(s.area) g+=`<path d="${d} L${x(s.data.length-1)} ${y(0)} L${x(0)} ${y(0)} Z" fill="url(#gr${el.id})" opacity=".9"/>`;
+    g+=`<path d="${d}" fill="none" stroke="${s.color}" stroke-width="${s.w||2.2}" stroke-linejoin="round" stroke-linecap="round" ${s.dash?'stroke-dasharray="4 4"':''} pathLength="1" style="stroke-dasharray:${s.dash?'':'1'};stroke-dashoffset:${s.dash?0:1};animation:draw 1.2s ${si*.15}s ease forwards"/>`;
+    pts.forEach((p,i)=>g+=`<circle cx="${p[0]}" cy="${p[1]}" r="${i===pts.length-1?4:3}" fill="#fff" stroke="${s.color}" stroke-width="2" data-tip="${labels[i]} · ${s.name}: ${fmt(s.data[i])}" style="cursor:default"/><circle cx="${p[0]}" cy="${p[1]}" r="12" fill="transparent" data-tip="${labels[i]} · ${s.name}: ${fmt(s.data[i])}"/>`);
+  });
+  el.innerHTML=`<svg class="chart" viewBox="0 0 ${W} ${H}"><defs><linearGradient id="gr${el.id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${series[0].color}" stop-opacity=".16"/><stop offset="1" stop-color="${series[0].color}" stop-opacity="0"/></linearGradient></defs>${g}</svg>`;
+}
+function barChart(el,data,labels,opts={}){
+  const W=el.clientWidth>200?el.clientWidth-20:(opts.w||360),H=opts.h||200,P={l:30,r:8,t:12,b:26};
+  const rawMax=Math.max(...data.map(d=>Array.isArray(d)?d.reduce((a,b)=>a+b,0):d))*1.1;const stepN=[1,2,5,10,20,25,50,100,200,250,500].find(x=>x*3>=rawMax)||Math.ceil(rawMax/3);const max=opts.max||stepN*3;
+  const bw=(W-P.l-P.r)/data.length;
+  let g='';
+  for(let k=0;k<=3;k++){const v=max*k/3;const yy=H-P.b-v/max*(H-P.t-P.b);g+=`<line x1="${P.l}" x2="${W-P.r}" y1="${yy}" y2="${yy}" stroke="#eeebe5"/><text x="${P.l-6}" y="${yy+4}" text-anchor="end">${Math.round(v)}</text>`}
+  data.forEach((d,i)=>{
+    const vals=Array.isArray(d)?d:[d];let acc=0;
+    vals.forEach((v,j)=>{const h=v/max*(H-P.t-P.b);const yy=H-P.b-acc-h;acc+=h;
+      const col=(opts.colors||['var(--brand)'])[j]||'#d9b3ad';const hl=opts.highlight===i;
+      g+=`<rect x="${P.l+i*bw+bw*.2}" y="${yy}" width="${bw*.6}" height="${Math.max(h,0)}" rx="${j===vals.length-1?4:0}" fill="${hl&&j===0?'var(--brand)':col}" opacity="${opts.highlight!=null&&!hl?.45:1}" data-tip="${labels[i]}: ${fmt(v)}${opts.unit||''}" style="transform-origin:center ${H-P.b}px;animation:grow .7s ${i*.04}s cubic-bezier(.2,.8,.2,1) both"/>`});
+    g+=`<text x="${P.l+i*bw+bw/2}" y="${H-7}" text-anchor="middle">${labels[i]}</text>`;
+  });
+  el.innerHTML=`<svg class="chart" viewBox="0 0 ${W} ${H}">${g}</svg>`;
+}
+function donut(el,parts,center){
+  const R=58,r=40,cx=70,cy=70;let a=-Math.PI/2;const tot=parts.reduce((s,p)=>s+p.v,0);let g='';
+  parts.forEach(p=>{const ang=p.v/tot*Math.PI*2;const a2=a+ang;const la=ang>Math.PI?1:0;
+    const pt=(rad,an)=>[cx+rad*Math.cos(an),cy+rad*Math.sin(an)];
+    const [x1,y1]=pt(R,a),[x2,y2]=pt(R,a2-.012),[x3,y3]=pt(r,a2-.012),[x4,y4]=pt(r,a);
+    g+=`<path d="M${x1} ${y1} A${R} ${R} 0 ${la} 1 ${x2} ${y2} L${x3} ${y3} A${r} ${r} 0 ${la} 0 ${x4} ${y4}Z" fill="${p.c}" data-tip="${p.l}: ${fmt(p.v)} (${Math.round(p.v/tot*100)}%)"/>`;a=a2});
+  const leg=parts.map(p=>`<div style="display:flex;align-items:center;gap:8px;font-size:12.5px;padding:4px 0"><i style="width:9px;height:9px;border-radius:3px;background:${p.c}"></i><span style="color:var(--text-2)">${p.l}</span><b style="margin-left:auto;font-variant-numeric:tabular-nums">${Math.round(p.v/tot*100)}%</b></div>`).join('');
+  el.innerHTML=`<div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap"><svg viewBox="0 0 140 140" style="width:140px;flex:none">${g}<text x="70" y="68" text-anchor="middle" style="font-size:20px;font-weight:650;fill:var(--text)">${center[0]}</text><text x="70" y="86" text-anchor="middle" style="font-size:10px;fill:var(--muted)">${center[1]}</text></svg><div style="flex:1;min-width:140px">${leg}</div></div>`;
+}
+function spark(data,color){const W=84,H=30,max=Math.max(...data),min=Math.min(...data);const pts=data.map((v,i)=>[i*W/(data.length-1),H-3-(v-min)/(max-min||1)*(H-6)]);return `<svg class="spark" viewBox="0 0 ${W} ${H}"><path d="${pts.map((p,i)=>(i?'L':'M')+p[0]+' '+p[1]).join(' ')}" fill="none" stroke="${color}" stroke-width="1.8" stroke-linecap="round"/></svg>`}
+const st=document.createElement('style');st.textContent='@keyframes draw{to{stroke-dashoffset:0}}@keyframes grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}';document.head.appendChild(st);
+
+/* ---------- toasts / feed ---------- */
+function toast(t,s){const el=document.createElement('div');el.className='toast';el.innerHTML=ICON.check+`<div>${t}${s?`<small>${s}</small>`:''}</div>`;$('#toasts').appendChild(el);setTimeout(()=>{el.style.transition='all .3s';el.style.opacity=0;el.style.transform='translateY(8px)';setTimeout(()=>el.remove(),300)},3600)}
+const FEEDTYPES={
+  qr:['qr','var(--brand-soft)','var(--brand)'],club:['star','var(--violet-soft)','var(--violet)'],mail:['mail','var(--blue-soft)','var(--blue)'],
+  stock:['box','var(--amber-soft)','var(--amber)'],report:['chart','var(--green-soft)','var(--green)'],sys:['server','#f0eee9','var(--text-2)'],bolt:['bolt','var(--green-soft)','var(--green)']};
+function pushActivity(type,text,when='Ahora'){
+  state.activity.unshift({type,text,when});state.activity=state.activity.slice(0,9);renderFeed();
+  state.notifs.unshift({type,text,when});state.notifs=state.notifs.slice(0,8);renderNotifs();
+}
+function feedItem(a){const [ic,bg,fg]=FEEDTYPES[a.type];return `<li><div class="fi" style="background:${bg};color:${fg}">${ICON[ic]}</div><div><div class="ft">${a.text}</div><div class="fm">${a.when}</div></div></li>`}
+function renderFeed(){$('#feed').innerHTML=state.activity.slice(0,7).map(feedItem).join('')}
+function renderNotifs(){$('#notifList').innerHTML=state.notifs.map(feedItem).join('')}
+[
+  ['report','Informe semanal preparado y enviado a <b>equipo@spaceverona.com</b>','Hoy, 08:00'],
+  ['stock','Alerta de stock: <b>Polo Héritage · talla M</b> por debajo de 10 unidades','Hoy, 07:42'],
+  ['mail','Automatización de bienvenida ejecutada para <b>14 nuevos miembros</b>','Ayer, 12:00'],
+  ['club','<b>Nerea Castro</b> añadida al Honor Club','Ayer, 01:18'],
+  ['qr','Nuevo usuario registrado mediante QR: <b>Bruno Ortega</b> · Community Event','Ayer, 00:52'],
+  ['sys','Copia de seguridad de Shopify completada (tema, productos y clientes)','Hace 2 días']
+].reverse().forEach(a=>{state.activity.unshift({type:a[0],text:a[1],when:a[2]});state.notifs.unshift({type:a[0],text:a[1],when:a[2]})});
+
+/* ---------- navigation ---------- */
+const TITLES={dashboard:'Dashboard',crm:'CRM y clientes',club:'Honor Club',events:'Eventos',auto:'Automatizaciones',systems:'Shopify y sistemas',reports:'Informes'};
+const rendered={};
+function go(p,extra){
+  $$('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===p));
+  const ab=$('.nav button.active');if(ab&&window.innerWidth<=820)ab.scrollIntoView({inline:'center',block:'nearest'});
+  $$('.page').forEach(s=>s.classList.toggle('active',s.id==='page-'+p));
+  $('#crumb').textContent=TITLES[p];
+  window.scrollTo({top:0,behavior:'instant'});
+  RENDER[p]&&RENDER[p]();
+  if(p==='reports'&&extra==='1') setRep(1);
+  history.replaceState(null,'','#'+p);
+}
+$('#nav').addEventListener('click',e=>{const b=e.target.closest('button[data-page]');if(b)go(b.dataset.page)});
+document.addEventListener('click',e=>{const g=e.target.closest('[data-goto]');if(g){go(g.dataset.goto,g.dataset.report)}});
+
+/* ---------- DASHBOARD ---------- */
+const clubSeries=[312,341,366,388,407,431,452,478,503,527,566,598];
+function kpiCard(label,value,delta,sp,color,id){return `<div class="card kpi" ${id?`id="${id}"`:''}><div class="label">${label}</div><div class="value">${value}</div><div class="delta">${delta}</div>${sp?spark(sp,color||'var(--brand)'):''}</div>`}
+function renderDash(){
+  const active=AUTOS.filter(a=>a.on).length;
+  const fresh=customers.filter(c=>c.fresh).length;
+  $('#kpis').innerHTML=
+    kpiCard('Clientes registrados',fmt(registeredTotal()),`<span class="up">+${41+fresh}</span> este mes`,[980,1010,1042,1071,1103,1140,1186+fresh],'var(--text)','k1')+
+    kpiCard('Miembros del Honor Club',fmt(clubTotal()),`<span class="up">+${32+fresh}</span> desde el último evento`,clubSeries.slice(-7).concat(clubTotal()),'var(--brand)','k2')+
+    kpiCard('Registros del último evento',fmt(state.eventRegs),`${Math.round(state.eventRegs/state.scans*100)}% de los escaneos del QR`,[0,0,3,18,52,81,state.eventRegs],'var(--violet)','k3')+
+    kpiCard('Automatizaciones activas',`${active}<span style="color:var(--faint);font-size:16px"> / ${AUTOS.length}</span>`,'1.284 ejecuciones este mes',null,null,'k4')+
+    kpiCard('Clientes recurrentes','34%','<span class="up">+3 pts</span> vs. trimestre anterior',[27,28,29,30,31,33,34],'var(--green)')+
+    kpiCard('Ventas de clientes registrados',eur(BASE.attributed),'Atribuidas a miembros del CRM · 30 días',[9,11,10,13,12,15,16],'var(--blue)')+
+    kpiCard('Nuevos miembros vía eventos','41%','de las altas del Honor Club en 2026',null)+
+    `<div class="card kpi" style="cursor:pointer" data-goto="systems"><div class="label">Estado de los sistemas</div><div class="value" style="font-size:20px;margin-top:10px"><span class="status ok" style="font-size:16px">Todo operativo</span></div><div class="delta">Disponibilidad 99,98% · revisado hoy 07:00</div></div>`;
+  $('#clubGrowthChip').textContent='+'+Math.round((clubTotal()-312)/312*100)+'% en 12 meses';
+  const labs=MONTHS.slice(0).map((m,i)=>MONTHS[(i+0)%12]);
+  const cs=clubSeries.slice();cs[11]=clubTotal();
+  lineChart($('#chartClub'),[{name:'Miembros',data:cs,color:'#7a1a14',area:true}],['dic','ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov'],{h:230});
+  const evQR=customers.filter(c=>c.src==='Evento QR').length;
+  donut($('#chartSource'),[{l:'Eventos (QR)',v:41+fresh,c:'#7a1a14'},{l:'Web',v:24,c:'#c98b80'},{l:'Instagram',v:21,c:'#2c5fd0'},{l:'Compra online',v:14,c:'#d8d4cc'}],[fmt(clubTotal()),'miembros']);
+  barChart($('#chartWeekly'),[18,22,15,27,24,31,26,state.eventRegs],['S40','S41','S42','S43','S44','S45','S46','S47'],{highlight:7});
+  barChart($('#chartActivity'),[[42,18],[38,16],[45,21],[51,24],[63,29],[88,41],[71,30]],['L','M','X','J','V','S','D'],{colors:['var(--brand)','#e2c6c1'],unit:''});
+  $('#dashSystems').innerHTML=[['shop','Tienda Shopify','Operativa · 0 incidencias','ok','99,98%'],['mail','Correo corporativo','SPF · DKIM · DMARC correctos','ok','OK'],['globe','Dominio spaceverona.com','Renovación en 287 días','ok','SSL'],['save','Copias de seguridad','Última: hoy 03:00','ok','Diaria'],['bolt','Automatizaciones',active+' activas · 0 errores',active<AUTOS.length?'warn':'ok',active+'/'+AUTOS.length]]
+    .map(s=>`<div class="svc"><div class="si">${ICON[s[0]]}</div><div>${s[1]}<small>${s[2]}</small></div><div class="r"><span class="status ${s[3]}">${s[4]}</span></div></div>`).join('');
+  renderFeed();
+}
+
+/* ---------- CRM ---------- */
+function avatar(c,size=28){const ini=c.name.split(' ').map(s=>s[0]).slice(0,2).join('');return `<div class="pa" style="background:${c.color};width:${size}px;height:${size}px;font-size:${size*.38}px">${ini}</div>`}
+function renderCRM(){
+  const total=registeredTotal();
+  $('#crmKpis').innerHTML=kpiCard('Fichas en el CRM',fmt(total),'Unificadas desde Shopify, eventos e Instagram')+kpiCard('Valor medio por cliente','68 €','Últimos 12 meses')+kpiCard('Clientes recurrentes','34%','2 o más compras')+kpiCard('Inactivos +120 días','11%','Detectados automáticamente');
+  $('#segments').innerHTML=SEGMENTS.map(s=>`<button data-seg="${s[0]}" class="${state.seg===s[0]?'on':''}">${s[1]} <b>${customers.filter(s[2]).length}</b></button>`).join('');
+  const f=SEGMENTS.find(s=>s[0]===state.seg)[2];const q=state.q.toLowerCase();
+  const rows=customers.filter(f).filter(c=>!q||c.name.toLowerCase().includes(q)||c.email.includes(q)).sort((a,b)=>a.regAgo-b.regAgo);
+  $('#crmBody').innerHTML=rows.map(c=>{const [s,k]=stateOf(c);return `<tr data-id="${c.id}" class="${c.justAdded?'new-row':''}"><td><div class="person">${avatar(c)}<div><div style="font-weight:550">${esc(c.name)}</div><div class="muted" style="font-size:12px">${esc(c.email)}</div></div></div></td><td class="muted">${dstr(c.reg)}</td><td class="num">${c.purchases}</td><td class="muted">${c.lastAgo==null?'—':c.lastAgo===0?'Hoy':'Hace '+c.lastAgo+' d'}</td><td class="num">${eur(c.total)}</td><td><div class="tags">${tagsOf(c).slice(0,3).map(t=>`<span class="chip ${t[1]}">${t[0]}</span>`).join('')}</div></td><td><span class="status ${k}">${s}</span></td></tr>`}).join('')||`<tr><td colspan="7" class="muted" style="text-align:center;padding:30px">Sin resultados</td></tr>`;
+  customers.forEach(c=>c.justAdded=false);
+}
+$('#segments').addEventListener('click',e=>{const b=e.target.closest('button');if(b){state.seg=b.dataset.seg;renderCRM()}});
+$('#crmSearch').addEventListener('input',e=>{state.q=e.target.value;renderCRM()});
+$('#globalSearch').addEventListener('input',e=>{state.q=e.target.value;$('#crmSearch').value=e.target.value;if(!$('#page-crm').classList.contains('active'))go('crm');else renderCRM()});
+document.addEventListener('click',e=>{const tr=e.target.closest('tr[data-id]');if(tr)openCustomer(+tr.dataset.id)});
+$('#crmExport').onclick=()=>{const s=SEGMENTS.find(x=>x[0]===state.seg);toast(`Segmento «${s[1]}» exportado`,`${customers.filter(s[2]).length} contactos · CSV (simulado)`)};
+
+function openCustomer(id){
+  const c=customers.find(x=>x.id===id);if(!c)return;const [s,k]=stateOf(c);
+  const tl=[];
+  c.orders.slice(0,5).forEach(o=>tl.push([o.ago,`Compra: <b>${o.p}</b> · ${eur(o.amount)}`]));
+  if(c.lastEvent) tl.push([2,'Asistió al <b>Community Event — Honor Club</b> · registro con QR']);
+  if(c.club) tl.push([Math.max(c.regAgo-1,0)>c.regAgo?c.regAgo:Math.max(0,c.regAgo-(c.src==='Evento QR'?0:3)),'Se unió al <b>Honor Club</b>']);
+  tl.push([c.regAgo,`Ficha creada · origen: <b>${c.src}</b>`]);
+  if(c.club) tl.push([Math.max(0,c.regAgo-1),'Automatización: mensaje de bienvenida enviado']);
+  tl.sort((a,b)=>a[0]-b[0]);
+  $('#drawer').innerHTML=`<div class="drawer-head">${avatar(c,48)}<div><div style="font-size:17px;font-weight:650">${esc(c.name)}</div><div class="muted" style="font-size:12.5px">${esc(c.email)} · ${esc(c.ig)}</div><div style="margin-top:6px"><span class="status ${k}">${s}</span></div></div><button class="icon-btn" style="margin-left:auto" id="closeDrawer">✕</button></div>
+  <div class="drawer-body">
+    <div class="dl"><div><span>Valor acumulado</span><b>${eur(c.total)}</b></div><div><span>Compras</span><b>${c.purchases}</b></div><div><span>Eventos asistidos</span><b>${c.events}</b></div><div><span>Talla habitual</span><b>${c.size}</b></div><div><span>Cliente desde</span><b>${dstr(c.reg)}</b></div><div><span>Origen</span><b>${c.src}</b></div></div>
+    <div class="h5">Etiquetas</div><div style="display:flex;gap:6px;flex-wrap:wrap">${tagsOf(c).map(t=>`<span class="chip ${t[1]}">${t[0]}</span>`).join('')||'<span class="muted">—</span>'}<span class="chip outline">talla-${c.size.toLowerCase()}</span></div>
+    <div class="h5">Segmentos automáticos</div><div style="display:flex;gap:6px;flex-wrap:wrap">${SEGMENTS.slice(1).filter(sg=>sg[2](c)).map(sg=>`<span class="chip outline">${sg[1]}</span>`).join('')||'<span class="muted">Ninguno</span>'}</div>
+    <div class="h5">Historial y actividad</div><ul class="timeline">${tl.map(t=>`<li>${t[1]}<small>${t[0]===0?'Hoy':dstr(daysAgo(t[0]))}</small></li>`).join('')}</ul>
+    <div class="h5">Comunicaciones</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      ${c.club?`<div class="svc" style="padding:8px 0;border:0"><div class="si">${ICON.mail}</div><div>Bienvenida al Honor Club<small>Abierto · ${dshort(daysAgo(Math.max(0,c.regAgo-1)))}</small></div></div>`:''}
+      ${c.lastEvent?`<div class="svc" style="padding:8px 0;border:0"><div class="si">${ICON.img}</div><div>Gracias por venir · fotos y vídeos<small>Programado 24 h tras el evento</small></div></div>`:''}
+      <div class="svc" style="padding:8px 0;border:0"><div class="si">${ICON.star}</div><div>Aviso exclusivo próximo drop<small>${c.club?'Incluido en el segmento Honor Club':'No incluido (no es miembro)'}</small></div></div>
+    </div>
+  </div>`;
+  $('#drawer').classList.add('on');$('#scrim').classList.add('on');
+  $('#closeDrawer').onclick=closeDrawer;
+}
+function closeDrawer(){$('#drawer').classList.remove('on');$('#scrim').classList.remove('on');$('#modal').classList.remove('on')}
+$('#scrim').onclick=closeDrawer;
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDrawer();$('#notifPanel').classList.remove('on')}if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();$('#globalSearch').focus()}});
+
+/* ---------- HONOR CLUB ---------- */
+const FLOW=[['user','Asiste al evento','Community Event'],['qr','Escanea el QR','En la entrada y la barra'],['form','Abre el formulario','Nombre, email, talla'],['star','Se une al Honor Club','En 20 segundos'],['db','Ficha en el CRM','Creada automáticamente'],['tag','Etiqueta del evento','evento-community-nov']];
+function renderFlow(){$('#flow').innerHTML=FLOW.map((f,i)=>`<div class="fstep" data-i="${i}"><div class="ico">${ICON[f[0]]}</div><b>${i+1}. ${f[1]}</b><small>${f[2]}</small></div>`).join('')}
+let flowTimer=null;
+function playFlow(){clearTimeout(flowTimer);const steps=$$('.fstep');steps.forEach(s=>s.classList.remove('lit','done'));let i=0;
+  const tick=()=>{if(i>0)steps[i-1].classList.replace('lit','done');if(i<steps.length){steps[i].classList.add('lit');i++;flowTimer=setTimeout(tick,520)}};tick()}
+$('#playFlow').onclick=playFlow;
+function renderClub(){
+  const fresh=customers.filter(c=>c.fresh).length;
+  $('#clubKpis').innerHTML=kpiCard('Total de miembros',fmt(clubTotal()),`<span class="up">+${Math.round((clubTotal()-566)/566*1000)/10}%</span> este mes`,clubSeries.slice(-7).concat(clubTotal()))+
+    kpiCard('Nuevas incorporaciones',fmt(46+fresh),'Últimos 30 días',[21,26,24,30,28,34,46+fresh],'var(--violet)')+
+    kpiCard('Procedentes de eventos',fmt(244+fresh),'41% de la comunidad',null)+
+    kpiCard('Crecimiento mensual','+5,7%','Media de los últimos 6 meses',[3.1,3.8,4.2,4.9,5.1,5.7],'var(--green)');
+  const m=customers.filter(c=>c.club).sort((a,b)=>a.regAgo-b.regAgo);
+  $('#clubCount').textContent=fmt(clubTotal())+' miembros · mostrando los '+m.length+' más recientes';
+  $('#clubBody').innerHTML=m.map(c=>`<tr data-id="${c.id}" class="${c.justAddedClub?'new-row':''}"><td><div class="person">${avatar(c)}<div><div style="font-weight:550">${esc(c.name)}</div><div class="muted" style="font-size:12px">${esc(c.ig)}</div></div></div></td><td class="muted">${c.regAgo===0?'Hoy':dshort(c.reg)}</td><td>${c.src==='Evento QR'?'<span class="chip brand">Evento · QR</span>':`<span class="chip">${c.src}</span>`}</td><td><div class="tags">${tagsOf(c).filter(t=>t[0]!=='Honor Club').slice(0,2).map(t=>`<span class="chip ${t[1]}">${t[0]}</span>`).join('')}</div></td><td class="num">${c.events}</td></tr>`).join('');
+  customers.forEach(c=>c.justAddedClub=false);
+  $('#navClub').textContent='+'+(46+fresh);
+}
+$('#autofill').onclick=e=>{e.preventDefault();const fn=pick(FN),ln=pick(LN);$('#fName').value=fn+' '+ln;$('#fEmail').value=(fn+'.'+ln).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')+'@correo-demo.es';$('#fIg').value='@'+fn.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')+'.'+ri(10,99)};
+$('#clubForm').onsubmit=e=>{e.preventDefault();const name=$('#fName').value.trim()||'Invitado';const [fn,...rest]=name.split(' ');
+  register({fn,ln:rest.join(' ')||pick(LN),email:$('#fEmail').value,ig:$('#fIg').value,size:$('#fSize').value});
+  $('#okName').textContent=fn;$('#svOk').classList.add('on');playFlow();};
+$('#okAgain').onclick=()=>{$('#svOk').classList.remove('on');$('#clubForm').reset()};
+
+function register(o={}){
+  const c=makeCustomer({fn:o.fn,ln:o.ln,regAgo:0,src:'Evento QR',club:true,events:1,purchases:0,fresh:true,lastEvent:true});
+  if(o.email) c.email=o.email; if(o.ig) c.ig=o.ig.startsWith('@')?o.ig:'@'+o.ig; if(o.size) c.size=o.size;
+  c.justAdded=true;c.justAddedClub=true;customers.push(c);
+  state.eventRegs++;state.scans+=1;state.attendees+=1;
+  pushActivity('qr',`Nuevo usuario registrado mediante QR: <b>${esc(c.name)}</b> · Community Event`);
+  setTimeout(()=>pushActivity('club',`<b>${esc(c.name)}</b> añadido al Honor Club · etiqueta <b>evento-community-nov</b>`),700);
+  setTimeout(()=>pushActivity('mail',`Automatización de bienvenida preparada para <b>${esc(c.name)}</b>`),1400);
+  AUTOS[0].runs++;
+  toast('Nuevo miembro del Honor Club',`${c.name} · ficha creada en el CRM con la etiqueta del evento`);
+  const cur=$('.page.active').id.replace('page-','');RENDER[cur]&&RENDER[cur]();
+  $$('.kpi').forEach(k=>k.classList.add('flash'));setTimeout(()=>$$('.kpi').forEach(k=>k.classList.remove('flash')),1000);
+  return c;
+}
+$('#dashSim').onclick=()=>register();
+
+/* ---------- QR ---------- */
+function drawQR(el){
+  seed=99;let g='<rect width="29" height="29" fill="#fff"/>';
+  const finder=(x,y)=>`<rect x="${x}" y="${y}" width="7" height="7" fill="#18181a"/><rect x="${x+1}" y="${y+1}" width="5" height="5" fill="#fff"/><rect x="${x+2}" y="${y+2}" width="3" height="3" fill="#18181a"/>`;
+  for(let y=0;y<29;y++)for(let x=0;x<29;x++){const inF=(x<8&&y<8)||(x>20&&y<8)||(x<8&&y>20);if(!inF&&rnd()<.48)g+=`<rect x="${x}" y="${y}" width="1" height="1" fill="#18181a"/>`}
+  g+=finder(0,0)+finder(22,0)+finder(0,22)+`<rect x="11" y="11" width="7" height="7" rx="1.5" fill="#7a1a14"/><text x="14.5" y="16.2" text-anchor="middle" style="font:italic 4.4px Georgia;fill:#f4ece2">SV</text>`;
+  el.innerHTML=g; seed=12345;
+}
+
+/* ---------- EVENTS ---------- */
+const PHASES=[
+  [['Preparación del QR','Código único del evento, impreso en la entrada y la barra'],['Configuración del formulario','Nombre, email, Instagram y talla en menos de 20 s'],['Etiqueta en el CRM','Se crea «evento-community-nov» para identificar a los asistentes'],['Automatización de bienvenida','Mensaje listo para enviarse a cada nuevo miembro']],
+  [['Escanean el QR','Los asistentes acceden desde su móvil, sin descargar nada'],['Se registran en el Honor Club','Alta inmediata en la comunidad'],['Se guardan sus datos','Ficha única en el CRM, sin duplicados'],['Etiquetado automático','Marcados como asistentes del evento']],
+  [['Agradecimiento a las 24 h','Mensaje personal a todos los asistentes registrados'],['Contenido audiovisual','Fotos y vídeos del evento compartidos con la comunidad'],['CRM actualizado','Historial de cada persona con su asistencia'],['Análisis de la comunidad','Crecimiento, nuevos miembros y participación'],['Retorno a futuros eventos','Medimos cuántos asistentes vuelven']]
+];
+function renderPhases(){$('#phases').innerHTML=PHASES.map((p,i)=>`<div class="phase ${i===0?'on':''}" data-ph="${i}">${p.map(x=>`<div class="pcard"><div class="ck">${ICON.check}</div><div><b>${x[0]}</b><small>${x[1]}</small></div></div>`).join('')}</div>`).join('')}
+$('#phaseTabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;$$('#phaseTabs button').forEach(x=>x.classList.toggle('on',x===b));$$('.phase').forEach(p=>p.classList.toggle('on',p.dataset.ph===b.dataset.ph))});
+const THANKS='¡Gracias por formar parte de este evento! Ha sido un placer tenerte con nosotros. Queremos que sigas formando parte de Honor Club. Aquí podrás encontrar las fotos y vídeos de lo que vivimos juntos.';
+function playMsg(){
+  const b=$('#chatBody');b.innerHTML='<div style="text-align:center;font-size:10.5px;color:#888;background:#fff8;border-radius:8px;padding:3px 8px;align-self:center">Domingo · 22 nov · 20:00</div>';
+  setTimeout(()=>{b.insertAdjacentHTML('beforeend',`<div class="bubble" style="animation:fade .4s">Hola Lucía 👋<br>${THANKS}<small>20:00</small></div>`)},400);
+  setTimeout(()=>{b.insertAdjacentHTML('beforeend',`<div class="bubble" style="animation:fade .4s"><b style="font-size:12px">Community Event — Honor Club</b><div class="gallery"><div style="background:linear-gradient(135deg,#3a0d0a,#9b3a26)"><span>FOTO 01</span></div><div class="play" style="background:linear-gradient(135deg,#1d1b19,#5c4a3a)"><span>VÍDEO</span></div><div style="background:linear-gradient(135deg,#7a1a14,#d0a07a)"><span>FOTO 02</span></div><div style="background:linear-gradient(135deg,#2b2a28,#7a6a55)"><span>+38</span></div></div><div style="margin-top:6px;color:#7a1a14;font-weight:600;font-size:12px">Ver galería completa →</div><small>20:00</small></div>`)},1200);
+}
+$('#replayMsg').onclick=playMsg;
+function renderEvents(){
+  drawQR($('#qrSmall'));
+  const conv=Math.round(state.eventRegs/state.scans*100);
+  $('#eventKpis').innerHTML=kpiCard('Asistentes',fmt(state.attendees),'Aforo estimado del evento')+kpiCard('Escaneos del QR',fmt(state.scans),`${Math.round(state.scans/state.attendees*100)}% de los asistentes`)+kpiCard('Nuevos registros',fmt(state.eventRegs),`<b>${conv}%</b> de conversión escaneo → registro`)+kpiCard('Nuevos miembros captados',fmt(state.eventRegs-state.eventExisting),`${state.eventExisting} ya pertenecían al Honor Club`);
+  const steps=[['Asistentes',state.attendees],['Escanean el QR',state.scans],['Se registran',state.eventRegs],['Nuevos miembros',state.eventRegs-state.eventExisting]];
+  $('#funnel').innerHTML=steps.map((s,i)=>`<div class="fbar"><span>${s[0]}</span><div class="track"><div class="fill" style="width:0" data-w="${s[1]/state.attendees*100}"></div></div><b>${fmt(s[1])}</b></div>`).join('')+`<div class="muted" style="font-size:12px;margin-top:4px">El ${Math.round((state.eventRegs-state.eventExisting)/state.attendees*100)}% de los asistentes se ha incorporado como nuevo miembro de la comunidad.</div>`;
+  requestAnimationFrame(()=>setTimeout(()=>$$('#funnel .fill').forEach(f=>f.style.width=f.dataset.w+'%'),60));
+  donut($('#chartEventMix'),[{l:'Nuevos miembros',v:state.eventRegs-state.eventExisting,c:'#7a1a14'},{l:'Ya eran del Honor Club',v:state.eventExisting,c:'#d9b3ad'}],[fmt(state.eventRegs),'registros']);
+  barChart($('#chartReturn'),[0,18,27,34],['Ev. jun','Ev. jul','Ev. sep','Ev. nov'],{unit:'% repiten',max:40,h:170,w:380,highlight:3});
+  const evs=customers.filter(c=>c.lastEvent).sort((a,b)=>a.regAgo-b.regAgo).slice(0,5);
+  $('#eventFeed').innerHTML=evs.map(c=>`<li><div class="fi" style="background:var(--brand-soft);color:var(--brand)">${ICON.qr}</div><div><div class="ft"><b>${esc(c.name)}</b> se registró con el QR</div><div class="fm">${c.fresh?'Ahora':'21 nov · '+ri(22,23)+':'+String(ri(0,59)).padStart(2,'0')} · ${c.club?'Honor Club':''}</div></div></li>`).join('');
+  playMsg();
+}
+$('#simScan').onclick=()=>{state.scans+=3;state.attendees+=0;register();};
+
+/* ---------- AUTOMATIONS ---------- */
+const AUTOS=[
+  {name:'Registro en Honor Club',desc:'Del escaneo del QR a miembro de la comunidad',icon:'star',col:['var(--violet-soft)','var(--violet)'],on:true,runs:93,rate:'100%',time:'2 s',
+   nodes:[['trigger','Disparador','Nuevo registro mediante QR','qr'],['action','Acción','Crear ficha en el CRM','db'],['action','Acción','Añadir etiqueta del evento','tag'],['action','Acción','Incorporar al Honor Club','star'],['action','Acción','Preparar mensaje de bienvenida','mail']]},
+  {name:'Agradecimiento después del evento',desc:'Mensaje y contenido a las 24 h',icon:'send',col:['var(--brand-soft)','var(--brand)'],on:true,runs:93,rate:'97% abiertos',time:'24 h',
+   nodes:[['trigger','Disparador','Asistencia registrada en un evento','user'],['wait','Espera','24 horas','clock'],['action','Acción','Enviar mensaje de agradecimiento','send'],['action','Acción','Compartir fotografías y vídeos','img']]},
+  {name:'Aviso exclusivo de lanzamiento',desc:'Acceso anticipado para el Honor Club',icon:'bell',col:['var(--amber-soft)','var(--amber)'],on:true,runs:3,rate:'612 avisos',time:'—',
+   nodes:[['trigger','Disparador','Nuevo lanzamiento de producto','box'],['cond','Condición','¿Pertenece al segmento Honor Club?','split'],['action','Acción','Preparar aviso exclusivo','bell']]},
+  {name:'Lista de espera de tallas agotadas',desc:'Avisa cuando vuelve la talla',icon:'box',col:['var(--blue-soft)','var(--blue)'],on:true,runs:57,rate:'57 en espera',time:'—',
+   nodes:[['trigger','Disparador','Talla agotada','box'],['action','Acción','Permitir que el cliente se apunte','form'],['trigger','Disparador posterior','Reposición de stock','box'],['action','Acción','Generar aviso para los interesados','mail']]},
+  {name:'Alerta de stock',desc:'Antes de quedarse sin una talla',icon:'bolt',col:['var(--green-soft)','var(--green)'],on:true,runs:12,rate:'12 alertas',time:'Inmediato',
+   nodes:[['trigger','Disparador','Stock inferior a 10 unidades','box'],['action','Acción','Generar notificación al equipo','bell']]},
+  {name:'Clientes inactivos',desc:'Detecta a quien lleva tiempo sin actividad',icon:'moon',col:['#f0eee9','var(--text-2)'],on:false,runs:0,rate:'Pausada',time:'—',
+   nodes:[['trigger','Disparador','Sin actividad durante 120 días','clock'],['action','Acción','Identificarlo en el CRM','db'],['action','Acción','Incluirlo en el segmento «Inactivos»','tag']]},
+  {name:'Informe semanal',desc:'Cada lunes a las 08:00',icon:'chart',col:['var(--green-soft)','var(--green)'],on:true,runs:22,rate:'22 enviados',time:'8 s',
+   nodes:[['trigger','Disparador','Cada semana · lunes 08:00','clock'],['action','Acción','Recopilar datos de Shopify, CRM y eventos','db'],['action','Acción','Generar informe de actividad','chart']]}
+];
+function renderAutoList(){
+  $('#alist').innerHTML=AUTOS.map((a,i)=>`<div class="aitem ${i===state.autoSel?'sel':''}" data-i="${i}"><div class="ai" style="background:${a.col[0]};color:${a.col[1]}">${ICON[a.icon]}</div><div style="min-width:0"><b>${a.name}</b><small>${a.on?`${fmt(a.runs)} ejecuciones`:'Pausada'}</small></div><button class="toggle ${a.on?'on':''}" data-t="${i}" aria-label="Activar"></button></div>`).join('');
+  $('#autoCount').textContent=AUTOS.filter(a=>a.on).length+' de '+AUTOS.length+' activas';
+}
+function renderAutoDetail(){
+  const a=AUTOS[state.autoSel];
+  $('#aTitle').textContent=a.name;$('#aDesc').textContent=a.desc;
+  $('#aState').innerHTML=a.on?'<span class="status ok">Activa</span>':'<span class="status off">Pausada</span>';
+  $('#aStats').innerHTML=[['Ejecuciones',fmt(a.runs)],['Resultado',a.rate],['Tiempo',a.time]].map(s=>`<div style="background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:9px 12px"><div class="muted" style="font-size:11.5px">${s[0]}</div><b style="font-size:15px">${s[1]}</b></div>`).join('');
+  let h='<div class="paused-banner">Automatización pausada · actívala para que se ejecute</div>';
+  a.nodes.forEach((n,i)=>{
+    if(i>0){const cond=a.nodes[i-1][0]==='cond';h+=`<div class="edge ${cond?'tall':''}" data-e="${i}"><span class="pulse"></span>${cond?'<span class="edge-label">Sí, es miembro</span><span class="edge-label no">No → no se envía</span>':''}</div>`}
+    h+=`<div class="node ${n[0]}" data-n="${i}"><div class="ni">${ICON[n[3]]}</div><div><div class="nt">${n[1]}</div><b>${n[2]}</b></div><span class="ns">${i===0?'inicio':'paso '+i}</span></div>`;
+  });
+  $('#canvas').innerHTML=h;$('#canvas').classList.toggle('paused',!a.on);
+  $('#runAuto').disabled=!a.on||state.running;
+}
+$('#alist').addEventListener('click',e=>{
+  const t=e.target.closest('.toggle');
+  if(t){e.stopPropagation();const a=AUTOS[+t.dataset.t];a.on=!a.on;toast(`${a.name}: ${a.on?'activada':'pausada'}`,a.on?'Se ejecutará en el próximo disparador':'No se ejecutará hasta que la actives');pushActivity('bolt',`Automatización <b>${a.name}</b> ${a.on?'activada':'pausada'}`);if(a.on&&a.rate==='Pausada')a.rate='Activa';renderAutoList();renderAutoDetail();return}
+  const it=e.target.closest('.aitem');if(it&&!state.running){state.autoSel=+it.dataset.i;renderAutoList();renderAutoDetail();$('#runlog').innerHTML='<span class="t">// Registro de ejecución (simulado). Pulsa «Ejecutar simulación».</span>'}
+});
+function log(msg,cls=''){const t=new Date();const ts=t.toTimeString().slice(0,8);$('#runlog').insertAdjacentHTML('beforeend',`<div><span class="t">${ts}</span> <span class="${cls}">${msg}</span></div>`);$('#runlog').scrollTop=1e6}
+$('#runAuto').onclick=()=>{
+  const a=AUTOS[state.autoSel];if(!a.on||state.running)return;state.running=true;$('#runAuto').disabled=true;
+  $('#runlog').innerHTML='';log(`▶ Simulación iniciada: «${a.name}»`);
+  const nodes=$$('#canvas .node'),edges=$$('#canvas .edge');nodes.forEach(n=>{n.classList.remove('ok','running');n.querySelector('.ns').textContent=n.dataset.n==0?'inicio':'paso '+n.dataset.n});edges.forEach(e=>e.classList.remove('lit'));
+  const sample=pick(customers.filter(c=>c.club)).name;
+  const msgs={0:`Disparador recibido · ${sample}`};
+  let i=0;
+  const step=()=>{
+    if(i>0){nodes[i-1].classList.replace('running','ok');nodes[i-1].querySelector('.ns').textContent='✓ hecho'}
+    if(i>=nodes.length){log(`✓ Completada sin errores · ${nodes.length} pasos`, 'ok');a.runs++;renderAutoList();renderAutoDetail();state.running=false;$('#runAuto').disabled=false;toast('Simulación completada',`${a.name} · ${nodes.length} pasos sin errores`);pushActivity('bolt',`Simulación de <b>${a.name}</b> completada`);return}
+    const go2=()=>{nodes[i].classList.add('running');nodes[i].querySelector('.ns').innerHTML='<span class="spinner"></span>';const n=a.nodes[i];log(`${n[1]} → ${n[2]}${i===0?' · '+sample:''}${n[0]==='wait'?' (acelerado para la demo)':''}${n[0]==='cond'?' · resultado: sí':''}`,n[0]==='action'?'ok':'');i++;setTimeout(step,n[0]==='wait'?1100:750)};
+    if(i>0){edges[i-1].classList.add('lit');setTimeout(go2,420)}else go2();
+  };
+  step();
+};
+
+/* ---------- SYSTEMS ---------- */
+const SYS=[
+  {t:'Web y Shopify',ic:'shop',rows:[['shop','Estado de la tienda','spaceverona.com · checkout operativo','ok','Online'],['check','Revisión técnica','Tema, enlaces rotos y SEO básico','ok','Sin errores'],['speed','Rendimiento móvil','Carga media 1,9 s · imágenes optimizadas','ok','92/100'],['box','Aplicaciones instaladas','6 apps · 2 sin uso detectadas','warn','Revisar'],['save','Mantenimiento','Última actualización del tema: 18 nov','ok','Al día']],extra:'uptime'},
+  {t:'Dominio y correo',ic:'mail',rows:[['globe','Dominio spaceverona.com','Renovación automática · caduca en 287 días','ok','Activo'],['mail','Correo corporativo','info@ · equipo@ · pedidos@ spaceverona.com','ok','3 cuentas'],['check','SPF','v=spf1 include:_spf.google.com ~all','ok','Correcto'],['check','DKIM (Google + Shopify)','Firmas verificadas','ok','Correcto'],['check','DMARC','p=quarantine · informes semanales','ok','Correcto'],['bell','Incidencias de entrega','0 rebotes en los últimos 7 días','ok','0']],extra:'dns'},
+  {t:'Seguridad',ic:'lock',rows:[['lock','Accesos a Shopify','4 usuarios · verificación en 2 pasos en todos','ok','2FA 4/4'],['people','Revisión de permisos','Colaboradores con permisos mínimos','ok','Revisado'],['save','Copias de seguridad','Productos, clientes, pedidos y tema · diaria 03:00','ok','Hoy'],['check','Comprobaciones de seguridad','SSL, apps de terceros y contraseñas','ok','Superadas']],extra:'ring'},
+  {t:'Sistemas',ic:'server',rows:[['server','Estado general','Todas las integraciones respondiendo','ok','Operativo'],['bell','Incidencias abiertas','Ninguna','ok','0'],['clock','Última revisión','Hoy 07:00 · automática','ok','OK']],extra:'tasks'}
+];
+let TASKS=[['Eliminar 2 apps de Shopify sin uso',false],['Revisar textos del banner (L´arte → L\'arte)',true],['Unificar nombre de colección «Héritage»',true],['Configurar QR del próximo evento',false],['Revisión mensual de permisos',false]];
+function renderSystems(){
+  $('#sysKpis').innerHTML=kpiCard('Disponibilidad (30 d)','99,98%','Tienda y checkout',[99.9,99.95,99.99,99.97,100,99.98,99.98],'var(--green)')+kpiCard('Velocidad móvil','92','PageSpeed · <span class="up">+31</span> desde la optimización',[61,64,70,78,85,90,92],'var(--green)')+kpiCard('Entregabilidad del correo','99,2%','Llegan a la bandeja de entrada',[71,74,90,97,98,99,99.2],'var(--blue)')+kpiCard('Incidencias abiertas','0','Tiempo medio de resolución: 3 h');
+  $('#sysGrid').innerHTML=SYS.map((s,si)=>`<div class="card" data-sys="${si}"><div class="card-head"><div class="si" style="width:30px;height:30px;border-radius:8px;background:var(--surface-2);border:1px solid var(--border);display:grid;place-items:center">${ICON[s.ic].replace('<svg','<svg width="15" height="15"')}</div><h3>${s.t}</h3><div class="right"><span class="status ${s.rows.some(r=>r[3]==='warn')?'warn':'ok'}">${s.rows.some(r=>r[3]==='warn')?'1 aviso':'Correcto'}</span></div></div>
+    ${s.extra==='uptime'?`<div style="padding:14px 18px 6px;font-size:12px" class="muted">Disponibilidad últimos 45 días</div><div class="uptime">${Array.from({length:45},(_,i)=>`<i class="${i===17?'w':''}" data-tip="${dshort(daysAgo(44-i))} · ${i===17?'99,2% (mantenimiento programado)':'100%'}"></i>`).join('')}</div>`:''}
+    ${s.extra==='ring'?`<div class="gauge"><svg class="ring" viewBox="0 0 84 84"><circle cx="42" cy="42" r="34" fill="none" stroke="#efede8" stroke-width="8"/><circle cx="42" cy="42" r="34" fill="none" stroke="var(--green)" stroke-width="8" stroke-linecap="round" stroke-dasharray="${2*Math.PI*34}" stroke-dashoffset="${2*Math.PI*34*.04}" transform="rotate(-90 42 42)"/><text x="42" y="47" text-anchor="middle" style="font-size:18px;font-weight:650;fill:var(--text)">96</text></svg><div><b>Puntuación de seguridad</b><div class="muted" style="font-size:12.5px">Por encima de la media de tiendas Shopify de su tamaño. Pendiente: retirar 2 apps sin uso.</div></div></div>`:''}
+    <div style="padding-top:${s.extra?0:8}px">${s.rows.map(r=>`<div class="svc"><div class="si">${ICON[r[0]]}</div><div>${r[1]}<small>${r[2]}</small></div><div class="r"><span class="status ${r[3]}">${r[4]}</span></div></div>`).join('')}</div>
+    ${s.extra==='dns'?`<details style="border-top:1px solid #f0eee9"><summary style="padding:10px 18px;cursor:pointer;font-size:12.5px;color:var(--muted)">Ver registros DNS verificados</summary><table class="dns"><tr><td>MX</td><td>@</td><td>smtp.google.com</td></tr><tr><td>TXT</td><td>@</td><td>v=spf1 include:_spf.google.com ~all</td></tr><tr><td>TXT</td><td>google._domainkey</td><td>v=DKIM1; k=rsa; p=MIIBIj…</td></tr><tr><td>CNAME</td><td>shopify1._domainkey</td><td>shopify1._domainkey.shops.shopify…</td></tr><tr><td>TXT</td><td>_dmarc</td><td>v=DMARC1; p=quarantine; rua=…</td></tr></table></details>`:''}
+    ${s.extra==='tasks'?`<div class="h5" style="padding:0 18px;margin:14px 0 4px">Tareas pendientes</div>${TASKS.map((t,i)=>`<label class="task ${t[1]?'done':''}"><input type="checkbox" data-task="${i}" ${t[1]?'checked':''}><span>${t[0]}</span></label>`).join('')}`:''}
+  </div>`).join('');
+  $('#lastCheck').textContent='Última revisión: hoy 07:00';
+}
+document.addEventListener('change',e=>{if(e.target.dataset.task!=null){TASKS[+e.target.dataset.task][1]=e.target.checked;e.target.closest('.task').classList.toggle('done',e.target.checked);if(e.target.checked)toast('Tarea completada',TASKS[+e.target.dataset.task][0])}});
+$('#runCheck').onclick=()=>{
+  const btn=$('#runCheck');btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Revisando…';
+  const st=$$('#sysGrid .svc .status');st.forEach(s=>{s.dataset.o=s.className;s.dataset.t=s.textContent;s.className='status';s.innerHTML='<span class="spinner"></span>'});
+  st.forEach((s,i)=>setTimeout(()=>{s.className=s.dataset.o;s.textContent=s.dataset.t},300+i*120));
+  setTimeout(()=>{btn.disabled=false;btn.innerHTML=ICON.check.replace('<svg','<svg width="15" height="15"')+' Revisión completada';$('#lastCheck').textContent='Última revisión: ahora mismo';toast('Revisión técnica completada',`${st.length} comprobaciones · 0 errores · 1 aviso`);pushActivity('sys','Revisión técnica completada: <b>0 errores</b>, 1 aviso (apps sin uso)');setTimeout(()=>{btn.innerHTML=ICON.speed.replace('<svg','<svg width="15" height="15"')+' Ejecutar revisión'},2500)},500+st.length*120);
+};
+
+/* ---------- REPORTS ---------- */
+function setRep(i){$$('#repTabs button').forEach(b=>b.classList.toggle('on',+b.dataset.r===i));$('#rep0').style.display=i?'none':'';$('#rep1').style.display=i?'':'none';if(i)renderEventReport()}
+$('#repTabs').addEventListener('click',e=>{const b=e.target.closest('button');if(b)setRep(+b.dataset.r)});
+function renderReports(){
+  const fresh=customers.filter(c=>c.fresh).length;
+  $('#repKpis').innerHTML=kpiCard('Crecimiento Honor Club (12 m)','+'+Math.round((clubTotal()-312)/312*100)+'%',`${fmt(clubTotal())} miembros`)+kpiCard('Nuevos miembros este mes',fmt(46+fresh),'41% procedentes de eventos')+kpiCard('Clientes recurrentes','34%','<span class="up">+3 pts</span> trimestre')+kpiCard('Asistentes que compran después','19%','En los 30 días siguientes');
+  const cs=clubSeries.slice();cs[11]=clubTotal();const nw=cs.map((v,i)=>i?v-cs[i-1]:20);
+  lineChart($('#repClub'),[{name:'Total',data:cs,color:'#7a1a14',area:true},{name:'Nuevos',data:nw,color:'#d9b3ad',w:2}],['dic','ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov'],{h:220});
+  barChart($('#repEvents'),[[38,9],[51,14],[62,19],[state.eventRegs-state.eventExisting,state.eventExisting]],['Junio','Julio','Septiembre','Noviembre'],{colors:['var(--brand)','#e2c6c1'],w:420,h:220,highlight:null});
+  donut($('#repNew'),[{l:'Nuevos miembros',v:state.eventRegs-state.eventExisting,c:'#7a1a14'},{l:'Ya eran miembros',v:state.eventExisting,c:'#d9b3ad'}],[Math.round((state.eventRegs-state.eventExisting)/state.eventRegs*100)+'%','nuevos']);
+  barChart($('#repPart'),[312,104,41,12],['1 evento','2 eventos','3 eventos','4+'],{w:320,h:190});
+  barChart($('#repAfter'),[8,13,17,19],['7 d','14 d','21 d','30 d'],{w:300,h:190,unit:'%',max:25});
+  const AR=[['Registro en Honor Club',100,'100%'],['Agradecimiento post-evento',97,'97% abiertos'],['Aviso de lanzamiento',74,'74% abiertos'],['Lista de espera',41,'41% compran'],['Informe semanal',100,'22/22'],['Alerta de stock',100,'12/12']];
+  $('#repAuto').innerHTML=AR.map(a=>`<div class="bh"><span>${a[0]}</span><div class="t"><i style="width:0" data-w="${a[1]}"></i></div><b>${a[2]}</b></div>`).join('');
+  setTimeout(()=>$$('#repAuto i').forEach(i=>i.style.width=i.dataset.w+'%'),80);
+}
+function renderEventReport(){
+  const n=state.eventRegs-state.eventExisting;
+  $('#rsKpis').innerHTML=[['Asistentes',fmt(state.attendees)],['Escaneos QR',fmt(state.scans)],['Registros',fmt(state.eventRegs)],['Nuevos miembros',fmt(n)]].map(k=>`<div><span>${k[0]}</span><b>${k[1]}</b></div>`).join('');
+  barChart($('#rsHourly'),[6,14,22,19,16,9,7],['22h','23h','00h','01h','02h','03h','04h'],{w:420,h:190,highlight:2});
+  const B=[['Conversión escaneo → registro',Math.round(state.eventRegs/state.scans*100)],['Asistentes registrados',Math.round(state.eventRegs/state.attendees*100)],['Nuevos sobre registrados',Math.round(n/state.eventRegs*100)],['Abren el agradecimiento',97],['Repiten de eventos anteriores',34]];
+  $('#rsBars').innerHTML=B.map(b=>`<div class="bh"><span>${b[0]}</span><div class="t"><i style="width:0" data-w="${b[1]}"></i></div><b>${b[1]}%</b></div>`).join('');
+  setTimeout(()=>$$('#rsBars i').forEach(i=>i.style.width=i.dataset.w+'%'),80);
+  $('#rsConc').innerHTML=[`<b>${fmt(n)} personas nuevas</b> se han incorporado al Honor Club gracias al evento.`,`El ${Math.round(state.eventRegs/state.scans*100)}% de quienes escanearon el QR completó el registro: el formulario corto funciona.`,`El pico de registros fue a medianoche: conviene recordar el QR en ese momento.`,`Un 34% de los asistentes ya había venido a eventos anteriores: la comunidad repite.`].map(x=>`<li>${x}</li>`).join('');
+}
+$('#exportBtn').onclick=()=>{
+  const isEv=$('#rep1').style.display!=='none';
+  $('#modal').innerHTML=`<h3>Exportar informe</h3><div class="muted" style="font-size:13px">${isEv?'Informe del Community Event — Honor Club':'Informe general de comunidad'} · PDF</div><div class="progress"><i id="pg"></i></div><div class="muted" style="font-size:12px" id="pgt">Recopilando datos…</div><div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px"><button class="btn" id="mClose">Cerrar</button><button class="btn primary" id="mPrint" disabled>Imprimir / Guardar PDF</button></div>`;
+  $('#modal').classList.add('on');$('#scrim').classList.add('on');
+  const steps=['Recopilando datos…','Generando gráficos…','Maquetando informe…','Informe listo'];let p=0;
+  const iv=setInterval(()=>{p+=25;$('#pg').style.width=p+'%';$('#pgt').textContent=steps[p/25-1];if(p>=100){clearInterval(iv);$('#mPrint').disabled=false;toast('Informe generado','Listo para imprimir o guardar como PDF')}},450);
+  $('#mClose').onclick=closeDrawer;$('#mPrint').onclick=()=>{closeDrawer();setTimeout(()=>{try{window.print()}catch(e){}toast('Informe listo','Si no se abre el diálogo de impresión, abre la demo como archivo en el navegador')},250)};
+};
+
+/* ---------- notifications ---------- */
+$('#bell').onclick=e=>{e.stopPropagation();$('#notifPanel').classList.toggle('on');$('#bell .ping').style.display='none'};
+document.addEventListener('click',e=>{if(!e.target.closest('#notifPanel')&&!e.target.closest('#bell'))$('#notifPanel').classList.remove('on')});
+
+/* ---------- render registry ---------- */
+const RENDER={dashboard:renderDash,crm:renderCRM,club:()=>{renderFlow();renderClub();setTimeout(playFlow,350)},events:()=>{renderPhases();renderEvents()},auto:()=>{renderAutoList();renderAutoDetail()},systems:renderSystems,reports:()=>{renderReports();if($('#rep1').style.display!=='none')renderEventReport()}};
+
+/* ---------- ambient live activity ---------- */
+const AMBIENT=[
+  ()=>pushActivity('stock','Alerta de stock: <b>Sudadera Amore Eterno · talla S</b> con 7 unidades'),
+  ()=>pushActivity('club',`<b>${pick(FN)} ${pick(LN)}</b> se ha apuntado a la lista de espera del <b>Polo Héritage · L</b>`),
+  ()=>pushActivity('mail','Mensaje de agradecimiento abierto por <b>'+ri(3,9)+' asistentes</b> más'),
+  ()=>pushActivity('sys','Comprobación automática de dominio y certificados SSL: <b>correcta</b>'),
+];
+let amb=0;setInterval(()=>{if(document.hidden)return;AMBIENT[amb++%AMBIENT.length]();if($('#page-dashboard').classList.contains('active'))renderFeed()},14000);
+
+let rz;window.addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{const cur=$('.page.active').id.replace('page-','');RENDER[cur]&&RENDER[cur]()},250)});
+/* ---------- boot ---------- */
+seed=12345;
+renderNotifs();
+$('#navClub').textContent='+46';
+const start=(location.hash||'#dashboard').slice(1);
+go(TITLES[start]?start:'dashboard');
+})();
+</script>
+</body>
+</html>
