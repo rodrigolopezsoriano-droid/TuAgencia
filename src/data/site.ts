@@ -14,8 +14,8 @@ export const SITE = {
   whatsapp: '',
   instagram: 'https://www.instagram.com/tuagenciatech',
   zona: ['Alcalá de Henares', 'Madrid'],
-  // PENDIENTE: enlace de Cal.com o Calendly para reservar la llamada (vacío = se usa el formulario)
-  agenda: '',
+  // Página propia de reservas, conectada a Google Calendar y Google Meet. Ver docs/AGENDA.md
+  agenda: '/reservar',
 };
 
 export const NAV = [
