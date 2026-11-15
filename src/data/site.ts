@@ -27,19 +27,19 @@ export const NAV = [
 
 export const EQUIPO = [
   {
-    nombre: 'Pablo Villalvilla',
+    nombre: 'Pablo Villalvilla Martín',
     rol: 'Sistemas, servidores y automatización',
     formacion: 'Técnico Superior en ASIR',
     inicial: 'P',
   },
   {
-    nombre: 'Jorge',
+    nombre: 'Jorge Jiménez Gutiérrez',
     rol: 'Infraestructura y soporte a clientes',
     formacion: 'Técnico Superior en ASIR',
     inicial: 'J',
   },
   {
-    nombre: 'Rodrigo López',
+    nombre: 'Rodrigo López Soriano',
     rol: 'Desarrollo e inteligencia artificial',
     formacion: 'Ingeniería de Computadores · UAH',
     inicial: 'R',
