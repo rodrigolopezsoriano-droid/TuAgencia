@@ -1,9 +1,10 @@
-// ⚠ PENDIENTE: completa estos datos antes de publicar (los exige la LSSI).
-// No pongáis "SL" si la sociedad no está constituida: si facturáis como autónomo,
-// el titular es la persona física con su NIF.
+// Datos del titular que exige la LSSI (aviso legal) y el RGPD (política de privacidad).
+// El titular es una persona física (no hay sociedad constituida): no escribir "SL" aquí
+// hasta que exista. Si cambia el titular, se cambia solo en este archivo.
 export const TITULAR = {
-  nombre: 'PENDIENTE: nombre del titular o razón social',
-  nif: 'PENDIENTE: NIF',
-  domicilio: 'PENDIENTE: domicilio a efectos de notificaciones',
+  nombre: 'Pablo Villalvilla Martín',
+  nif: '09121697N',
+  // Falta el número de portal y el código postal: añadirlos cuando se confirmen.
+  domicilio: 'Calle de la Aviación Española, Alcalá de Henares (Madrid)',
   email: 'admin@tuagencia.tech',
 };
