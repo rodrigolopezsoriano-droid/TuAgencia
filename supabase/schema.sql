@@ -299,5 +299,28 @@ grant  execute on function public.es_staff()     to authenticated;
 grant  execute on function public.es_admin()     to authenticated;
 grant  execute on function public.mi_cliente_id() to authenticated;
 
+-- ════════════════════════════════════════════════════════════════
+--  CUENTAS QUE YA EXISTÍAN antes de esta versión: se les crea su perfil y su ficha de cliente
+--  (no toca las fichas que ya estuvieran creadas a mano)
+-- ════════════════════════════════════════════════════════════════
+insert into public.perfiles (user_id, email, nombre, negocio, telefono)
+select u.id, lower(u.email),
+       left(nullif(btrim(u.raw_user_meta_data ->> 'nombre'),   ''), 120),
+       left(nullif(btrim(u.raw_user_meta_data ->> 'negocio'),  ''), 160),
+       left(nullif(btrim(u.raw_user_meta_data ->> 'telefono'), ''), 40)
+from auth.users u
+where u.email is not null
+on conflict (user_id) do nothing;
+
+insert into public.clientes (user_id, negocio, contacto, email)
+select u.id,
+       coalesce(left(nullif(btrim(u.raw_user_meta_data ->> 'negocio'), ''), 160), 'Sin indicar'),
+       left(nullif(btrim(u.raw_user_meta_data ->> 'nombre'), ''), 120),
+       lower(u.email)
+from auth.users u
+where u.email is not null
+  and not exists (select 1 from public.staff s where s.email = lower(u.email))
+  and not exists (select 1 from public.clientes c where c.user_id = u.id);
+
 -- NOTA: desde la web NUNCA se usa la clave service_role. El Table Editor de Supabase sí la usa
 -- (se salta RLS) y es donde, si hace falta, tocáis cosas a mano.
