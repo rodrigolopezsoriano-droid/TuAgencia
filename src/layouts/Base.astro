@@ -65,9 +65,21 @@ const enHref = lang === 'en' ? Astro.url.pathname : altHref ?? '/en/';
     <meta property="og:image" content={ogImage} />
     <meta name="twitter:card" content="summary_large_image" />
     <script type="application/ld+json" set:html={JSON.stringify([org, ...extra])} />
-    <script is:inline>document.documentElement.classList.remove('no-js')</script>
+    <script is:inline>
+      document.documentElement.classList.remove('no-js');
+      try { if (sessionStorage.getItem('ta_pre') === '1') document.documentElement.classList.add('no-pre'); } catch (e) {}
+    </script>
   </head>
   <body>
+    <!-- Animación del logo al entrar (una vez por visita) -->
+    <div id="preloader" aria-hidden="true">
+      <svg class="pl-logo" viewBox="0 0 64 64" fill="none">
+        <path class="pl-path" d="M32 8 L56 52 H44 L32 28 L20 52 H8 Z" stroke="#6366F1" stroke-width="2.5" stroke-linejoin="round" />
+        <path class="pl-path pl-d" d="M18 40 H46" stroke="#6366F1" stroke-width="2.5" stroke-linecap="round" />
+        <circle class="pl-dot" cx="32" cy="28" r="3" fill="#6366F1" />
+      </svg>
+      <div class="pl-word">TUAGENCIA<span>.</span></div>
+    </div>
     <a href="#main" class="sr-only">Saltar al contenido</a>
     <Header lang={lang} altHref={lang === 'es' ? enHref : esHref} />
     <main id="main"><slot /></main>
@@ -77,6 +89,24 @@ const enHref = lang === 'en' ? Astro.url.pathname : altHref ?? '/en/';
         <svg viewBox="0 0 24 24" width="26" height="26" fill="#fff" aria-hidden="true"><path d="M20.5 3.5A11.8 11.8 0 0 0 1.9 17.7L.5 23.5l6-1.6A11.8 11.8 0 0 0 20.5 3.5ZM12 21.3a9.8 9.8 0 0 1-5-1.4l-.4-.2-3.6.9 1-3.5-.2-.4a9.8 9.8 0 1 1 8.2 4.6Zm5.4-7.3c-.3-.2-1.8-.9-2-1s-.5-.1-.7.1-.8 1-1 1.2-.4.2-.7.1a8 8 0 0 1-4-3.5c-.3-.5.3-.5.9-1.6.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6a1.1 1.1 0 0 0-.8.4 3.4 3.4 0 0 0-1 2.5 5.9 5.9 0 0 0 1.2 3.1 13.4 13.4 0 0 0 5.2 4.6c1.9.8 2.7.9 3.6.7a3.1 3.1 0 0 0 2-1.4 2.5 2.5 0 0 0 .2-1.4c-.1-.1-.3-.2-.6-.3Z"/></svg>
       </a>
     )}
+    <script>
+      // Preloader: se muestra el logo al menos 1,3 s la primera vez de cada visita
+      const pl = document.getElementById('preloader');
+      if (pl) {
+        if (document.documentElement.classList.contains('no-pre')) pl.remove();
+        else {
+          const t0 = performance.now();
+          const ocultar = () => {
+            pl.classList.add('hidden');
+            try { sessionStorage.setItem('ta_pre', '1'); } catch {}
+            setTimeout(() => pl.remove(), 900);
+          };
+          const listo = () => setTimeout(ocultar, Math.max(0, 1300 - (performance.now() - t0)));
+          document.readyState === 'complete' ? listo() : addEventListener('load', listo, { once: true });
+          setTimeout(ocultar, 4000); // por si algo tarda de más
+        }
+      }
+    </script>
     <script>
       // Revelado suave al hacer scroll (respeta "reducir movimiento")
       const els = document.querySelectorAll('.reveal');
@@ -88,6 +118,26 @@ const enHref = lang === 'en' ? Astro.url.pathname : altHref ?? '/en/';
         els.forEach((el) => io.observe(el));
       } else els.forEach((el) => el.classList.add('is-in'));
     </script>
+    <style is:global>
+      #preloader {
+        position: fixed; inset: 0; z-index: 9999; background: #050508;
+        display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px;
+        transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.7s;
+        animation: pl-salida 0.7s ease 4.5s forwards; /* red de seguridad si el script no llega a ejecutarse */
+      }
+      #preloader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+      .pl-logo { width: 64px; height: 64px; }
+      .pl-path { stroke-dasharray: 200; stroke-dashoffset: 200; animation: pl-dibuja 1s cubic-bezier(0.4, 0, 0.2, 1) 0.1s forwards; }
+      .pl-d { animation-delay: 0.4s; }
+      .pl-dot { opacity: 0; animation: pl-sube 0.3s ease 0.9s forwards; }
+      .pl-word { font-weight: 700; font-size: 18px; letter-spacing: 0.08em; color: #8887a8; opacity: 0; animation: pl-sube 0.5s ease 0.8s forwards; }
+      .pl-word span { color: #6366f1; }
+      @keyframes pl-dibuja { to { stroke-dashoffset: 0; } }
+      @keyframes pl-sube { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+      @keyframes pl-salida { to { opacity: 0; visibility: hidden; } }
+      html.no-js #preloader, html.no-pre #preloader { display: none; }
+      @media (prefers-reduced-motion: reduce) { #preloader { display: none; } }
+    </style>
     <style>
       .wa { position: fixed; right: 20px; bottom: calc(20px + env(safe-area-inset-bottom)); width: 56px; height: 56px; border-radius: 50%; background: #25d366; display: grid; place-items: center; box-shadow: 0 10px 30px rgba(37, 211, 102, 0.4); z-index: 60; transition: transform 0.25s var(--ease); }
       .wa:active { transform: scale(0.94); }
