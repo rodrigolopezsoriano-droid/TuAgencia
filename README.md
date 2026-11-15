@@ -32,13 +32,15 @@ Sin Supabase configurado, la web funciona igual: el formulario abre el correo y 
 
 | Quiero cambiar… | Archivo |
 |---|---|
-| Email, WhatsApp, Instagram, enlace de Calendly | `src/data/site.ts` |
+| Email, WhatsApp, Instagram | `src/data/site.ts` |
+| Horario de las llamadas (agenda propia) | `src/data/agenda.ts` · guía en `docs/AGENDA.md` |
+| Mostrar el nombre y las fotos del caso de la barbería | `npm run descensurar` (ver `src/data/casos.ts`) |
 | Equipo (nombres, roles, formación) | `src/data/site.ts` → `EQUIPO` |
 | Preguntas frecuentes | `src/data/site.ts` → `FAQ` |
 | Soluciones (se crea una página por cada una) | `src/data/soluciones.ts` |
 | Sectores (se crea una página por cada uno) | `src/data/sectores.ts` |
 | Precios | `src/data/precios.ts` |
-| Datos legales (**⚠ PENDIENTE**) | `src/data/legal.ts` |
+| Datos legales | `src/data/legal.ts` |
 | Colores y tipografía | `src/styles/global.css` (variables `--brand`, `--ink`…) |
 | Página de inicio | `src/pages/index.astro` |
 | Versión en inglés | `src/pages/en/index.astro` |
@@ -111,8 +113,10 @@ El archivo `public/_redirects` ya redirige las URLs antiguas (`contactanos.html`
 
 ## 6. Pendientes antes de publicar
 
-- [ ] `src/data/legal.ts`: titular, NIF y domicilio reales. No uséis "SL" si la sociedad no está constituida.
-- [ ] `src/data/site.ts`: número de WhatsApp Business y enlace de Calendly o Cal.com, cuando los tengáis.
-- [ ] Apellidos y fotos del equipo.
-- [ ] Permiso de la barbería para nombrarla en el caso de éxito (de momento sale anónima).
+- [ ] **Agenda de llamadas** (`/reservar`): crear las credenciales de Google y ponerlas en Cloudflare. Sin esto, la página avisa de que el calendario se está configurando. Guía paso a paso: `docs/AGENDA.md`.
+- [ ] Revisar el horario de partida de `src/data/agenda.ts` (lunes a viernes, 10–14 h y 16–19 h).
+- [ ] `src/data/legal.ts`: falta el número de portal y el código postal del domicilio.
+- [ ] `src/data/site.ts`: número de WhatsApp Business.
+- [ ] Fotos del equipo en `public/equipo/`.
+- [ ] Permiso del cliente de la barbería: mientras tanto el caso sale anónimo y con fotos difuminadas. Cuando lo den: `npm run descensurar`.
 - [ ] Revisar los precios de `src/data/precios.ts`.

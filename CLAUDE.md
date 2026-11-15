@@ -13,13 +13,15 @@ Estilo Apple (limpio, mucho espacio, color de marca `#6366F1`), SEO local y cost
 ## Dónde se edita cada cosa
 | Quiero cambiar… | Archivo |
 |---|---|
-| Email, WhatsApp, Instagram, enlace de agenda | `src/data/site.ts` |
+| Email, WhatsApp, Instagram | `src/data/site.ts` |
+| Horario de llamadas (agenda propia en `/reservar`, Google Calendar + Meet) | `src/data/agenda.ts` · `docs/AGENDA.md` |
 | Equipo (nombres, roles, formación) | `src/data/site.ts` → `EQUIPO` |
 | Preguntas frecuentes | `src/data/site.ts` → `FAQ` |
 | Soluciones (una página por cada una) | `src/data/soluciones.ts` |
 | Sectores (una página por cada uno) | `src/data/sectores.ts` |
 | Precios | `src/data/precios.ts` |
-| Datos legales (**PENDIENTE**) | `src/data/legal.ts` |
+| Datos legales (titular, NIF, domicilio) | `src/data/legal.ts` |
+| Caso de la barbería: censurado / con nombre | `src/data/casos.ts` (no editar a mano) |
 | Colores y tipografía | `src/styles/global.css` |
 | Portada / versión en inglés | `src/pages/index.astro` · `src/pages/en/index.astro` |
 | Área de cliente | `src/pages/area-cliente.astro` · `src/scripts/supabase.ts` |
@@ -28,7 +30,7 @@ Estilo Apple (limpio, mucho espacio, color de marca `#6366F1`), SEO local y cost
 | Fotos del equipo | `public/equipo/` (`pablo.webp`, `jorge.webp`, `rodrigo.webp`) |
 
 Los informes `public/informe_*.pdf` y las demos `public/demo*.html` ya se han enviado a clientes: **no cambiar sus nombres ni URLs**.
-`scripts/reputacion_local.py` genera los informes de reputación (necesita una clave de Google Places en la constante `API_KEY`: ponerla solo en local y **nunca subirla** a GitHub; pendiente de pasarla a variable de entorno).
+`public/spaceverona/`, `demo_spaceverona.html` y `demo-spaceverona.html` son demos privadas para un cliente potencial (noindex). `scripts/reputacion_local.py` genera los informes de reputación (necesita una clave de Google Places en la constante `API_KEY`: ponerla solo en local y **nunca subirla** a GitHub; pendiente de pasarla a variable de entorno).
 
 ## Comandos
 ```bash
@@ -36,6 +38,8 @@ npm install       # instalar dependencias
 npm run dev       # servidor local en http://localhost:4321
 npm run build     # compila a dist/ (debe dar 25 páginas sin errores)
 npm run preview   # sirve dist/ en local
+npm test          # 18 pruebas de la agenda (simulan Google; no hacen falta credenciales)
+npm run descensurar / npm run censurar   # caso de la barbería (solo con permiso del cliente)
 ```
 
 ## Reglas
@@ -45,4 +49,6 @@ npm run preview   # sirve dist/ en local
 4. No crear cuentas, no cambiar DNS, no activar servicios de pago.
 5. Si algo falla o hay una decisión importante, parar y preguntar.
 6. Responder siempre en español.
-7. No poner "SL" en los datos legales mientras la sociedad no esté constituida.
+7. **Caso de la barbería:** mientras no haya permiso, no escribir su nombre ni subir fotos sin difuminar. Los originales están en `casos-privados/` (ignorada por Git) y no deben salir de ahí.
+8. Credenciales de Google (`GOOGLE_*`) y `TURNSTILE_SECRET`: solo en Cloudflare, nunca en el código ni en GitHub.
+9. No poner "SL" en los datos legales mientras la sociedad no esté constituida.
