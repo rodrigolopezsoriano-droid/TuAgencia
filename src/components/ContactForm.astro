@@ -1,0 +1,104 @@
+---
+import { SOLUCIONES } from '../data/soluciones';
+import { SITE } from '../data/site';
+---
+<form class="form card" data-form novalidate>
+  <div class="row">
+    <div class="field">
+      <label for="f-nombre">Nombre</label>
+      <input class="input" id="f-nombre" name="nombre" autocomplete="name" required />
+    </div>
+    <div class="field">
+      <label for="f-negocio">Negocio</label>
+      <input class="input" id="f-negocio" name="negocio" autocomplete="organization" placeholder="Ej.: Barbería Centro" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="field">
+      <label for="f-email">Email</label>
+      <input class="input" id="f-email" name="email" type="email" autocomplete="email" required />
+    </div>
+    <div class="field">
+      <label for="f-tel">Teléfono o WhatsApp</label>
+      <input class="input" id="f-tel" name="telefono" type="tel" autocomplete="tel" inputmode="tel" />
+    </div>
+  </div>
+  <div class="field">
+    <label for="f-interes">¿Qué te interesa?</label>
+    <select class="input" id="f-interes" name="interes">
+      <option value="">No lo sé todavía, quiero la auditoría</option>
+      {SOLUCIONES.map((s) => <option value={s.slug}>{s.nombre}</option>)}
+    </select>
+  </div>
+  <div class="field">
+    <label for="f-msg">¿Qué tarea te quita más tiempo?</label>
+    <textarea class="input" id="f-msg" name="mensaje" rows="4" placeholder="Ej.: contestar WhatsApps para dar citas, redactar informes, pasar pedidos a Excel…"></textarea>
+  </div>
+  <label class="check">
+    <input type="checkbox" name="acepta" required />
+    <span>He leído y acepto la <a href="/privacidad" target="_blank">política de privacidad</a>.</span>
+  </label>
+  <!-- trampa anti-spam: los humanos no la ven -->
+  <input type="text" name="web" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true" />
+  <button class="btn btn-primary" type="submit">Enviar y pedir mi auditoría</button>
+  <p class="status" role="status" aria-live="polite" data-status></p>
+</form>
+
+<style>
+  .form { display: grid; gap: 18px; padding: 36px; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .check { display: flex; gap: 10px; align-items: flex-start; font-size: 0.88rem; color: var(--muted); }
+  .check input { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--brand); }
+  .check a { color: var(--brand); }
+  .hp { position: absolute; left: -9999px; }
+  .status { margin: 0; font-size: 0.95rem; min-height: 1.5em; }
+  .status.ok { color: #15803d; }
+  .status.err { color: #b91c1c; }
+  @media (max-width: 640px) { .row { grid-template-columns: 1fr; } .form { padding: 22px; } }
+</style>
+
+<script define:vars={{ email: SITE.email }}>
+  window.__TA_EMAIL = email;
+</script>
+<script>
+  import { supabase } from '../scripts/supabase';
+  const form = document.querySelector<HTMLFormElement>('[data-form]');
+  const status = document.querySelector<HTMLElement>('[data-status]');
+  const params = new URLSearchParams(location.search);
+
+  // Si viene de la calculadora o de un plan, lo dejamos apuntado
+  const msg = form?.querySelector<HTMLTextAreaElement>('#f-msg');
+  if (msg && params.get('ahorro')) msg.value = `Según la calculadora podría ahorrar unos ${params.get('ahorro')} € al mes (${params.get('horas')} h/semana, ${params.get('personas')} personas).\n`;
+  if (msg && params.get('plan')) msg.value = `Me interesa el plan ${params.get('plan')}.\n`;
+  const sol = params.get('solucion');
+  if (sol) form?.querySelector<HTMLSelectElement>('#f-interes')?.querySelectorAll('option').forEach((o) => { if (o.value === sol) o.selected = true; });
+
+  const say = (t: string, cls: 'ok' | 'err') => { if (status) { status.textContent = t; status.className = `status ${cls}`; } };
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const d = Object.fromEntries(new FormData(form)) as Record<string, string>;
+    if (d.web) return; // bot
+    if (!d.nombre?.trim() || !/^\S+@\S+\.\S+$/.test(d.email ?? '')) return say('Escribe tu nombre y un email válido.', 'err');
+    if (!d.acepta) return say('Necesitamos que aceptes la política de privacidad.', 'err');
+
+    const lead = {
+      nombre: d.nombre.trim(), negocio: d.negocio || null, email: d.email.trim(), telefono: d.telefono || null,
+      interes: d.interes || null, mensaje: d.mensaje || null, origen: params.get('origen') || 'web',
+    };
+    const btn = form.querySelector('button')!;
+    btn.disabled = true;
+
+    if (supabase) {
+      const { error } = await supabase.from('leads').insert(lead);
+      btn.disabled = false;
+      if (error) return say('No se ha podido enviar. Escríbenos a ' + (window as any).__TA_EMAIL, 'err');
+      form.reset();
+      return say('¡Recibido! Te escribimos en menos de 24 horas laborables.', 'ok');
+    }
+    // Sin Supabase configurado: abrimos el correo como alternativa
+    btn.disabled = false;
+    const body = encodeURIComponent(Object.entries(lead).map(([k, v]) => `${k}: ${v ?? ''}`).join('\n'));
+    location.href = `mailto:${(window as any).__TA_EMAIL}?subject=Auditoría gratis&body=${body}`;
+  });
+</script>
