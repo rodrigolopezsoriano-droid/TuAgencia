@@ -1,0 +1,174 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Área cliente" description="Accede a tu panel de TuAgencia: horas ahorradas, estado de tus automatizaciones, informes y soporte." noindex>
+  <section class="section-tight soft area">
+    <div class="wrap">
+      <!-- LOGIN -->
+      <div class="login card" data-view="login">
+        <h1 class="h2">Área cliente</h1>
+        <p class="muted">Te enviamos un enlace de acceso a tu email. Sin contraseñas.</p>
+        <form data-login class="stack">
+          <div class="field">
+            <label for="l-email">Email</label>
+            <input class="input" id="l-email" type="email" autocomplete="email" required />
+          </div>
+          <button class="btn btn-primary" type="submit" style="width:100%">Enviarme el enlace</button>
+          <p class="msg" data-login-msg role="status" aria-live="polite"></p>
+        </form>
+        <button class="btn btn-ghost" data-demo style="width:100%">Ver un panel de ejemplo →</button>
+      </div>
+
+      <!-- PANEL -->
+      <div class="panel" data-view="panel" hidden>
+        <div class="demo-banner" data-demo-banner hidden>Panel de ejemplo con datos ficticios</div>
+        <div class="top">
+          <div>
+            <p class="eyebrow" data-negocio>Tu negocio</p>
+            <h1 class="h2">Hola, <span data-nombre>cliente</span>.</h1>
+          </div>
+          <button class="btn btn-sm" style="background:#fff" data-logout>Salir</button>
+        </div>
+
+        <div class="hero-stat card">
+          <span class="muted">Este mes has ahorrado</span>
+          <strong><span data-horas>0</span> horas</strong>
+          <span class="muted">≈ <b data-euros>0 €</b> de tiempo de tu equipo</span>
+        </div>
+
+        <div class="cols">
+          <div class="card">
+            <h2 class="h3">Tus automatizaciones</h2>
+            <ul class="autos" data-autos></ul>
+          </div>
+          <div class="card">
+            <h2 class="h3">Actividad del mes</h2>
+            <ul class="kpis" data-kpis></ul>
+          </div>
+        </div>
+
+        <div class="cols">
+          <div class="card">
+            <h2 class="h3">Informes</h2>
+            <ul class="docs" data-docs></ul>
+          </div>
+          <div class="card">
+            <h2 class="h3">¿Necesitas ayuda?</h2>
+            <form data-ticket class="stack">
+              <textarea class="input" rows="3" placeholder="Cuéntanos qué necesitas cambiar o qué no funciona" required></textarea>
+              <button class="btn btn-dark" type="submit">Enviar a soporte</button>
+              <p class="msg" data-ticket-msg role="status" aria-live="polite"></p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .area { min-height: 70vh; }
+  .login { max-width: 440px; margin: 40px auto; display: grid; gap: 16px; }
+  .login p { margin: 0; }
+  .msg { margin: 0; font-size: 0.9rem; color: var(--muted); min-height: 1.4em; }
+  .panel { display: grid; gap: 20px; }
+  .demo-banner { background: #fff7e6; color: #92400e; border-radius: 12px; padding: 10px 16px; font-size: 0.88rem; font-weight: 550; text-align: center; }
+  .top { display: flex; justify-content: space-between; align-items: end; gap: 16px; }
+  .hero-stat { display: grid; gap: 4px; text-align: center; padding: 44px 24px; }
+  .hero-stat strong { font-size: clamp(3rem, 8vw, 5rem); letter-spacing: -0.045em; line-height: 1.05; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .hero-stat b { color: var(--ink); }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .cols .card { display: grid; gap: 16px; align-content: start; }
+  ul { list-style: none; padding: 0; margin: 0; display: grid; }
+  ul :global(li) { display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 0.95rem; }
+  ul :global(li:last-child) { border: 0; }
+  :global(.estado) { font-size: 0.82rem; font-weight: 600; }
+  :global(.estado.ok)::before { content: '● '; color: var(--ok); }
+  :global(.estado.off)::before { content: '● '; color: #f59e0b; }
+  .kpis :global(b) { font-variant-numeric: tabular-nums; color: var(--ink); }
+  .docs :global(a) { color: var(--brand); font-weight: 600; }
+  @media (max-width: 820px) { .cols { grid-template-columns: 1fr; } }
+</style>
+
+<script>
+  import { supabase } from '../scripts/supabase';
+
+  const $ = <T extends HTMLElement>(s: string) => document.querySelector<T>(s)!;
+  const show = (v: 'login' | 'panel') => document.querySelectorAll<HTMLElement>('[data-view]').forEach((el) => (el.hidden = el.dataset.view !== v));
+  const eur = (n: number) => new Intl.NumberFormat('es-ES', { maximumFractionDigits: 0 }).format(n) + ' €';
+  const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!));
+
+  type Datos = {
+    nombre: string; negocio: string; costeHora: number; horas: number;
+    autos: { nombre: string; activa: boolean }[];
+    kpis: { etiqueta: string; valor: number }[];
+    docs: { titulo: string; url: string }[];
+  };
+
+  function pintar(d: Datos) {
+    $('[data-nombre]').textContent = d.nombre;
+    $('[data-negocio]').textContent = d.negocio;
+    $('[data-horas]').textContent = String(Math.round(d.horas));
+    $('[data-euros]').textContent = eur(d.horas * d.costeHora);
+    $('[data-autos]').innerHTML = d.autos.map((a) => `<li>${esc(a.nombre)}<span class="estado ${a.activa ? 'ok' : 'off'}">${a.activa ? 'Activa' : 'En pausa'}</span></li>`).join('') || '<li class="muted">Aún no hay automatizaciones</li>';
+    $('[data-kpis]').innerHTML = d.kpis.map((k) => `<li>${esc(k.etiqueta)}<b>${k.valor}</b></li>`).join('') || '<li class="muted">Sin actividad este mes</li>';
+    $('[data-docs]').innerHTML = d.docs.map((x) => `<li>${esc(x.titulo)}<a href="${esc(x.url)}" target="_blank" rel="noopener">Descargar</a></li>`).join('') || '<li class="muted">Todavía no hay informes</li>';
+    show('panel');
+  }
+
+  const DEMO: Datos = {
+    nombre: 'Laura', negocio: 'Peluquería Ejemplo · Alcalá', costeHora: 15, horas: 23,
+    autos: [{ nombre: 'Chatbot de WhatsApp', activa: true }, { nombre: 'Recordatorios de citas', activa: true }, { nombre: 'Monitor de reseñas', activa: false }],
+    kpis: [{ etiqueta: 'Citas agendadas por el chatbot', valor: 64 }, { etiqueta: 'Mensajes respondidos', valor: 412 }, { etiqueta: 'Recordatorios enviados', valor: 158 }, { etiqueta: 'Huecos recuperados', valor: 11 }],
+    docs: [{ titulo: 'Informe de reseñas · octubre', url: '#' }, { titulo: 'Informe de reseñas · septiembre', url: '#' }],
+  };
+
+  async function cargar() {
+    if (!supabase) return;
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return show('login');
+    const inicioMes = new Date(); inicioMes.setDate(1); inicioMes.setHours(0, 0, 0, 0);
+    const [{ data: cli }, { data: autos }, { data: met }, { data: docs }] = await Promise.all([
+      supabase.from('clientes').select('*').eq('user_id', user.id).maybeSingle(),
+      supabase.from('automatizaciones').select('nombre, activa'),
+      supabase.from('metricas').select('etiqueta, valor, horas_ahorradas').gte('fecha', inicioMes.toISOString().slice(0, 10)),
+      supabase.from('informes').select('titulo, url').order('creado', { ascending: false }).limit(6),
+    ]);
+    const kp = new Map<string, number>();
+    let horas = 0;
+    (met ?? []).forEach((m: any) => { horas += Number(m.horas_ahorradas) || 0; if (m.etiqueta) kp.set(m.etiqueta, (kp.get(m.etiqueta) ?? 0) + Number(m.valor || 0)); });
+    pintar({
+      nombre: cli?.contacto ?? user.email!.split('@')[0], negocio: cli?.negocio ?? '', costeHora: Number(cli?.coste_hora ?? 15), horas,
+      autos: (autos as any) ?? [], kpis: [...kp].map(([etiqueta, valor]) => ({ etiqueta, valor })), docs: (docs as any) ?? [],
+    });
+  }
+
+  $('[data-demo]').addEventListener('click', () => { $('[data-demo-banner]').hidden = false; pintar(DEMO); });
+
+  $<HTMLFormElement>('[data-login]').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = $<HTMLInputElement>('#l-email').value.trim();
+    const msg = $('[data-login-msg]');
+    if (!supabase) { msg.textContent = 'El acceso aún no está activado. Mientras tanto, mira el panel de ejemplo.'; return; }
+    const { error } = await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: location.origin + '/area-cliente', shouldCreateUser: false } });
+    msg.textContent = error ? 'No encontramos una cuenta con ese email. Escríbenos y te damos acceso.' : 'Revisa tu correo: te hemos enviado el enlace de acceso.';
+  });
+
+  $('[data-logout]').addEventListener('click', async () => { await supabase?.auth.signOut(); $('[data-demo-banner]').hidden = true; show('login'); });
+
+  $<HTMLFormElement>('[data-ticket]').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const f = e.currentTarget as HTMLFormElement;
+    const texto = f.querySelector('textarea')!.value.trim();
+    const msg = $('[data-ticket-msg]');
+    if (!texto) return;
+    if (!supabase || !$('[data-demo-banner]').hidden) { msg.textContent = 'En el panel de ejemplo no se envían tickets.'; return; }
+    const { data: { user } } = await supabase.auth.getUser();
+    const { error } = await supabase.from('tickets').insert({ user_id: user!.id, mensaje: texto });
+    msg.textContent = error ? 'No se ha podido enviar. Inténtalo de nuevo.' : 'Recibido. Te respondemos lo antes posible.';
+    if (!error) f.reset();
+  });
+
+  supabase?.auth.onAuthStateChange(() => cargar());
+  cargar();
+</script>
