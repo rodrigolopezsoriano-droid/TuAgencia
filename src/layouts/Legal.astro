@@ -1,0 +1,18 @@
+---
+import Base from './Base.astro';
+const { title } = Astro.props;
+---
+<Base title={title} description={`${title} de TuAgencia.`}>
+  <section class="section-tight">
+    <article class="wrap legal">
+      <h1 class="h2">{title}</h1>
+      <slot />
+    </article>
+  </section>
+</Base>
+<style>
+  .legal { max-width: 760px; }
+  .legal :global(h2) { font-size: 1.2rem; margin: 36px 0 10px; }
+  .legal :global(p), .legal :global(li) { color: #3a3a3c; }
+  .legal :global(.pend) { background: #fff7e6; color: #92400e; padding: 1px 6px; border-radius: 6px; font-weight: 600; }
+</style>
