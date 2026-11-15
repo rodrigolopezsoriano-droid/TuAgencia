@@ -1,10 +1,10 @@
 ---
 import Base from '../../layouts/Base.astro';
 import CtaFinal from '../../components/CtaFinal.astro';
-import { CASO_CENSURADO, CASO_NOMBRE } from '../../data/casos';
+import { CASO_BARBERIA_CENSURADO as CASO_CENSURADO, CASO_BARBERIA_NOMBRE as CASO_NOMBRE } from '../../data/casos';
 
 // Seguridad: sin nombre configurado, la página es siempre anónima y con fotos difuminadas.
-// Para cambiar de modo: npm run descensurar / npm run censurar (ver src/data/casos.ts).
+// Para cambiar de modo: npm run descensurar -- barberia / npm run censurar -- barberia (ver src/data/casos.ts).
 const censurado = CASO_CENSURADO || !CASO_NOMBRE;
 const fotos = [
   { src: '/casos/barberia/foto-1.webp', alt: 'El barbero en su local' },

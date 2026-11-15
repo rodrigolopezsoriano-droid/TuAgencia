@@ -8,8 +8,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "test": "node --test tests/*.test.ts",
-    "descensurar": "node scripts/caso-barberia.mjs descensurar",
-    "censurar": "node scripts/caso-barberia.mjs censurar"
+    "descensurar": "node scripts/caso.mjs descensurar",
+    "censurar": "node scripts/caso.mjs censurar"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.5",

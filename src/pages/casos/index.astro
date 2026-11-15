@@ -1,0 +1,51 @@
+---
+import Base from '../../layouts/Base.astro';
+import CtaFinal from '../../components/CtaFinal.astro';
+import { CASO_BARBERIA_CENSURADO, CASO_BARBERIA_NOMBRE, CASO_MODA_CENSURADO, CASO_MODA_NOMBRE } from '../../data/casos';
+
+// Con permiso del cliente (nombre configurado y descensurado) se muestra su nombre; si no, anónimo.
+const barberia = CASO_BARBERIA_CENSURADO || !CASO_BARBERIA_NOMBRE ? 'Barbería en Alcalá de Henares' : CASO_BARBERIA_NOMBRE;
+const moda = CASO_MODA_CENSURADO || !CASO_MODA_NOMBRE ? 'Marca de moda con tienda Shopify' : CASO_MODA_NOMBRE;
+
+const casos = [
+  {
+    href: '/casos/barberia-alcala', sector: barberia, estado: 'Caso real',
+    titulo: 'Una barbería que reserva sola.',
+    texto: 'Reservas online sin solapamientos, club VIP por niveles, panel de gestión y calendario sincronizado con el móvil de cada barbero.',
+    foto: '/casos/barberia/foto-2.webp',
+  },
+  {
+    href: '/casos/tienda-moda', sector: moda, estado: 'Piloto en preparación',
+    titulo: 'De los eventos a una comunidad de clientes.',
+    texto: 'Registro con QR en eventos, CRM con segmentos, comunicaciones automáticas, control de stock e informes semanales.',
+    foto: '/casos/moda/foto-1.webp',
+  },
+];
+---
+<Base title="Casos de éxito" description="Proyectos de TuAgencia: una barbería de Alcalá de Henares con reservas online y una marca de moda con tienda Shopify, CRM y comunidad de clientes.">
+  <section class="section center">
+    <div class="wrap stack">
+      <p class="eyebrow reveal">Casos</p>
+      <h1 class="display reveal reveal-d1">Lo que hemos montado.</h1>
+      <p class="lead reveal reveal-d2">Proyectos reales y pilotos. Cuando un cliente nos lo pide, mantenemos su nombre en privado.</p>
+    </div>
+  </section>
+  <section class="section-tight soft">
+    <div class="wrap grid g2">
+      {casos.map((c, i) => (
+        <a href={c.href} class:list={['card card-link reveal', `reveal-d${i + 1}`]}>
+          <img src={c.foto} alt="" loading="lazy" width="1440" height="900" class="foto" />
+          <p class="eyebrow" style="margin:18px 0 6px">{c.sector} · {c.estado}</p>
+          <h2 class="h3">{c.titulo}</h2>
+          <p class="muted" style="margin:10px 0 0">{c.texto}</p>
+          <p class="mas">Ver el caso →</p>
+        </a>
+      ))}
+    </div>
+  </section>
+  <CtaFinal />
+</Base>
+<style>
+  .foto { width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; border-radius: var(--radius-sm); background: var(--bg-soft); }
+  .mas { margin: 16px 0 0; color: var(--brand); font-weight: 600; }
+</style>
