@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0E1840">
+<script>try{if(localStorage.getItem("svm")==="reduced")document.documentElement.className+=" rm"}catch(e){}</script>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23800000'/%3E%3Ctext x='32' y='43' font-family='Georgia,serif' font-size='30' text-anchor='middle' fill='%23F5F5D9'%3ESV%3C/text%3E%3C/svg%3E">
+<title>Piloto Etnia · SpaceVerona</title>
+<meta name="description" content="Demo privada del piloto del evento del 21 de noviembre: QR, Honor Club, código personal y panel de resultados.">
+<link rel="preload" href="assets/fonts/eb.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="ev-top"><div class="wrap">
+  <img src="assets/img/firma.png" alt="SpaceVerona" width="63" height="28">
+  <span class="demo-flag" style="background:rgba(255,255,255,.14);color:#dfe4ff">Demo privada · TuAgencia</span>
+  <a class="back" href="index.html">← Volver a la tienda</a>
+</div></div>
+<div class="tricolor" aria-hidden="true"></div>
+
+<main>
+<section id="full" style="padding-top:clamp(40px,6vw,72px)">
+  <div class="wrap">
+    <div id="intro" style="text-align:center;max-width:760px;margin:0 auto 36px">
+      <span class="eyebrow">Piloto · Etnia, Madrid · 21 de noviembre</span>
+      <h1 class="h2" style="margin:12px 0 14px">Del stand a tu lista de clientes</h1>
+      <p class="lede" style="margin:0 auto">Cada persona que pase por el evento se apunta al Honor Club con un QR, recibe un código personal y a las 24 horas le llega un email. Tú ves cuántas altas y cuánto vende el evento.</p>
+    </div>
+
+    <div class="tabs" role="tablist" id="tabs">
+      <button type="button" role="tab" aria-selected="true" data-tab="qr">1 · Cartel del stand</button>
+      <button type="button" role="tab" aria-selected="false" data-tab="movil">2 · Lo que ve el asistente</button>
+      <button type="button" role="tab" aria-selected="false" data-tab="panel">3 · Panel del evento</button>
+    </div>
+
+    <!-- 1 · CARTEL -->
+    <div class="pane on" id="p-qr" role="tabpanel">
+      <div class="poster">
+        <div>
+          <span class="eyebrow" style="color:#c8d1ff">Honor Club · Etnia</span>
+          <h2>Escanea y entra en la familia</h2>
+          <p>Acceso anticipado a los drops y un código personal solo para hoy. Te apuntas en 20 segundos.</p>
+          <p class="tiny" style="color:#aab6f0;margin-top:18px">En la demo, pulsa el QR para verlo como lo vería quien escanea.</p>
+        </div>
+        <button class="qr" type="button" id="qrBtn" title="Ver cómo lo ve el asistente" style="cursor:pointer;border:0">
+          <div id="qrbox"></div>
+          <p>Honor Club · Etnia</p><small>21 nov · Madrid</small>
+        </button>
+      </div>
+      <p class="tiny" id="fileNote" style="text-align:center;margin-top:14px;display:none">Estás viendo la demo como archivo local: el QR funcionará desde un móvil cuando la demo esté alojada en un enlace privado.</p>
+      <ol class="steps" style="max-width:720px;margin:44px auto 0">
+        <li><div><b>El asistente escanea el QR</b><span>Se abre una página móvil, ligera, con el formulario del Honor Club.</span></div></li>
+        <li><div><b>Entra en Shopify con la etiqueta “evento”</b><span>Sin hojas de cálculo ni tareas a mano: queda como cliente, con su consentimiento de email.</span></div></li>
+        <li><div><b>Recibe su código personal</b><span>Válido unos días, para que compre mientras el recuerdo del evento está fresco.</span></div></li>
+        <li><div><b>A las 24 horas, el email automático</b><span>Con su código y la colección. Y a la semana, el informe con altas, ventas con código y facturación del evento.</span></div></li>
+      </ol>
+    </div>
+
+    <!-- 2 · MÓVIL -->
+    <div class="pane" id="p-movil" role="tabpanel">
+      <div class="two">
+        <div class="phone"><div class="phone-in">
+          <div class="phone-bar"><img src="assets/img/firma.png" alt="SpaceVerona" width="58" height="26"><small>Honor Club · Etnia</small><b>Te damos la bienvenida a la familia</b></div>
+          <div class="form-card" id="evCard">
+            <h3>Únete en 20 segundos</h3>
+            <p>Y llévate tu código personal del evento.</p>
+            <form id="evF" novalidate>
+              <div class="f"><label for="en">Nombre y apellidos</label><input id="en" type="text" autocomplete="name" placeholder="Tu nombre completo"><div class="err" id="enE"></div></div>
+              <div class="f"><label for="ee">Email</label><input id="ee" type="email" autocomplete="email" placeholder="tu@email.com"><div class="err" id="eeE"></div></div>
+              <label class="check"><input type="checkbox" id="ec"><span>Acepto recibir comunicaciones comerciales de SPACEVERONA por email (novedades, drops, acceso anticipado y ofertas). Puedo darme de baja cuando quiera.</span></label>
+              <div class="err" id="ecE" style="margin:-8px 0 10px"></div>
+              <button class="btn btn-dark btn-full" type="submit">Unirme al Honor Club</button>
+            </form>
+          </div>
+        </div></div>
+        <div id="mailCol">
+          <span class="eyebrow">Qué pasa después</span>
+          <h2 class="h2" style="font-size:clamp(30px,4vw,44px);margin:10px 0 14px">Rellena el formulario y mira el email de las 24 h</h2>
+          <p class="lede">Al apuntarte, el sistema te etiqueta como “evento” y programa un email automático con tu código y la colección. Aquí tienes cómo lo vería esa persona.</p>
+          <div class="mail" id="mail" style="margin-top:22px;opacity:.55;filter:grayscale(.4)">
+            <div class="mail-h"><span><b>De:</b> SpaceVerona &lt;info@spaceverona.com&gt;</span><span><b>Asunto:</b> <span id="mSub">Tu código personal del Honor Club</span></span><span><b>Cuándo:</b> 24 h después de apuntarte</span></div>
+            <div class="mail-b">
+              <img class="lg" src="assets/img/firma.png" alt="SpaceVerona" width="80" height="36">
+              <h3 id="mH">Gracias por pasarte por Etnia</h3>
+              <p>Fue un placer tenerte en el evento. Este es tu código personal, solo para ti y válido unos días:</p>
+              <span class="code" id="mCode">ETNIA-····</span>
+              <p class="tiny">Importe de descuento de ejemplo: lo definís vosotros.</p>
+              <div class="mimg"><img src="assets/img/polo-s.webp" alt="" width="460" height="349"><img src="assets/img/waffle-s.webp" alt="" width="420" height="331"></div>
+              <p style="margin-top:16px"><a class="btn btn-dark" href="index.html#tienda">Ver la colección Héritage</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 · PANEL -->
+    <div class="pane" id="p-panel" role="tabpanel">
+      <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:18px">
+        <div><span class="eyebrow">Informe del evento</span><h2 class="h2" style="font-size:clamp(30px,4vw,44px);margin-top:8px">Etnia · 21 de noviembre</h2></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-line" type="button" id="simA" style="min-height:42px;padding:0 18px">Simular asistentes</button>
+          <button class="btn btn-line" type="button" id="simS" style="min-height:42px;padding:0 18px">Simular ventas con código</button>
+          <button class="link" type="button" id="reset" style="align-self:center">Borrar datos</button>
+        </div>
+      </div>
+      <div class="kpis">
+        <div class="kpi live"><small>Altas al Honor Club</small><b id="kA">0</b><em>con etiqueta “evento”</em></div>
+        <div class="kpi"><small>Emails de 24 h</small><b id="kE">0</b><em>programados</em></div>
+        <div class="kpi"><small>Ventas con código</small><b id="kS">0</b><em id="kC">conversión 0 %</em></div>
+        <div class="kpi"><small>Facturación del evento</small><b id="kR">0,00 €</b><em>atribuida al código</em></div>
+      </div>
+      <div class="panel">
+        <h4>Asistentes <span class="demo-flag">Datos de la demo</span></h4>
+        <div class="scroll-x"><table>
+          <thead><tr><th>Nombre</th><th>Email</th><th>Código</th><th>Etiqueta</th><th>Estado</th></tr></thead>
+          <tbody id="rows"><tr><td colspan="5" style="color:var(--suave)">Todavía no hay altas. Apúntate desde la pestaña 2 o pulsa “Simular asistentes”.</td></tr></tbody>
+        </table></div>
+      </div>
+      <p class="tiny" style="margin-top:14px">Las altas que haces tú en la pestaña 2 son reales dentro de esta demo. Los asistentes y ventas simulados sirven para enseñar cómo quedaría el informe; en el evento real, estos datos salen de Shopify.</p>
+    </div>
+  </div>
+</section>
+</main>
+
+<div class="toast" id="toast" role="status"></div>
+<script src="assets/vendor/qrcode.min.js"></script>
+<script>
+(function () {
+  "use strict";
+  const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const eur = n => n.toFixed(2).replace(".", ",") + " €";
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  };
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  let db = store.get("sv_event", { su: [], sa: [] });
+  const save = () => store.set("sv_event", db);
+  let toastT;
+  function toast(m) { const t = $("#toast"); t.textContent = m; t.classList.add("on"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("on"), 2800); }
+
+  /* pestañas */
+  function tab(n) {
+    $$("#tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === n));
+    $$(".pane").forEach(p => p.classList.toggle("on", p.id === "p-" + n));
+    if (n === "panel") render();
+  }
+  $$("#tabs button").forEach(b => b.addEventListener("click", () => tab(b.dataset.tab)));
+
+  /* QR: apunta a esta misma página en modo móvil */
+  const url = location.href.split("#")[0].split("?")[0] + "?v=movil";
+  try { new QRCode($("#qrbox"), { text: url, width: 230, height: 230, colorDark: "#15120E", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.M }); }
+  catch (e) { $("#qrbox").textContent = "QR no disponible"; }
+  if (location.protocol === "file:") $("#fileNote").style.display = "";
+  $("#qrBtn").addEventListener("click", () => { tab("movil"); window.scrollTo({ top: 0, behavior: "smooth" }); });
+
+  /* modo móvil real (al escanear el QR) */
+  if (new URLSearchParams(location.search).get("v") === "movil") {
+    $("#intro").style.display = "none"; $("#tabs").style.display = "none"; $("#mailCol").style.display = "none";
+    $(".ev-top").style.display = "none"; $("#full").style.paddingTop = "16px";
+    $(".two").style.display = "block"; tab("movil");
+  }
+
+  /* alta */
+  const CH = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
+  const mk = () => "ETNIA-" + Array.from({ length: 4 }, () => CH[Math.floor(Math.random() * CH.length)]).join("");
+  $("#evF").addEventListener("submit", e => {
+    e.preventDefault();
+    const n = $("#en").value.trim(), em = $("#ee").value.trim(), c = $("#ec").checked;
+    const okN = n.split(/\s+/).filter(Boolean).length >= 2, okE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em);
+    $("#enE").textContent = okN ? "" : "Escribe tu nombre y apellidos"; $("#en").classList.toggle("bad", !okN);
+    $("#eeE").textContent = okE ? "" : "Escribe un email válido"; $("#ee").classList.toggle("bad", !okE);
+    $("#ecE").textContent = c ? "" : "Para unirte tienes que aceptar recibir nuestros emails.";
+    if (!okN || !okE || !c) return;
+    const code = mk();
+    db.su.push({ n, em, code, t: Date.now(), sim: false }); save();
+    const first = esc(n.split(/\s+/)[0]);
+    $("#evCard").innerHTML = `<div class="ok"><div class="tick"><svg viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></svg></div><h3 class="serif" style="font-weight:500;font-size:32px;line-height:1.05">Ya estás dentro, ${first}</h3><p style="color:var(--suave);margin:10px 0 4px">Este es tu código personal:</p><span class="code">${code}</span><p class="tiny">Válido unos días. Mañana te escribimos con la colección.</p><p style="margin-top:16px"><a class="btn btn-dark" href="index.html#tienda">Ver la tienda</a></p></div>`;
+    $("#mH").textContent = "Gracias por pasarte por Etnia, " + n.split(/\s+/)[0];
+    $("#mCode").textContent = code;
+    const m = $("#mail"); m.style.opacity = 1; m.style.filter = "none";
+    toast("Alta registrada con la etiqueta “evento”");
+  });
+
+  /* panel */
+  const NAMES = [["Lucía M.", "lucia"], ["Marc R.", "marc"], ["Carla S.", "carla"], ["Hugo P.", "hugo"], ["Irene T.", "irene"], ["Álex V.", "alex"], ["Noa B.", "noa"], ["Dani F.", "dani"]];
+  function mask(em) { const [u, d] = em.split("@"); return esc(u.slice(0, 2) + "•••@" + d); }
+  function render() {
+    const A = db.su.length, S = db.sa.length, R = db.sa.reduce((a, s) => a + s.amt, 0);
+    $("#kA").textContent = A; $("#kE").textContent = A; $("#kS").textContent = S; $("#kR").textContent = eur(R);
+    $("#kC").textContent = "conversión " + (A ? Math.round(S / A * 100) : 0) + " %";
+    $("#rows").innerHTML = A ? db.su.slice().reverse().map(s => {
+      const used = db.sa.some(x => x.code === s.code);
+      return `<tr><td>${esc(s.n)}${s.sim ? ' <span class="tg ex">simulado</span>' : ""}</td><td>${mask(s.em)}</td><td style="font-family:ui-monospace,Consolas,monospace">${s.code}</td><td><span class="tg">evento</span></td><td>${used ? "Compró con código" : "Email 24 h programado"}</td></tr>`;
+    }).join("") : `<tr><td colspan="5" style="color:var(--suave)">Todavía no hay altas. Apúntate desde la pestaña 2 o pulsa “Simular asistentes”.</td></tr>`;
+  }
+  $("#simA").addEventListener("click", () => {
+    NAMES.slice(0, 5).forEach(([n, u]) => db.su.push({ n, em: u + "@ejemplo.com", code: mk(), t: Date.now(), sim: true }));
+    save(); render(); toast("5 asistentes simulados");
+  });
+  $("#simS").addEventListener("click", () => {
+    const free = db.su.filter(s => !db.sa.some(x => x.code === s.code));
+    if (!free.length) { toast("Primero apunta o simula asistentes"); return; }
+    const prices = [29.99, 37.99, 39.99, 44.99, 59.98, 79.99];
+    free.slice(0, Math.max(1, Math.ceil(free.length / 3))).forEach(s => db.sa.push({ code: s.code, amt: prices[Math.floor(Math.random() * prices.length)] }));
+    save(); render(); toast("Ventas con código simuladas");
+  });
+  $("#reset").addEventListener("click", () => { db = { su: [], sa: [] }; save(); render(); toast("Datos de la demo borrados"); });
+  render();
+})();
+</script>
+</body>
+</html>
