@@ -34,7 +34,7 @@ Sin Supabase configurado, la web funciona igual: el formulario abre el correo y 
 |---|---|
 | Email, WhatsApp, Instagram | `src/data/site.ts` |
 | Horario de las llamadas (agenda propia) | `src/data/agenda.ts` · guía en `docs/AGENDA.md` |
-| Mostrar el nombre y las fotos del caso de la barbería | `npm run descensurar` (ver `src/data/casos.ts`) |
+| Mostrar nombre e imágenes de un caso (con permiso) | `npm run descensurar -- barberia` o `-- moda` (ver `src/data/casos.ts`) |
 | Equipo (nombres, roles, formación) | `src/data/site.ts` → `EQUIPO` |
 | Preguntas frecuentes | `src/data/site.ts` → `FAQ` |
 | Soluciones (se crea una página por cada una) | `src/data/soluciones.ts` |
@@ -51,25 +51,18 @@ Sin Supabase configurado, la web funciona igual: el formulario abre el correo y 
 
 ---
 
-## 3. Conectar Supabase (base de datos + login)
+## 3. Conectar Supabase (cuentas + base de datos)
 
-1. Crea una cuenta en **supabase.com** → *New project*. En región elige **Central EU (Frankfurt)**.
-2. Ve a **SQL Editor → New query**, pega todo `supabase/schema.sql` y pulsa **Run**. Esto crea las tablas:
-   `leads`, `clientes`, `automatizaciones`, `metricas`, `informes`, `tickets`, con seguridad por filas (cada cliente solo ve lo suyo).
-3. Ve a **Project Settings → API** y copia la *Project URL* y la clave **anon public**.
-4. En VS Code, duplica `.env.example`, llámalo `.env` y pega los dos valores.
-5. En **Authentication → URL Configuration**, pon como *Site URL* `https://tuagencia.tech` y añade `http://localhost:4321/area-cliente` en *Redirect URLs*.
+La guía completa, paso a paso, está en **[docs/SUPABASE.md](docs/SUPABASE.md)** (incluye el texto para pasárselo a tu Claude de escritorio). En resumen:
+
+1. Crear el proyecto en Supabase (región Frankfurt) y ejecutar `supabase/schema.sql`.
+2. En *Authentication*: confirmación de email **activada**, contraseña mínima de 10 y las URLs de la web. Configurar un SMTP propio para que lleguen los correos a los clientes.
+3. Poner `PUBLIC_SUPABASE_URL` y `PUBLIC_SUPABASE_ANON_KEY` en `.env` y en Cloudflare.
+4. Registrar `admin@`, `pablo@`, `jorge@` y `rodrigo@tuagencia.tech` desde `/area-cliente` (necesitan buzón para confirmar el correo): ven el panel de gestión.
+
+En `/area-cliente` cada persona puede **iniciar sesión** o **registrarse**. Un cliente ve sus solicitudes, su panel y sus datos (que luego autocompletan los formularios); el equipo ve todas las solicitudes y contactos; el admin además cambia los planes.
 
 ⚠️ **Nunca** pongáis la clave `service_role` en la web ni la subáis a GitHub.
-
-### Ver los contactos que llegan
-Supabase → **Table Editor → leads**. También podéis conectar n8n a esa tabla para recibir un aviso por Telegram o WhatsApp con cada lead nuevo.
-
-### Dar de alta a un cliente en el área de cliente
-1. **Authentication → Users → Add user → Send invitation** con su email.
-2. **Table Editor → clientes → Insert row**: negocio, contacto, `user_id` (el id del usuario del paso 1), plan y `coste_hora`.
-3. Añade sus filas en `automatizaciones`. Vuestros scripts o n8n van sumando filas en `metricas` (por ejemplo, `etiqueta = 'Citas agendadas por el chatbot'`, `valor = 1`, `horas_ahorradas = 0.1`) y el panel lo calcula solo.
-4. El cliente entra en `/area-cliente` con su email y recibe un enlace de acceso. Sin contraseñas.
 
 ### Evitar que Supabase pause el proyecto
 Los proyectos gratis se pausan tras 7 días sin actividad. Ya está incluido `.github/workflows/supabase-keepalive.yml`, que hace un "ping" cada 3 días. Solo tenéis que añadir en GitHub → **Settings → Secrets and variables → Actions** los secretos `SUPABASE_URL` y `SUPABASE_ANON_KEY`.
@@ -113,10 +106,12 @@ El archivo `public/_redirects` ya redirige las URLs antiguas (`contactanos.html`
 
 ## 6. Pendientes antes de publicar
 
+- [ ] **Base de datos y cuentas**: crear el proyecto de Supabase y las 4 cuentas de equipo/admin. Guía: `docs/SUPABASE.md`.
+- [ ] **Buzones** `admin@`, `pablo@`, `jorge@`, `rodrigo@tuagencia.tech` (gratis con Cloudflare Email Routing) para poder confirmar las cuentas.
 - [ ] **Agenda de llamadas** (`/reservar`): crear las credenciales de Google y ponerlas en Cloudflare. Sin esto, la página avisa de que el calendario se está configurando. Guía paso a paso: `docs/AGENDA.md`.
 - [ ] Revisar el horario de partida de `src/data/agenda.ts` (lunes a viernes, 10–14 h y 16–19 h).
 - [ ] `src/data/legal.ts`: falta el número de portal y el código postal del domicilio.
 - [ ] `src/data/site.ts`: número de WhatsApp Business.
 - [ ] Fotos del equipo en `public/equipo/`.
-- [ ] Permiso del cliente de la barbería: mientras tanto el caso sale anónimo y con fotos difuminadas. Cuando lo den: `npm run descensurar`.
+- [ ] Permiso del cliente de la barbería: mientras tanto el caso sale anónimo y con fotos difuminadas. Cuando lo den: `npm run descensurar -- barberia`. Igual con la marca de moda: `-- moda`.
 - [ ] Revisar los precios de `src/data/precios.ts`.

@@ -21,7 +21,8 @@ Estilo Apple (limpio, mucho espacio, color de marca `#6366F1`), SEO local y cost
 | Sectores (una página por cada uno) | `src/data/sectores.ts` |
 | Precios | `src/data/precios.ts` |
 | Datos legales (titular, NIF, domicilio) | `src/data/legal.ts` |
-| Caso de la barbería: censurado / con nombre | `src/data/casos.ts` (no editar a mano) |
+| Casos de éxito: censurados / con nombre | `src/data/casos.ts` (no editar a mano) |
+| Cuentas, roles y base de datos | `supabase/schema.sql` · `docs/SUPABASE.md` |
 | Colores y tipografía | `src/styles/global.css` |
 | Portada / versión en inglés | `src/pages/index.astro` · `src/pages/en/index.astro` |
 | Área de cliente | `src/pages/area-cliente.astro` · `src/scripts/supabase.ts` |
@@ -38,8 +39,9 @@ npm install       # instalar dependencias
 npm run dev       # servidor local en http://localhost:4321
 npm run build     # compila a dist/ (debe dar 25 páginas sin errores)
 npm run preview   # sirve dist/ en local
-npm test          # 18 pruebas de la agenda (simulan Google; no hacen falta credenciales)
-npm run descensurar / npm run censurar   # caso de la barbería (solo con permiso del cliente)
+npm test          # pruebas de la agenda (simulan Google) y de la seguridad de la base de datos (Postgres en memoria)
+npm run descensurar -- barberia|moda   # muestra nombre e imágenes de un caso (solo con permiso del cliente)
+npm run censurar -- barberia|moda      # vuelve al modo anónimo
 ```
 
 ## Reglas
@@ -49,6 +51,7 @@ npm run descensurar / npm run censurar   # caso de la barbería (solo con permis
 4. No crear cuentas, no cambiar DNS, no activar servicios de pago.
 5. Si algo falla o hay una decisión importante, parar y preguntar.
 6. Responder siempre en español.
-7. **Caso de la barbería:** mientras no haya permiso, no escribir su nombre ni subir fotos sin difuminar. Los originales están en `casos-privados/` (ignorada por Git) y no deben salir de ahí.
-8. Credenciales de Google (`GOOGLE_*`) y `TURNSTILE_SECRET`: solo en Cloudflare, nunca en el código ni en GitHub.
-9. No poner "SL" en los datos legales mientras la sociedad no esté constituida.
+7. **Casos de éxito (barbería y moda):** mientras no haya permiso, no escribir el nombre del cliente ni subir imágenes sin censurar, ni en el código, ni en comentarios, ni en nombres de archivo. Los originales y el nombre están en `casos-privados/` (ignorada por Git) y no deben salir de ahí.
+8. Roles: el equipo/admin se decide por email verificado en la tabla `staff`; la confirmación de email de Supabase debe seguir activada. Cualquier cambio en `supabase/schema.sql` debe pasar `npm test`.
+9. Credenciales de Google (`GOOGLE_*`) y `TURNSTILE_SECRET`: solo en Cloudflare, nunca en el código ni en GitHub.
+10. No poner "SL" en los datos legales mientras la sociedad no esté constituida.
