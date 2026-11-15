@@ -1,0 +1,27 @@
+---
+import Base from '../../layouts/Base.astro';
+import CtaFinal from '../../components/CtaFinal.astro';
+import { SOLUCIONES } from '../../data/soluciones';
+---
+<Base title="Soluciones de automatización con IA" description="Chatbot de WhatsApp, CRM inteligente, informes con IA, reseñas, recordatorios y webs con reservas para negocios locales.">
+  <section class="section center">
+    <div class="wrap stack">
+      <h1 class="display reveal">Soluciones.</h1>
+      <p class="lead reveal reveal-d1">Elige una o combina varias. Todas se conectan con las herramientas que ya usas.</p>
+    </div>
+  </section>
+  <section class="section-tight soft">
+    <div class="wrap grid g3">
+      {SOLUCIONES.map((s, i) => (
+        <a href={`/soluciones/${s.slug}`} class:list={['card card-link reveal', `reveal-d${(i % 3) + 1}`]} style="display:flex;flex-direction:column;gap:10px">
+          <div class="icon-badge">{s.icono}</div>
+          <p class="eyebrow">Plan {s.plan}</p>
+          <h2 class="h3">{s.nombre}</h2>
+          <p class="muted" style="margin:0">{s.resumen}</p>
+          <span style="margin-top:auto;padding-top:8px;color:var(--brand);font-weight:600">Saber más →</span>
+        </a>
+      ))}
+    </div>
+  </section>
+  <CtaFinal titulo="¿No ves lo que necesitas?" texto="Casi cualquier tarea repetitiva se puede automatizar. Cuéntanos la tuya y te decimos cómo, gratis." />
+</Base>

@@ -1,0 +1,53 @@
+---
+import Base from '../../layouts/Base.astro';
+import CtaFinal from '../../components/CtaFinal.astro';
+import { SECTORES, getSector } from '../../data/sectores';
+import { getSolucion } from '../../data/soluciones';
+
+export function getStaticPaths() {
+  return SECTORES.map((s) => ({ params: { slug: s.slug } }));
+}
+const s = getSector(Astro.params.slug!)!;
+const sols = s.soluciones.map(getSolucion).filter(Boolean);
+---
+<Base title={s.seo.title} description={s.seo.description}>
+  <section class="section center">
+    <div class="wrap stack">
+      <p class="eyebrow reveal">{s.nombre}</p>
+      <h1 class="display reveal reveal-d1">{s.titular}</h1>
+      <p class="lead reveal reveal-d2">{s.problema}</p>
+      <div class="actions reveal reveal-d3" style="margin-top:36px">
+        <a href="/contacto" class="btn btn-primary">Pide tu auditoría gratis</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-tight dark">
+    <div class="wrap">
+      <h2 class="h3 center" style="margin-bottom:32px">¿Te suena?</h2>
+      <div class="pains">{s.dolores.map((d, i) => <div class:list={['pain reveal', `reveal-d${i}`]}>{d}</div>)}</div>
+    </div>
+  </section>
+
+  <section class="section soft">
+    <div class="wrap">
+      <h2 class="h2 center reveal" style="margin-bottom:48px">Así lo resolvemos.</h2>
+      <div class="grid g2">
+        {sols.map((x, i) => (
+          <a href={`/soluciones/${x!.slug}`} class:list={['card card-link reveal', `reveal-d${(i % 2) + 1}`]}>
+            <div class="icon-badge">{x!.icono}</div>
+            <h3 class="h3">{x!.nombre}</h3>
+            <p class="muted">{x!.resumen}</p>
+            <span style="color:var(--brand);font-weight:600">Saber más →</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+  <CtaFinal />
+</Base>
+
+<style>
+  .pains { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  .pain { padding: 24px; border-radius: 18px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.1); font-weight: 550; }
+</style>

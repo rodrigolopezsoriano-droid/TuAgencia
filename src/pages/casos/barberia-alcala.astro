@@ -1,0 +1,45 @@
+---
+import Base from '../../layouts/Base.astro';
+import CtaFinal from '../../components/CtaFinal.astro';
+// Cuando el cliente dé permiso, podéis poner su nombre, su logo, capturas y su testimonio.
+const bloques = [
+  { t: 'Reservas online 24/7', d: 'El cliente elige servicio, barbero y hora. Si pide "cualquier barbero", el sistema asigna el que esté libre. La base de datos impide que se solapen dos citas.' },
+  { t: 'Cambiar o cancelar sin llamar', d: 'Hasta 2 horas antes, desde su cuenta. Pasado ese margen, la web le redirige a WhatsApp.' },
+  { t: 'Club VIP por niveles', d: 'Cada corte completado suma. Cinco niveles, de Bronce a Platinum, con descuentos que el equipo ve al atender.' },
+  { t: 'Panel de gestión', d: 'Agenda del día, citas manuales, clientes y resumen del negocio, actualizado en tiempo real.' },
+  { t: 'Calendario en el móvil', d: 'Cada barbero se suscribe a su agenda desde el iPhone o Google Calendar y la tiene siempre al día.' },
+  { t: 'Bilingüe y con modo oscuro', d: 'Español e inglés, modo claro y oscuro, y animaciones cuidadas que respetan la accesibilidad.' },
+];
+---
+<Base title="Caso de éxito: barbería en Alcalá de Henares con reservas online" description="Cómo diseñamos para una barbería de Alcalá de Henares una web con reservas online, club VIP y panel de gestión sincronizado con el calendario.">
+  <section class="section center">
+    <div class="wrap stack">
+      <p class="eyebrow reveal">Caso real · Barbería en Alcalá de Henares</p>
+      <h1 class="display reveal reveal-d1">Una barbería que reserva sola.</h1>
+      <p class="lead reveal reveal-d2">Las citas llegaban por WhatsApp a cualquier hora y se apuntaban a mano. Diseñamos un sistema completo para que los clientes reserven solos y el equipo solo tenga que cortar.</p>
+    </div>
+  </section>
+  <section class="section-tight soft">
+    <div class="wrap">
+      <div class="stack-tech card reveal">
+        <span><b>Frontend</b> React + Vite + Tailwind</span>
+        <span><b>Backend</b> Node.js + Express</span>
+        <span><b>Base de datos</b> PostgreSQL</span>
+        <span><b>Extras</b> Calendario .ics, i18n, modo oscuro</span>
+      </div>
+      <div class="grid g3" style="margin-top:20px">
+        {bloques.map((b, i) => (
+          <div class:list={['card reveal', `reveal-d${(i % 3) + 1}`]}>
+            <h2 class="h3">{b.t}</h2>
+            <p class="muted" style="margin:10px 0 0">{b.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+  <CtaFinal titulo="¿Tienes una peluquería o un centro de estética?" texto="Montamos el mismo sistema adaptado a tu negocio. Pide una demo y te lo enseñamos funcionando." />
+</Base>
+<style>
+  .stack-tech { display: flex; flex-wrap: wrap; gap: 12px 32px; justify-content: center; font-size: 0.95rem; color: var(--muted); }
+  .stack-tech b { color: var(--ink); margin-right: 6px; }
+</style>

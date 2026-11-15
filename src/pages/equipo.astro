@@ -1,0 +1,38 @@
+---
+import Base from '../layouts/Base.astro';
+import CtaFinal from '../components/CtaFinal.astro';
+import { EQUIPO } from '../data/site';
+---
+<Base title="Equipo" description="Somos TuAgencia: tres técnicos de Alcalá de Henares especializados en sistemas, redes, desarrollo e inteligencia artificial.">
+  <section class="section center">
+    <div class="wrap stack">
+      <h1 class="display reveal">Hablas con quien lo construye.</h1>
+      <p class="lead reveal reveal-d1">Somos tres técnicos de Alcalá de Henares. Venimos de los sistemas, las redes y la ingeniería, y montamos TuAgencia para que los negocios de nuestro barrio tengan la misma tecnología que las grandes empresas.</p>
+    </div>
+  </section>
+  <section class="section-tight soft">
+    <div class="wrap grid g3">
+      {EQUIPO.map((m, i) => (
+        <article class:list={['card center reveal', `reveal-d${i + 1}`]}>
+          <!-- Cambia el círculo por una foto: <img src="/equipo/pablo.webp" alt="Pablo" class="av" /> -->
+          <div class="av">{m.inicial}</div>
+          <h2 class="h3">{m.nombre}</h2>
+          <p class="muted" style="margin:6px 0 0">{m.rol}</p>
+          <p class="pill" style="margin-top:16px">{m.formacion}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+  <section class="section">
+    <div class="wrap grid g3 valores">
+      <div><h3 class="h3">Sin humo</h3><p class="muted">Si algo no te va a ahorrar tiempo, te lo decimos. Preferimos un cliente contento a una venta.</p></div>
+      <div><h3 class="h3">Cerca de ti</h3><p class="muted">Estamos en Alcalá y Madrid. Si hace falta, vamos a tu negocio.</p></div>
+      <div><h3 class="h3">Tus datos, seguros</h3><p class="muted">Venimos del mundo de los sistemas: seguridad, copias y RGPD van de serie.</p></div>
+    </div>
+  </section>
+  <CtaFinal />
+</Base>
+<style>
+  .av { width: 104px; height: 104px; border-radius: 50%; margin: 0 auto 20px; display: grid; place-items: center; font-size: 2.4rem; font-weight: 700; color: #fff; background: linear-gradient(135deg, var(--brand), #a855f7); object-fit: cover; }
+  .valores > div > * + * { margin-top: 10px; }
+</style>

@@ -1,0 +1,31 @@
+---
+import Base from '../layouts/Base.astro';
+import Planes from '../components/Planes.astro';
+import Faq from '../components/Faq.astro';
+import CtaFinal from '../components/CtaFinal.astro';
+const faq = [
+  { p: '¿Qué incluye la puesta en marcha?', r: 'El análisis de tu negocio, el diseño y la programación de la automatización, la conexión con tus herramientas y la formación de tu equipo.' },
+  { p: '¿Qué incluye la cuota mensual?', r: 'Alojamiento, mantenimiento, ajustes cuando cambie tu negocio, soporte y el informe de horas ahorradas. El consumo normal de IA va incluido.' },
+  { p: '¿Puedo combinar varias soluciones?', r: 'Sí. Si contratas más de una automatización te hacemos un precio conjunto con descuento.' },
+  { p: '¿Los precios llevan IVA?', r: 'Los precios mostrados no incluyen IVA.' },
+  { p: '¿Hay permanencia?', r: 'No. Puedes darte de baja cuando quieras avisando con 30 días.' },
+];
+---
+<Base title="Precios" description="Precios claros para automatizar tu negocio con IA: plan Esencial, Crecimiento e IA a medida. Sin permanencia y con auditoría gratis.">
+  <section class="section center">
+    <div class="wrap stack">
+      <h1 class="display reveal">Precios.</h1>
+      <p class="lead reveal reveal-d1">Empieza por lo que más tiempo te quita. Amplía cuando quieras.</p>
+    </div>
+  </section>
+  <section class="section-tight soft">
+    <div class="wrap"><Planes /></div>
+  </section>
+  <section class="section">
+    <div class="wrap">
+      <h2 class="h2 center" style="margin-bottom:40px">Dudas sobre precios.</h2>
+      <Faq items={faq} />
+    </div>
+  </section>
+  <CtaFinal />
+</Base>

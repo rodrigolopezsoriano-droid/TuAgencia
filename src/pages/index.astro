@@ -1,0 +1,237 @@
+---
+import Base from '../layouts/Base.astro';
+import ChatDemo from '../components/ChatDemo.astro';
+import Calculadora from '../components/Calculadora.astro';
+import Planes from '../components/Planes.astro';
+import Faq from '../components/Faq.astro';
+import CtaFinal from '../components/CtaFinal.astro';
+import { SOLUCIONES } from '../data/soluciones';
+import { SECTORES } from '../data/sectores';
+import { EQUIPO, FAQ } from '../data/site';
+
+const destacadas = SOLUCIONES.filter((s) => s.destacado);
+const resto = SOLUCIONES.filter((s) => !s.destacado);
+const pasos = [
+  { n: '01', t: 'Auditoría gratis', d: 'Una llamada de 30 minutos para ver dónde pierdes tiempo. Si no hay ahorro claro, no te cobramos nada.' },
+  { n: '02', t: 'Demo en 48 h', d: 'Te enseñamos la automatización funcionando con un caso real de tu negocio.' },
+  { n: '03', t: 'En marcha en 2 semanas', d: 'La conectamos con tus herramientas y formamos a tu equipo en 30 minutos.' },
+  { n: '04', t: 'Siempre al día', d: 'Mantenimiento, soporte y mejoras cada mes. Tú solo ves los resultados.' },
+];
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQ.map((f) => ({ '@type': 'Question', name: f.p, acceptedAnswer: { '@type': 'Answer', text: f.r } })),
+};
+---
+<Base
+  title="TuAgencia — Automatización con IA para negocios en Alcalá y Madrid"
+  description="Chatbots de WhatsApp, CRM e informes automáticos con IA para negocios locales de Alcalá de Henares y Madrid. Auditoría gratis y demo en 48 horas."
+  jsonLd={faqLd}
+>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow reveal">Automatización con IA · Alcalá de Henares y Madrid</p>
+        <h1 class="display reveal reveal-d1">Tu negocio,<br /><span class="grad">en piloto automático.</span></h1>
+        <p class="lead reveal reveal-d2">Chatbots que reservan citas, un CRM que hace el seguimiento por ti e informes que se redactan solos. Tú atiendes a tus clientes. Nosotros nos encargamos del resto.</p>
+        <div class="actions reveal reveal-d3">
+          <a href="/contacto" class="btn btn-primary">Pide tu auditoría gratis</a>
+          <a href="#soluciones" class="btn btn-ghost">Ver qué automatizamos →</a>
+        </div>
+        <ul class="trust reveal reveal-d3">
+          <li>Demo en 48 h</li><li>Sin permanencia</li><li>Datos en la UE (RGPD)</li>
+        </ul>
+      </div>
+      <div class="hero-visual reveal reveal-d2"><ChatDemo /></div>
+    </div>
+  </section>
+
+  <!-- SECTORES -->
+  <section class="section-tight soft">
+    <div class="wrap center">
+      <p class="muted reveal">Automatizaciones pensadas para</p>
+      <div class="chips reveal reveal-d1">
+        {SECTORES.map((s) => <a href={`/sectores/${s.slug}`} class="chip">{s.nombre}</a>)}
+      </div>
+    </div>
+  </section>
+
+  <!-- SOLUCIONES -->
+  <section class="section" id="soluciones">
+    <div class="wrap">
+      <div class="head center">
+        <h2 class="h2 reveal">Lo que hacemos por ti.</h2>
+        <p class="lead reveal reveal-d1">Las tareas que más tiempo roban a un negocio local, resueltas con inteligencia artificial.</p>
+      </div>
+      <div class="bento">
+        {destacadas.map((s, i) => (
+          <a href={`/soluciones/${s.slug}`} class:list={['card card-link tile reveal', `reveal-d${i + 1}`, i === 0 && 'tile-wide']}>
+            <div class="tile-text">
+              <div class="icon-badge">{s.icono}</div>
+              <p class="eyebrow">{s.nombre}</p>
+              <h3 class="h3 big">{s.corto}</h3>
+              <p class="muted">{s.resumen}</p>
+              <span class="more">Saber más →</span>
+            </div>
+            {i === 0 && (
+              <div class="flow" aria-hidden="true">
+                <div class="src"><span>WhatsApp</span><span>Web</span><span>Instagram</span></div>
+                <div class="bot">IA</div>
+                <div class="dst"><span>📅 Cita reservada</span><span>📇 Contacto en el CRM</span><span>🔔 Aviso a tu equipo</span></div>
+              </div>
+            )}
+          </a>
+        ))}
+        {resto.map((s, i) => (
+          <a href={`/soluciones/${s.slug}`} class:list={['card card-link tile small reveal', `reveal-d${i + 1}`]}>
+            <div class="icon-badge">{s.icono}</div>
+            <h3 class="h3">{s.nombre}</h3>
+            <p class="muted">{s.corto}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESO -->
+  <section class="section dark">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow reveal" style="color:#a5b4fc">Cómo trabajamos</p>
+        <h2 class="h2 reveal reveal-d1">De la primera llamada<br />a funcionando en 2 semanas.</h2>
+      </div>
+      <ol class="steps">
+        {pasos.map((p, i) => (
+          <li class:list={['reveal', `reveal-d${i}`]}>
+            <span class="n">{p.n}</span>
+            <h3 class="h3">{p.t}</h3>
+            <p class="muted">{p.d}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- CALCULADORA -->
+  <section class="section soft">
+    <div class="wrap">
+      <div class="head center">
+        <h2 class="h2 reveal">¿Cuánto te cuestan las tareas repetitivas?</h2>
+        <p class="lead reveal reveal-d1">Mueve los controles y descúbrelo en 10 segundos.</p>
+      </div>
+      <div class="reveal reveal-d2"><Calculadora /></div>
+    </div>
+  </section>
+
+  <!-- CASO -->
+  <section class="section">
+    <div class="wrap caso">
+      <div class="stack">
+        <p class="eyebrow reveal">Caso real</p>
+        <h2 class="h2 reveal reveal-d1">Una barbería de Alcalá que reserva sola.</h2>
+        <p class="lead reveal reveal-d2">Diseñamos su web con reservas online, cuentas de cliente, un club VIP por niveles y un panel de gestión que se sincroniza con el calendario del móvil de cada barbero.</p>
+        <div class="actions reveal reveal-d3"><a href="/casos/barberia-alcala" class="btn btn-dark">Ver el caso completo</a></div>
+      </div>
+      <div class="caso-card card reveal reveal-d2">
+        <ul class="list-check">
+          <li>Reservas 24/7 sin solapamientos entre barberos</li>
+          <li>Cancelar o cambiar la cita desde el móvil</li>
+          <li>Club VIP con 5 niveles y descuentos automáticos</li>
+          <li>Panel de agenda y clientes para el equipo</li>
+          <li>Calendario sincronizado con iPhone y Google</li>
+          <li>Web en español e inglés, modo claro y oscuro</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRECIOS -->
+  <section class="section soft" id="precios">
+    <div class="wrap">
+      <div class="head center">
+        <h2 class="h2 reveal">Precios claros. Sin permanencia.</h2>
+        <p class="lead reveal reveal-d1">Una puesta en marcha y una cuota mensual con mantenimiento y soporte incluidos.</p>
+      </div>
+      <Planes />
+      <p class="center muted" style="margin-top:28px"><a href="/precios" style="color:var(--brand)">Ver todos los detalles de precios →</a></p>
+    </div>
+  </section>
+
+  <!-- EQUIPO -->
+  <section class="section">
+    <div class="wrap center">
+      <h2 class="h2 reveal">Tres técnicos. Cero humo.</h2>
+      <p class="lead reveal reveal-d1">Somos un equipo joven de Alcalá de Henares formado en sistemas, redes e ingeniería. Hablas siempre con quien construye tu automatización.</p>
+      <div class="team">
+        {EQUIPO.map((m, i) => (
+          <div class:list={['member reveal', `reveal-d${i + 1}`]}>
+            <div class="av">{m.inicial}</div>
+            <strong>{m.nombre}</strong>
+            <span class="muted">{m.rol}</span>
+          </div>
+        ))}
+      </div>
+      <a href="/equipo" class="btn btn-ghost">Conócenos →</a>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section soft">
+    <div class="wrap">
+      <h2 class="h2 center reveal" style="margin-bottom:40px">Preguntas frecuentes.</h2>
+      <Faq items={FAQ} />
+    </div>
+  </section>
+
+  <CtaFinal />
+</Base>
+
+<style>
+  .hero { padding: clamp(48px, 8vw, 96px) 0 clamp(64px, 10vw, 120px); overflow: hidden;
+    background: radial-gradient(60% 50% at 80% 30%, rgba(99,102,241,.10), transparent 70%), radial-gradient(40% 40% at 95% 80%, rgba(236,72,153,.08), transparent 70%); }
+  .hero-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 48px; align-items: center; }
+  .hero-copy > * + * { margin-top: 24px; }
+  .hero-copy .actions { margin-top: 36px; }
+  .trust { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 0.88rem; color: var(--muted); }
+  .trust li::before { content: '✓ '; color: var(--brand); font-weight: 700; }
+  .head { margin-bottom: clamp(40px, 6vw, 64px); }
+  .head > * + * { margin-top: 18px; }
+  .chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 18px; }
+  .chip { padding: 10px 18px; border-radius: 999px; background: #fff; font-weight: 550; font-size: 0.95rem; color: var(--ink); box-shadow: var(--shadow); transition: transform .25s var(--ease); }
+  .chip:hover { transform: translateY(-2px); }
+  .bento { display: grid; grid-template-columns: repeat(6, 1fr); gap: 20px; }
+  .tile { grid-column: span 3; display: flex; flex-direction: column; gap: 10px; padding: 36px; }
+  .tile-wide { grid-column: span 6; background: linear-gradient(135deg, #f5f5ff, #fff 60%); display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+  .tile-text { display: flex; flex-direction: column; gap: 10px; height: 100%; }
+  .flow { display: grid; grid-template-columns: 1fr auto 1.3fr; gap: 18px; align-items: center; }
+  .flow .src, .flow .dst { display: grid; gap: 10px; }
+  .flow span { background: #fff; border-radius: 12px; padding: 10px 14px; font-size: 0.85rem; font-weight: 550; box-shadow: var(--shadow); color: var(--ink); white-space: nowrap; }
+  .flow .bot { width: 64px; height: 64px; border-radius: 20px; display: grid; place-items: center; color: #fff; font-weight: 700; background: linear-gradient(135deg, var(--brand), #a855f7); box-shadow: 0 12px 30px rgba(99,102,241,.4); }
+  .tile.small { grid-column: span 2; }
+  .tile .big { font-size: clamp(1.6rem, 2.6vw, 2.2rem); letter-spacing: -0.03em; }
+  .tile p { margin: 0; }
+  .tile-wide p.muted { max-width: 60ch; }
+  .more { margin-top: auto; padding-top: 10px; color: var(--brand); font-weight: 600; font-size: 0.95rem; }
+  .steps { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .steps li { border-top: 1px solid rgba(255,255,255,.15); padding-top: 24px; display: grid; gap: 10px; align-content: start; }
+  .steps .n { font-size: 0.85rem; font-weight: 600; color: #a5b4fc; font-variant-numeric: tabular-nums; }
+  .steps p { margin: 0; font-size: 0.95rem; }
+  .caso { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 48px; align-items: center; }
+  .caso-card { padding: 40px; background: linear-gradient(160deg, #0b0b12, #23233a); color: #e4e4e7; border: 0; }
+  .team { display: flex; justify-content: center; gap: clamp(24px, 6vw, 72px); flex-wrap: wrap; margin: 48px 0 24px; }
+  .member { display: grid; justify-items: center; gap: 6px; max-width: 220px; }
+  .member .muted { font-size: 0.9rem; }
+  .av { width: 88px; height: 88px; border-radius: 50%; display: grid; place-items: center; font-size: 2rem; font-weight: 700; color: #fff; background: linear-gradient(135deg, var(--brand), #a855f7); margin-bottom: 8px; }
+  @media (max-width: 900px) {
+    .hero-grid, .caso { grid-template-columns: 1fr; }
+    .hero-copy { text-align: center; }
+    .hero-copy .lead { margin-inline: auto; }
+    .hero-copy .actions, .trust { justify-content: center; }
+    .tile, .tile-wide, .tile.small { grid-column: span 6; }
+    .tile-wide { grid-template-columns: 1fr; }
+    .flow { display: none; }
+    .steps { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 560px) { .steps { grid-template-columns: 1fr; } }
+</style>
