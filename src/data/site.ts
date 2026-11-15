@@ -25,25 +25,11 @@ export const NAV = [
   { href: '/equipo', label: 'Equipo' },
 ];
 
+// En la web solo se muestran los nombres (sin estudios ni cargos).
 export const EQUIPO = [
-  {
-    nombre: 'Pablo Villalvilla Martín',
-    rol: 'Sistemas, servidores y automatización',
-    formacion: 'Técnico Superior en ASIR',
-    inicial: 'P',
-  },
-  {
-    nombre: 'Jorge Jiménez Gutiérrez',
-    rol: 'Infraestructura y soporte a clientes',
-    formacion: 'Técnico Superior en ASIR',
-    inicial: 'J',
-  },
-  {
-    nombre: 'Rodrigo López Soriano',
-    rol: 'Desarrollo e inteligencia artificial',
-    formacion: 'Ingeniería de Computadores · UAH',
-    inicial: 'R',
-  },
+  { nombre: 'Pablo Villalvilla Martín', inicial: 'P' },
+  { nombre: 'Jorge Jiménez Gutiérrez', inicial: 'J' },
+  { nombre: 'Rodrigo López Soriano', inicial: 'R' },
 ];
 
 export const FAQ = [
