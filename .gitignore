@@ -4,3 +4,6 @@ dist/
 .env
 .env.*
 !.env.example
+
+# Material privado de clientes (originales sin censurar): nunca se sube a GitHub
+casos-privados/
