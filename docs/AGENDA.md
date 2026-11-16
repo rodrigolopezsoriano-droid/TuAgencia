@@ -36,7 +36,9 @@ node scripts/google-refresh-token.mjs
 
 Abre el enlace que sale, elige tu cuenta y acepta. En la terminal aparece el **refresh token**. Guárdalo en un sitio seguro: es como una contraseña de tu calendario.
 
-### 3. Ponerlo en Cloudflare Pages
+### 3. Ponerlo en Cloudflare (Pages o Worker)
+> Si la web se publica como **Worker** (`wrangler.jsonc` en la raíz), las rutas `/api/*` las atiende `worker/index.ts`; si se publica como **Pages**, las atiende la carpeta `functions/`. El código de la agenda es el mismo en los dos casos.
+
 En tu proyecto de Pages → **Settings → Variables and secrets** (entorno *Production*), añade como **Secret**:
 
 | Nombre | Valor |

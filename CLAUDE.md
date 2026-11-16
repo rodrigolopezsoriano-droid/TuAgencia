@@ -7,7 +7,7 @@ Estilo Apple (limpio, mucho espacio, color de marca `#6366F1`), SEO local y cost
 ## Stack
 - **Astro 7** (sitio estático) + TypeScript
 - **Supabase Free** (región UE): formulario de contacto (`leads`) y área de cliente con login por enlace mágico
-- **Cloudflare Pages** para publicar (rama conectada → despliegue automático)
+- **Cloudflare** para publicar (rama conectada → despliegue automático). Funciona como **Pages** (usa `functions/`) o como **Worker** (usa `wrangler.jsonc` + `worker/index.ts`, que reutiliza `functions/api/*`). Ahora mismo está como Worker.
 - La web antigua (HTML estático en GitHub Pages) sigue viva en `main` hasta que se decida lo contrario
 
 ## Dónde se edita cada cosa

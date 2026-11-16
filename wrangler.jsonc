@@ -1,0 +1,13 @@
+{
+  // Publicación como Cloudflare Worker: la web estática (dist/) + la agenda en /api/*.
+  // Las claves (GOOGLE_*, TURNSTILE_SECRET) se ponen en el panel de Cloudflare, nunca aquí.
+  "name": "tuagencia",
+  "main": "worker/index.ts",
+  "compatibility_date": "2025-09-01",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/*"]
+  }
+}
