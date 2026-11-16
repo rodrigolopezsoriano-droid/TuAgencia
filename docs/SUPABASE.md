@@ -32,7 +32,7 @@ Esto está comprobado con 13 pruebas automáticas contra un PostgreSQL real (`np
 
 ### 1. Crear el proyecto
 1. Entra en <https://supabase.com> → *New project*.
-2. Nombre `tuagencia`, **región Central EU (Frankfurt)**, y una contraseña de base de datos larga (guárdala en un gestor de contraseñas).
+2. Nombre `tuagencia`, **región de la UE** (la de este proyecto es West EU, Irlanda), y una contraseña de base de datos larga (guárdala en un gestor de contraseñas).
 
 ### 2. Crear las tablas y los permisos
 *SQL Editor → New query* → pega **todo** `supabase/schema.sql` → *Run*. Debe terminar con «Success».
@@ -87,7 +87,7 @@ insert into public.staff (email, nombre, rol) values ('nueva@tuagencia.tech', 'N
 
 > Necesito que prepares un proyecto de Supabase para mi web tuagencia.tech. Hazlo con mi cuenta de Supabase, **sin pegar ninguna clave en este chat** y sin gastar dinero (plan gratis).
 >
-> 1. Crea un proyecto llamado `tuagencia` en la región **Central EU (Frankfurt)**.
+> 1. Crea un proyecto llamado `tuagencia` en una región de la **Unión Europea**.
 > 2. En el *SQL Editor*, ejecuta el contenido completo del archivo `supabase/schema.sql` del repositorio (carpeta `c:\Users\pvmar\Desktop\TuAgencia`). Comprueba que termina sin errores y que existen las tablas `perfiles`, `staff`, `leads`, `clientes`, `automatizaciones`, `metricas`, `informes`, `tickets` y `keepalive`, todas con RLS activado, y que `staff` tiene 4 filas.
 > 3. En *Authentication*: deja **Confirm email activado**, pon la longitud mínima de contraseña en **10**, *Site URL* = `https://tuagencia.tech` y añade como *Redirect URLs* `https://tuagencia.tech/area-cliente` y `http://localhost:4321/area-cliente`.
 > 4. **No toques** nada más (ni claves, ni el plan, ni facturación) y **no uses la clave service_role** para nada.

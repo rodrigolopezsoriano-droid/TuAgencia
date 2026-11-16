@@ -55,7 +55,7 @@ Sin Supabase configurado, la web funciona igual: el formulario abre el correo y 
 
 La guía completa, paso a paso, está en **[docs/SUPABASE.md](docs/SUPABASE.md)** (incluye el texto para pasárselo a tu Claude de escritorio). En resumen:
 
-1. Crear el proyecto en Supabase (región Frankfurt) y ejecutar `supabase/schema.sql`.
+1. Crear el proyecto en Supabase (región de la UE; el vuestro está en Irlanda) y ejecutar `supabase/schema.sql`.
 2. En *Authentication*: confirmación de email **activada**, contraseña mínima de 10 y las URLs de la web. Configurar un SMTP propio para que lleguen los correos a los clientes.
 3. Poner `PUBLIC_SUPABASE_URL` y `PUBLIC_SUPABASE_ANON_KEY` en `.env` y en Cloudflare.
 4. Registrar `admin@`, `pablo@`, `jorge@` y `rodrigo@tuagencia.tech` desde `/area-cliente` (necesitan buzón para confirmar el correo): ven el panel de gestión.
