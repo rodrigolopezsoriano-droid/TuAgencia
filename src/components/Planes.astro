@@ -13,7 +13,7 @@ const eur = (n: number) => `${n.toLocaleString('es-ES')} €`;
         <strong>{eur(p.mensualIntro ?? p.mensual)}</strong><span class="mes">/mes</span>
       </div>
       <p class="cond">
-        <strong>{p.mensualIntro ? `${eur(p.mensualIntro)}/mes los ${MESES_INTRO} primeros meses, después ${eur(p.mensual)}/mes.` : `${eur(p.mensual)}/mes.`}</strong>
+        <strong>{p.mensualIntro ? `${eur(p.mensualIntro)}/mes los ${MESES_INTRO} primeros meses, después ${eur(p.mensual)}/mes.` : `${eur(p.mensual)}/mes.`}</strong>{' '}
         Sin permanencia. IVA no incluido.
       </p>
       <p class="small muted">Puesta en marcha: {eur(p.setup)} (pago único). Mantenimiento y soporte incluidos en la cuota.</p>

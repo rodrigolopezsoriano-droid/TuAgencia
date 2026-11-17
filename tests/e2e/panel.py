@@ -56,13 +56,18 @@ with sync_playwright() as p:
         pg.on("console", lambda m: errs.append(m.text) if m.type == "error" and "Failed to load resource" not in m.text else None)
         return ctx, pg, errs
 
-    def login(pg, email, clave):
-        pg.goto(B + "/area-cliente", wait_until="networkidle")
+    def login(pg, email, clave, abrir_panel=True, origen="/area-cliente"):
+        pg.goto(B + origen, wait_until="networkidle")
         pg.wait_for_selector("#l-email")
         pg.fill("#l-email", email); pg.fill("#l-pass", clave)
         pg.click("[data-form=login] button[type=submit]")
-        pg.wait_for_selector("[data-view=app]:not([hidden])", timeout=8000)
-        pg.wait_for_timeout(400)
+        pg.wait_for_selector("[data-cuenta]:not([hidden])", timeout=9000)   # tras entrar volvemos a la web con el menú de cuenta
+        pg.wait_for_timeout(300)
+        if abrir_panel:
+            pg.click("[data-cuenta-btn]")
+            pg.click("[data-cuenta-menu] a >> nth=0")
+            pg.wait_for_selector("[data-view=app]:not([hidden])", timeout=9000)
+            pg.wait_for_timeout(400)
 
     def navs(pg): return pg.locator("#ap-nav a span").all_inner_texts()
     def ir(pg, ruta): pg.evaluate(f"location.hash='{ruta}'"); pg.wait_for_timeout(350)
@@ -133,6 +138,7 @@ with sync_playwright() as p:
     pg.click(".ap-side [data-act=cambiar-cuenta]"); pg.wait_for_timeout(600)
     check("cambiar de cuenta: muestra el acceso con el email vacío", pg.is_visible("[data-view=auth]") and pg.input_value("#l-email") == "", pg.input_value("#l-email"))
     pg.fill("#l-email", "ana@clinica.es"); pg.fill("#l-pass", "NuevaClave#2026ok"); pg.click("[data-form=login] button[type=submit]")
+    pg.wait_for_selector("[data-cuenta]:not([hidden])", timeout=9000); pg.click("[data-cuenta-btn]"); pg.click("[data-cuenta-menu] a >> nth=0")
     pg.wait_for_selector("[data-view=app]:not([hidden])"); pg.wait_for_timeout(400)
     check("cambiar de cuenta: entra con la otra cuenta", "Hola, Ana" in cont(pg))
     # menú de usuario
@@ -279,6 +285,86 @@ with sync_playwright() as p:
     check("compat: la lista de equipo avisa en vez de romperse", "No se ha podido cargar la lista" in cont(pg))
     check("compat: sin errores JS", not errs, str(errs))
     ctx.close()
+    # ───────── 8. Menú de cuenta en la cabecera de la web ─────────
+    be = montar(); ctx, pg, errs = nuevo(be)
+    pg.goto(B + "/precios", wait_until="networkidle"); pg.wait_for_timeout(300)
+    check("cabecera: sin sesión se ve «Área cliente» y no el menú", pg.is_visible("[data-login-link]") and not pg.is_visible("[data-cuenta]"))
+    pg.click("[data-login-link]"); pg.wait_for_load_state("networkidle"); pg.wait_for_selector("#l-email")
+    pg.fill("#l-email", "ana@clinica.es"); pg.fill("#l-pass", "AnaSegura#2026x"); pg.click("[data-form=login] button[type=submit]")
+    pg.wait_for_selector("[data-cuenta]:not([hidden])", timeout=9000); pg.wait_for_timeout(300)
+    check("login: vuelve a la página donde estabas (no abre el panel)", pg.url == B + "/precios" and not pg.is_visible("[data-view=app]"), pg.url)
+    check("cabecera: con sesión desaparece «Área cliente» y sale su nombre", not pg.is_visible("[data-login-link]") and "Ana" in pg.inner_text("[data-cuenta-btn]"), pg.inner_text("[data-cuenta-btn]"))
+    pg.screenshot(path=f"{SC}/shots/p-cabecera-cerrada.png")
+    pg.click("[data-cuenta-btn]"); pg.wait_for_timeout(200)
+    m = pg.inner_text("[data-cuenta-menu]")
+    check("menú de cuenta (cliente): todas sus opciones", all(x in m for x in ["Cliente", "Mi panel", "Automatizaciones", "Resultados", "Informes", "Solicitudes", "Ayuda", "Mi cuenta", "Cambiar de cuenta", "Cerrar sesión"]), m)
+    check("menú de cuenta (cliente): no ofrece cosas del equipo", "Contactos" not in m and "Ingresos" not in m)
+    pg.screenshot(path=f"{SC}/shots/p-cabecera-menu.png")
+    pg.keyboard.press("Escape"); pg.wait_for_timeout(150)
+    check("menú de cuenta: Escape lo cierra y devuelve el foco", not pg.is_visible("[data-cuenta-menu]") and pg.evaluate("document.activeElement.hasAttribute('data-cuenta-btn')"))
+    pg.goto(B + "/contacto", wait_until="networkidle"); pg.wait_for_timeout(300)
+    check("navegar por la web: la sesión se mantiene en otras páginas", pg.is_visible("[data-cuenta]") and not pg.is_visible("[data-login-link]"))
+    pg.reload(wait_until="networkidle"); pg.wait_for_timeout(300)
+    check("recargar: sigue con sesión", pg.is_visible("[data-cuenta]"))
+    # entrar al panel desde el menú, sin ver nunca el formulario de acceso
+    pg.click("[data-cuenta-btn]"); pg.click("[data-cuenta-menu] a:has-text('Solicitudes')")
+    pg.wait_for_url("**/area-cliente#/solicitudes")
+    check("al pulsar una opción no se ve el formulario de acceso mientras carga", not pg.is_visible("[data-view=auth]"))
+    pg.wait_for_selector("[data-view=app]:not([hidden])", timeout=9000); pg.wait_for_timeout(300)
+    check("la opción lleva directamente a esa sección del panel", "Solicitudes" in pg.inner_text("#ap-titulo"))
+    pg.click("#ap-side a.ap-web"); pg.wait_for_url(B + "/"); pg.wait_for_timeout(300)
+    check("volver a la web desde el panel: sigue con sesión", pg.is_visible("[data-cuenta]"))
+    # cerrar sesión desde la cabecera
+    pg.click("[data-cuenta-btn]"); pg.click("[data-cuenta-menu] [data-cuenta-salir]"); pg.wait_for_timeout(700)
+    check("cerrar sesión desde la cabecera: vuelve «Área cliente»", pg.is_visible("[data-login-link]") and not pg.is_visible("[data-cuenta]"))
+    check("cerrar sesión desde la cabecera: avisa al servidor", any(x[0] == "logout" for x in be.log))
+    check("cerrar sesión: ya no queda nada guardado", pg.evaluate("localStorage.getItem('ta_sesion')") is None and not pg.evaluate("document.documentElement.classList.contains('ta-logueado')"))
+    check("cabecera: sin errores JS", not errs, str(errs))
+    ctx.close()
+
+    # sesión sin la pista guardada (p. ej. llegas desde el enlace del correo): el menú la reconstruye al abrirse
+    be = montar(); ctx, pg, errs = nuevo(be)
+    login(pg, "ana@clinica.es", "AnaSegura#2026x", abrir_panel=False)
+    pg.evaluate("localStorage.removeItem('ta_sesion')"); pg.goto(B + "/precios", wait_until="networkidle"); pg.wait_for_timeout(300)
+    check("sesión sin pista: aun así sale el menú", pg.is_visible("[data-cuenta]"))
+    pg.click("[data-cuenta-btn]"); pg.wait_for_timeout(900)
+    check("sesión sin pista: al abrir averigua su nombre y su rol", "Ana" in pg.inner_text("[data-cuenta-btn]") and "Cliente" in pg.inner_text("[data-cuenta-menu]"), pg.inner_text("[data-cuenta-menu]"))
+    # pista caducada: queda la pista pero no hay sesión real
+    pg.evaluate("Object.keys(localStorage).filter(k=>k.startsWith('sb-')).forEach(k=>localStorage.removeItem(k))")
+    pg.goto(B + "/precios", wait_until="networkidle"); pg.wait_for_timeout(300)
+    check("sin sesión real no se muestra el menú aunque quede la pista", pg.is_visible("[data-login-link]") and not pg.is_visible("[data-cuenta]"))
+    check("sesión sin pista: sin errores JS", not errs, str(errs))
+    ctx.close()
+
+    # equipo y admin
+    for email, clave, esperan, no_esperan, nombre in [
+        ("pablo@tuagencia.tech", "PabloSegura#2026", ["Equipo", "Panel de gestión", "Contactos", "Solicitudes", "Clientes", "Métricas"], ["Ingresos", "Automatizaciones"], "Pablo"),
+        ("admin@tuagencia.tech", "AdminSegura#2026", ["Administrador", "Panel de gestión", "Contactos", "Ingresos"], ["Automatizaciones"], "Administración"),
+    ]:
+        be = montar(); ctx, pg, errs = nuevo(be)
+        login(pg, email, clave, abrir_panel=False)
+        pg.click("[data-cuenta-btn]"); pg.wait_for_timeout(200); m = pg.inner_text("[data-cuenta-menu]")
+        check(f"menú de cuenta ({email.split('@')[0]}): opciones de su rol", all(x in m for x in esperan) and not any(x in m for x in no_esperan), m)
+        check(f"menú de cuenta ({email.split('@')[0]}): sale su nombre", nombre in pg.inner_text("[data-cuenta-btn]"), pg.inner_text("[data-cuenta-btn]"))
+        ctx.close()
+
+    # móvil
+    be = montar(); ctx, pg, errs = nuevo(be, 390, 800)
+    pg.goto(B + "/precios", wait_until="networkidle"); pg.click("[data-burger]"); pg.wait_for_timeout(200)
+    check("móvil: sin sesión el menú de la web muestra «Área cliente»", pg.is_visible("[data-login-sheet]") and not pg.is_visible("[data-cuenta-sheet]"))
+    login(pg, "ana@clinica.es", "AnaSegura#2026x", abrir_panel=False, origen="/area-cliente")
+    check("móvil: avatar visible (sin nombre) en la cabecera", pg.is_visible("[data-cuenta-btn]") and not pg.is_visible("[data-cuenta-btn] .cta-n"))
+    pg.click("[data-cuenta-btn]"); pg.wait_for_timeout(250)
+    box = pg.evaluate("(()=>{const r=document.querySelector('[data-cuenta-menu]').getBoundingClientRect();return [r.left,r.right]})()")
+    check("móvil: el desplegable cabe en la pantalla", box[0] >= 0 and box[1] <= 390, str(box))
+    pg.screenshot(path=f"{SC}/shots/p-cabecera-movil.png")
+    pg.keyboard.press("Escape"); pg.click("[data-burger]"); pg.wait_for_timeout(250)
+    check("móvil: el menú de la web incluye su cuenta y cerrar sesión", pg.is_visible("[data-cuenta-sheet]") and "Cerrar sesión" in pg.inner_text("[data-cuenta-sheet]"))
+    pg.click("[data-cuenta-sheet] [data-cuenta-salir]"); pg.wait_for_timeout(600)
+    check("móvil: cerrar sesión desde el menú de la web", not pg.is_visible("[data-cuenta]"))
+    check("móvil: sin errores JS", not errs, str(errs))
+    ctx.close()
+
     br.close()
 
 print("\n".join(res))
