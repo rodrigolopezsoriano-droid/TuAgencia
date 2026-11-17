@@ -31,6 +31,8 @@ const faqLd = {
 >
   <!-- HERO -->
   <section class="hero">
+    <div class="blob b1" aria-hidden="true" data-parallax="0.12"></div>
+    <div class="blob b2" aria-hidden="true" data-parallax="-0.07"></div>
     <div class="wrap hero-grid">
       <div class="hero-copy">
         <p class="eyebrow reveal">Automatización con IA · Alcalá de Henares y Madrid</p>
@@ -123,7 +125,7 @@ const faqLd = {
         <h2 class="h2 reveal">¿Cuánto te cuestan las tareas repetitivas?</h2>
         <p class="lead reveal reveal-d1">Mueve los controles y descúbrelo en 10 segundos.</p>
       </div>
-      <div class="reveal reveal-d2"><Calculadora /></div>
+      <div class="reveal reveal-esc reveal-d2"><Calculadora /></div>
     </div>
   </section>
 
@@ -136,7 +138,7 @@ const faqLd = {
         <p class="lead reveal reveal-d2">Diseñamos su web con reservas online, cuentas de cliente, un club VIP por niveles y un panel de gestión que se sincroniza con el calendario del móvil de cada barbero.</p>
         <div class="actions reveal reveal-d3"><a href="/casos/barberia-alcala" class="btn btn-dark">Ver el caso completo</a></div>
       </div>
-      <div class="caso-card card reveal reveal-d2">
+      <div class="caso-card card reveal reveal-der reveal-d2">
         <ul class="list-check">
           <li>Reservas 24/7 sin solapamientos entre barberos</li>
           <li>Cancelar o cambiar la cita desde el móvil</li>
@@ -214,7 +216,14 @@ const faqLd = {
 <style>
   .hero { padding: clamp(48px, 8vw, 96px) 0 clamp(64px, 10vw, 120px); overflow: hidden;
     background: radial-gradient(60% 50% at 80% 30%, rgba(99,102,241,.10), transparent 70%), radial-gradient(40% 40% at 95% 80%, rgba(236,72,153,.08), transparent 70%); }
-  .hero-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 48px; align-items: center; }
+  .hero { position: relative; }
+  .blob { position: absolute; border-radius: 50%; pointer-events: none; will-change: transform; }
+  .blob::before { content: ''; position: absolute; inset: 0; border-radius: 50%; animation: ta-flota 14s ease-in-out infinite; }
+  .b1 { width: 560px; height: 560px; right: -8%; top: -14%; }
+  .b1::before { background: radial-gradient(closest-side, rgba(99, 102, 241, 0.2), transparent); }
+  .b2 { width: 420px; height: 420px; left: -6%; bottom: -18%; }
+  .b2::before { background: radial-gradient(closest-side, rgba(236, 72, 153, 0.13), transparent); animation-delay: -5s; animation-direction: reverse; }
+  .hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 48px; align-items: center; }
   .hero-copy > * + * { margin-top: 24px; }
   .hero-copy .actions { margin-top: 36px; }
   .trust { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 0.88rem; color: var(--muted); }
@@ -231,7 +240,8 @@ const faqLd = {
   .flow { display: grid; grid-template-columns: 1fr auto 1.3fr; gap: 18px; align-items: center; }
   .flow .src, .flow .dst { display: grid; gap: 10px; }
   .flow span { background: #fff; border-radius: 12px; padding: 10px 14px; font-size: 0.85rem; font-weight: 550; box-shadow: var(--shadow); color: var(--ink); white-space: nowrap; }
-  .flow .bot { width: 64px; height: 64px; border-radius: 20px; display: grid; place-items: center; color: #fff; font-weight: 700; background: linear-gradient(135deg, var(--brand), #a855f7); box-shadow: 0 12px 30px rgba(99,102,241,.4); }
+  .flow .bot { animation: ta-bot 2.8s ease-in-out infinite; width: 64px; height: 64px; border-radius: 20px; display: grid; place-items: center; color: #fff; font-weight: 700; background: linear-gradient(135deg, var(--brand), #a855f7); box-shadow: 0 12px 30px rgba(99,102,241,.4); }
+  @keyframes ta-bot { 0%, 100% { box-shadow: 0 12px 30px rgba(99, 102, 241, 0.4); } 50% { box-shadow: 0 12px 46px rgba(168, 85, 247, 0.7); } }
   .tile.small { grid-column: span 2; }
   .tile .big { font-size: clamp(1.6rem, 2.6vw, 2.2rem); letter-spacing: -0.03em; }
   .tile p { margin: 0; }

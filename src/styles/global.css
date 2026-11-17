@@ -26,6 +26,8 @@
 *::after { box-sizing: border-box; }
 
 html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body { overflow-x: clip; }
+main > section, main > article { overflow-x: clip; } /* las entradas laterales (reveal-izq/der) no deben crear scroll horizontal */
 body {
   margin: 0;
   font-family: 'Inter Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
@@ -142,3 +144,32 @@ textarea.input { height: auto; min-height: 120px; padding: 14px 16px; resize: ve
 
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 [hidden] { display: none !important; }
+
+/* ───────── Animaciones sutiles ───────── */
+#progreso { position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 55; pointer-events: none; transform: scaleX(0); transform-origin: 0 50%; background: linear-gradient(90deg, #6366f1, #a855f7, #ec4899); }
+html.app-on #progreso { display: none; }
+.reveal-izq { transform: translateX(-36px); }
+.reveal-der { transform: translateX(36px); }
+.reveal-esc { transform: scale(0.94); }
+.reveal-d4 { transition-delay: 0.32s; }
+.reveal-d5 { transition-delay: 0.4s; }
+
+/* Foco de luz que sigue al ratón dentro de las tarjetas (lo mueve src/scripts/animaciones.ts) */
+.card-link, .plan { position: relative; }
+.card-link::after, .plan::after {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity 0.3s;
+  background: radial-gradient(360px circle at var(--mx, 50%) var(--my, 50%), rgba(99, 102, 241, 0.12), transparent 60%);
+}
+@media (hover: hover) { .card-link:hover::after, .plan:hover::after { opacity: 1; } }
+
+@media (prefers-reduced-motion: no-preference) {
+  .grad { background-size: 220% 100%; animation: ta-desliza 9s ease-in-out infinite alternate; }
+  .btn-primary { position: relative; overflow: hidden; }
+  .btn-primary::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.38) 50%, transparent 70%); transform: translateX(-130%); }
+  @media (hover: hover) { .btn-primary:hover::after { transform: translateX(130%); transition: transform 0.8s var(--ease); } }
+  .card-link .icon-badge { transition: transform 0.4s var(--ease); }
+  .card-link:hover .icon-badge { transform: rotate(-6deg) scale(1.08); }
+}
+@keyframes ta-desliza { to { background-position: 100% 0; } }
+@keyframes ta-flota { 0%, 100% { translate: 0 0; scale: 1; } 50% { translate: 34px -40px; scale: 1.08; } }
+@keyframes ta-flota-v { 0%, 100% { translate: 0 0; } 50% { translate: 0 -10px; } }

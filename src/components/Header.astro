@@ -61,7 +61,9 @@ const nav = en
   .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.1rem; letter-spacing: -0.02em; color: var(--ink); }
   .dot { color: var(--brand-2); }
   .links { display: flex; gap: 28px; margin-left: 24px; }
-  .links a { font-size: 0.92rem; color: var(--muted); transition: color 0.2s; }
+  .links a { position: relative; font-size: 0.92rem; color: var(--muted); transition: color 0.2s; }
+  .links a::after { content: ''; position: absolute; left: 0; right: 0; bottom: -7px; height: 2px; border-radius: 2px; background: var(--brand-2); transform: scaleX(0); transform-origin: left; transition: transform 0.35s var(--ease); }
+  .links a:hover::after, .links a[aria-current]::after { transform: scaleX(1); }
   .links a:hover, .links a[aria-current] { color: var(--ink); }
   .right { margin-left: auto; display: flex; align-items: center; gap: 16px; }
   .login { font-size: 0.92rem; color: var(--muted); }
