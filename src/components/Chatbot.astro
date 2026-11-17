@@ -1,0 +1,233 @@
+---
+// Asistente de la web: gratis, sin IA de pago ni servicios externos.
+// Responde con botones y con una búsqueda por palabras clave sobre las FAQ y las soluciones (src/data).
+// Termina siempre ofreciendo reservar una llamada o hablar por WhatsApp.
+import { FAQ, SITE } from '../data/site';
+import { SOLUCIONES } from '../data/soluciones';
+import { PLANES, MESES_INTRO } from '../data/precios';
+
+const eur = (n: number) => `${n.toLocaleString('es-ES')} €`;
+const datos = {
+  whatsapp: SITE.whatsapp ? `https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent('Hola, vengo de la web de TuAgencia y me gustaría hablar con alguien.')}` : '',
+  agenda: SITE.agenda,
+  faq: FAQ.map((f) => ({ t: f.p, r: f.r })),
+  soluciones: SOLUCIONES.map((s) => ({ t: s.nombre, r: `${s.resumen} ${s.resultado}`, url: `/soluciones/${s.slug}`, k: [s.nombre, s.corto, s.resumen, ...s.queHace, ...s.paraQuien].join(' ') })),
+  precios: PLANES.map((p) =>
+    p.mensualIntro
+      ? `${p.nombre}: ${eur(p.mensualIntro)}/mes los ${MESES_INTRO} primeros meses, después ${eur(p.mensual)}/mes. Puesta en marcha: ${eur(p.setup)} (pago único).`
+      : `${p.nombre}: ${eur(p.mensual)}/mes. Puesta en marcha: ${eur(p.setup)} (pago único).`
+  ),
+};
+const json = JSON.stringify(datos).replace(/</g, '\\u003c');
+---
+<div class="cb" data-cb hidden>
+  <script type="application/json" id="cb-datos" set:html={json} />
+  <button type="button" class="cb-open" data-cb-open aria-expanded="false" aria-controls="cb-panel">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z" /></svg>
+    <span>Asistente</span>
+  </button>
+
+  <section class="cb-panel" id="cb-panel" role="dialog" aria-label="Asistente de TuAgencia" hidden>
+    <header class="cb-head">
+      <div><strong>Asistente de TuAgencia</strong><span>Respuestas automáticas</span></div>
+      <button type="button" class="cb-x" data-cb-close aria-label="Cerrar el asistente">✕</button>
+    </header>
+    <div class="cb-log" data-cb-log role="log" aria-live="polite" aria-relevant="additions"></div>
+    <div class="cb-chips" data-cb-chips></div>
+    <form class="cb-form" data-cb-form>
+      <label for="cb-input" class="sr-only">Escribe tu pregunta</label>
+      <input id="cb-input" type="text" autocomplete="off" maxlength="200" placeholder="Escribe tu pregunta…" />
+      <button type="submit">Enviar</button>
+    </form>
+  </section>
+</div>
+
+<style is:global>
+  .cb { --cb-z: 61; }
+  .cb[hidden], .cb [hidden] { display: none !important; }
+  .cb-open {
+    position: fixed; right: 20px; bottom: calc(88px + env(safe-area-inset-bottom)); z-index: var(--cb-z);
+    display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 18px; border: 0; border-radius: 999px;
+    background: var(--brand-2); color: #fff; font: inherit; font-weight: 600; font-size: 0.92rem; cursor: pointer;
+    box-shadow: 0 10px 30px rgba(79, 70, 229, 0.38);
+  }
+  .cb-open:active { transform: scale(0.97); }
+  .cb-panel {
+    position: fixed; right: 20px; bottom: calc(88px + env(safe-area-inset-bottom)); z-index: 70;
+    width: min(380px, calc(100vw - 24px)); height: min(560px, calc(100dvh - 120px));
+    display: flex; flex-direction: column; background: #fff; border-radius: 20px; overflow: hidden;
+    box-shadow: 0 30px 80px -10px rgba(17, 17, 26, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.06);
+  }
+  .cb-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px; background: var(--ink); color: #fff; }
+  .cb-head strong { display: block; font-size: 0.95rem; }
+  .cb-head span { font-size: 0.75rem; color: #d4d4d8; }
+  .cb-x { width: 36px; height: 36px; border: 0; border-radius: 50%; background: rgba(255, 255, 255, 0.12); color: #fff; font-size: 1rem; cursor: pointer; }
+  .cb-log { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px; background: #f5f5f7; overscroll-behavior: contain; }
+  .cb-m { max-width: 88%; padding: 10px 13px; border-radius: 16px; font-size: 0.93rem; line-height: 1.45; white-space: pre-line; }
+  .cb-m.bot { align-self: flex-start; background: #fff; color: var(--ink); border-bottom-left-radius: 5px; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06); }
+  .cb-m.yo { align-self: flex-end; background: var(--brand-2); color: #fff; border-bottom-right-radius: 5px; }
+  .cb-acc { align-self: flex-start; display: flex; flex-wrap: wrap; gap: 8px; max-width: 95%; }
+  .cb-acc a, .cb-chips button, .cb-chips a {
+    display: inline-flex; align-items: center; min-height: 36px; padding: 0 14px; border-radius: 999px; font: inherit; font-size: 0.86rem; font-weight: 600; cursor: pointer; text-decoration: none;
+  }
+  .cb-acc a.pri { background: var(--brand-2); color: #fff; }
+  .cb-acc a.sec { background: #fff; color: var(--brand-2); border: 1px solid #c7d2fe; }
+  .cb-chips { display: flex; gap: 8px; padding: 10px 12px 4px; overflow-x: auto; background: #fff; border-top: 1px solid var(--line); scrollbar-width: thin; }
+  .cb-chips button, .cb-chips a { flex: 0 0 auto; background: var(--brand-soft); color: var(--brand-2); border: 0; white-space: nowrap; }
+  .cb-form { display: flex; gap: 8px; padding: 10px 12px 12px; background: #fff; }
+  .cb-form input { flex: 1; min-width: 0; padding: 11px 14px; border-radius: 12px; border: 1px solid #d2d2d7; font: inherit; font-size: 16px; }
+  .cb-form button { padding: 0 16px; border: 0; border-radius: 12px; background: var(--ink); color: #fff; font: inherit; font-weight: 600; cursor: pointer; }
+  .cb :focus-visible { outline: 3px solid #a5b4fc; outline-offset: 2px; }
+  @media (max-width: 560px) {
+    .cb-open span { display: none; }
+    .cb-open { width: 48px; padding: 0; justify-content: center; }
+    .cb-panel { right: 12px; left: 12px; width: auto; bottom: calc(12px + env(safe-area-inset-bottom)); height: min(520px, calc(100dvh - 24px)); }
+  }
+</style>
+
+<script>
+  type Dato = { t: string; r: string; url?: string; k?: string };
+  const raiz = document.querySelector<HTMLElement>('[data-cb]');
+  const crudo = document.getElementById('cb-datos')?.textContent;
+  if (raiz && crudo) {
+    const D = JSON.parse(crudo) as { whatsapp: string; agenda: string; faq: Dato[]; soluciones: Dato[]; precios: string[] };
+    const $ = <T extends HTMLElement>(s: string) => raiz.querySelector<T>(s)!;
+    const abrir = $('[data-cb-open]'), panel = $('#cb-panel'), log = $('[data-cb-log]'), chips = $('[data-cb-chips]');
+    const form = $<HTMLFormElement>('[data-cb-form]'), input = $<HTMLInputElement>('#cb-input');
+    let iniciado = false;
+
+    const norm = (s: string) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+    const PARADAS = new Set('que como para por con una uno unos unas los las del sus mis tus mas muy pero esto esta este son hay tienen tengo quiero puedo podeis haceis hacen cual cuales donde cuando necesito sobre'.toLowerCase().split(' '));
+    const palabras = (s: string) => norm(s).split(/[^a-z0-9ñ]+/).filter((w) => w.length > 2 && !PARADAS.has(w));
+
+    function msg(texto: string, quien: 'bot' | 'yo') {
+      const d = document.createElement('div');
+      d.className = `cb-m ${quien}`;
+      d.textContent = texto;
+      log.appendChild(d);
+      log.scrollTop = log.scrollHeight;
+    }
+    function acciones(extra: { t: string; href: string }[] = []) {
+      const fila = document.createElement('div');
+      fila.className = 'cb-acc';
+      const enlace = (t: string, href: string, clase: string, externo = false) => {
+        const a = document.createElement('a');
+        a.textContent = t; a.href = href; a.className = clase;
+        if (externo) { a.target = '_blank'; a.rel = 'noopener'; }
+        fila.appendChild(a);
+      };
+      extra.forEach((e) => enlace(e.t, e.href, 'sec'));
+      enlace('Reservar llamada gratis', D.agenda, 'pri');
+      if (D.whatsapp) enlace('Hablar por WhatsApp', D.whatsapp, 'sec', true);
+      log.appendChild(fila);
+      log.scrollTop = log.scrollHeight;
+    }
+    const responder = (texto: string, extra: { t: string; href: string }[] = []) => { msg(texto, 'bot'); acciones(extra); };
+
+    const faqPor = (clave: string) => D.faq.find((f) => norm(f.t).includes(clave));
+
+    const respuestas: Record<string, () => void> = {
+      que: () => responder('Automatizamos con IA lo que más tiempo te quita en tu negocio: contestar WhatsApps y dar citas, hacer seguimiento de clientes, redactar informes, recordar citas, vigilar reseñas y montar webs con reservas.\n\n¿Quieres ver alguna?', D.soluciones.slice(0, 3).map((s) => ({ t: s.t, href: s.url! }))),
+      precios: () => responder(`Nuestros planes (IVA no incluido, sin permanencia):\n\n${D.precios.join('\n')}`, [{ t: 'Ver todos los precios', href: '/precios' }]),
+      tardanza: () => responder(faqPor('se tarda')?.r ?? 'Te enseñamos una demo en 48 horas y una automatización estándar queda funcionando en unas 2 semanas.'),
+      demo: () => responder('Te enseñamos una demo sobre un caso real de tu negocio en 48 horas. Lo primero es una llamada gratis de 30 minutos para ver dónde pierdes tiempo.'),
+      whatsapp: () => responder('Claro, te atendemos por WhatsApp. Pulsa el botón y escríbenos.'),
+    };
+
+    // Intenciones frecuentes antes de buscar en las FAQ
+    function intencion(t: string): keyof typeof respuestas | null {
+      const n = norm(t);
+      if (/(precio|cuesta|cuanto vale|tarifa|presupuesto|cuota|coste)/.test(n)) return 'precios';
+      if (/(cuanto tard|plazo|cuando estar|en cuanto tiempo)/.test(n)) return 'tardanza';
+      if (/(demo|demostracion)/.test(n)) return 'demo';
+      if (/(hablar|con una persona|con alguien|llamar|telefono|contactar)/.test(n) || n.trim() === 'whatsapp') return 'whatsapp';
+      if (/(que hac|que ofrec|servicios|a que os dedic)/.test(n)) return 'que';
+      return null;
+    }
+
+    function buscar(t: string) {
+      const q = palabras(t);
+      if (!q.length) return null;
+      const lista: { d: Dato; texto: string; titulo: string }[] = [
+        ...D.faq.map((d) => ({ d, texto: norm(`${d.t} ${d.r}`), titulo: norm(d.t) })),
+        ...D.soluciones.map((d) => ({ d, texto: norm(`${d.t} ${d.k ?? ''}`), titulo: norm(d.t) })),
+      ];
+      let mejor: { d: Dato; puntos: number } | null = null;
+      for (const e of lista) {
+        let puntos = 0;
+        for (const w of q) {
+          if (e.titulo.includes(w)) puntos += 3;
+          else if (e.texto.includes(w)) puntos += 1;
+        }
+        if (puntos > (mejor?.puntos ?? 0)) mejor = { d: e.d, puntos };
+      }
+      return mejor && mejor.puntos >= 2 ? mejor.d : null;
+    }
+
+    function preguntar(texto: string) {
+      msg(texto, 'yo');
+      const clave = intencion(texto);
+      if (clave) return respuestas[clave]();
+      const hit = buscar(texto);
+      if (hit) return responder(hit.r, hit.url ? [{ t: `Saber más: ${hit.t}`, href: hit.url }] : []);
+      responder('No estoy seguro de haberte entendido bien. Prefiero que te lo cuente una persona: reserva una llamada gratis de 30 minutos o escríbenos por WhatsApp.');
+    }
+
+    // Botones rápidos
+    const botones: [string, keyof typeof respuestas, string][] = [
+      ['¿Qué hacéis?', 'que', '¿Qué hacéis?'],
+      ['Precios', 'precios', 'Precios'],
+      ['¿Cuánto tardáis?', 'tardanza', '¿Cuánto tardáis?'],
+      ['Quiero una demo', 'demo', 'Quiero una demo'],
+    ];
+    botones.forEach(([etiqueta, clave, dicho]) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.textContent = etiqueta;
+      b.addEventListener('click', () => { msg(dicho, 'yo'); respuestas[clave](); });
+      chips.appendChild(b);
+    });
+    if (D.whatsapp) {
+      const a = document.createElement('a');
+      a.href = D.whatsapp; a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'Hablar por WhatsApp';
+      chips.appendChild(a);
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const t = input.value.trim();
+      if (!t) return;
+      input.value = '';
+      preguntar(t);
+    });
+
+    function abrirPanel() {
+      panel.hidden = false;
+      abrir.hidden = true;
+      abrir.setAttribute('aria-expanded', 'true');
+      if (!iniciado) {
+        iniciado = true;
+        msg('¡Hola! Soy el asistente automático de TuAgencia. Elige una opción o escribe tu pregunta.', 'bot');
+      }
+      input.focus();
+    }
+    function cerrarPanel() {
+      panel.hidden = true;
+      abrir.hidden = false;
+      abrir.setAttribute('aria-expanded', 'false');
+      abrir.focus();
+    }
+    abrir.addEventListener('click', abrirPanel);
+    $('[data-cb-close]').addEventListener('click', cerrarPanel);
+    raiz.addEventListener('keydown', (e) => { if ((e as KeyboardEvent).key === 'Escape' && !panel.hidden) { e.stopPropagation(); cerrarPanel(); } });
+
+    raiz.hidden = false; // sin JavaScript el asistente no se muestra (el resto de la web funciona igual)
+
+    /* ─── PREPARADO, DESACTIVADO: respuestas con Cloudflare Workers AI ───────────────
+       Ver docs/CHATBOT.md y el bloque comentado de worker/index.ts (/api/chat).
+       Para activarlo: (1) activar el binding "ai" en wrangler.jsonc, (2) quitar el comentario de /api/chat
+       en worker/index.ts y (3) en `preguntar`, cuando `buscar` no encuentre nada, hacer
+         const r = await fetch('/api/chat', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ pregunta: texto }) });
+         if (r.ok) { responder((await r.json()).respuesta); return; }
+       No está activo: hoy el asistente no llama a ningún servicio externo. */
+  }
+</script>

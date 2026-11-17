@@ -29,6 +29,23 @@ export default {
       if (request.method !== 'POST') return respuesta(405, 'metodo_no_permitido', { allow: 'POST' });
       return reservar({ request, env });
     }
+    /* ─── PREPARADO, DESACTIVADO: chat con Cloudflare Workers AI ─────────────────────────
+       Ver docs/CHATBOT.md. Para activarlo hay que (1) descomentar "ai" en wrangler.jsonc,
+       (2) añadir `AI: { run: (modelo: string, datos: unknown) => Promise<{ response?: string }> }` a WorkerEnv
+       y (3) quitar el comentario de este bloque. Hoy NO se usa: el asistente de la web no llama a ningún servicio.
+
+    if (ruta === '/api/chat' && request.method === 'POST') {
+      const { pregunta } = (await request.json().catch(() => ({}))) as { pregunta?: string };
+      if (typeof pregunta !== 'string' || !pregunta.trim() || pregunta.length > 300) return respuesta(400, 'pregunta_no_valida');
+      const r = await env.AI.run('@cf/meta/llama-3.1-8b-instruct', {
+        messages: [
+          { role: 'system', content: 'Eres el asistente de TuAgencia, una agencia de automatización con IA de Alcalá de Henares. Responde en español, en 2-3 frases, solo con lo que sabes de la agencia y termina ofreciendo reservar una llamada en /reservar. No inventes precios ni plazos.' },
+          { role: 'user', content: pregunta.trim() },
+        ],
+      });
+      return new Response(JSON.stringify({ respuesta: r.response ?? '' }), { headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' } });
+    }
+    */
     if (ruta.startsWith('/api/')) return respuesta(404, 'no_encontrado');
 
     return env.ASSETS.fetch(request);
