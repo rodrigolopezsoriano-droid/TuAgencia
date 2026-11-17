@@ -31,7 +31,7 @@ const fotos = [
       <p class="eyebrow reveal">Proyecto · {censurado ? 'Marca de moda con tienda Shopify' : `${CASO_MODA_NOMBRE} · tienda Shopify`}</p>
       <h1 class="display reveal reveal-d1">De los eventos a una comunidad de clientes.</h1>
       <p class="lead reveal reveal-d2">{censurado ? 'Una marca de moda de inspiración italiana' : CASO_MODA_NOMBRE} vende en Shopify y capta clientes en eventos presenciales. Preparamos el sistema que convierte a cada asistente en cliente registrado, sin trabajo manual.</p>
-      <p class="reveal reveal-d3"><span class="pill">Piloto en preparación</span></p>
+      <p class="reveal reveal-d3"><span class="pill">Proyecto confirmado · en implantación</span></p>
     </div>
   </section>
 
@@ -66,10 +66,36 @@ const fotos = [
         ))}
       </div>
       <p class="muted center nota">
-        Capturas de una demostración con datos de ejemplo. {censurado && 'Nombre de la marca y de sus productos sustituidos para proteger su privacidad. '}Proyecto en fase de piloto: todavía no hay resultados reales que publicar.
+        Capturas de una demostración con datos de ejemplo. {censurado && 'Nombre de la marca y de sus productos sustituidos para proteger su privacidad. '}Proyecto en implantación: todavía no hay resultados reales que publicar.
       </p>
     </div>
   </section>
+
+  {/*
+    ── PREPARADO PARA CUANDO SE DESCENSURE Y HAYA RESULTADOS REALES ──────────────
+    Quitar este comentario SOLO cuando el cliente haya dado permiso y los datos sean reales y medidos.
+    No poner cifras de ejemplo. Rellenar los valores entre corchetes.
+
+  <section class="section-tight soft">
+    <div class="wrap">
+      <h2 class="h3 center reveal">Resultados</h2>
+      <div class="grid g3" style="margin-top:20px">
+        <div class="card reveal"><p class="display-sm">[cifra]</p><p class="muted">[qué se midió y en qué periodo]</p></div>
+        <div class="card reveal"><p class="display-sm">[cifra]</p><p class="muted">[qué se midió y en qué periodo]</p></div>
+        <div class="card reveal"><p class="display-sm">[cifra]</p><p class="muted">[qué se midió y en qué periodo]</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="wrap">
+      <figure class="card reveal" style="max-width:720px;margin:0 auto">
+        <blockquote class="lead" style="margin:0">«[testimonio literal, con permiso por escrito]»</blockquote>
+        <figcaption class="muted" style="margin-top:12px">[Nombre y cargo], {CASO_MODA_NOMBRE}</figcaption>
+      </figure>
+    </div>
+  </section>
+  */}
 
   <CtaFinal titulo="¿Vendes online y quieres conocer mejor a tus clientes?" texto="Montamos un sistema parecido adaptado a tu tienda. Pide una auditoría y te enseñamos cómo quedaría." />
 </Base>
