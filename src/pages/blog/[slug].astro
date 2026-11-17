@@ -1,0 +1,114 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { SITE } from '../../data/site';
+import { getSolucion } from '../../data/soluciones';
+import { getSector } from '../../data/sectores';
+import { articulosPublicados, fechaLarga, minutosLectura } from '../../data/blog';
+
+export async function getStaticPaths() {
+  const articulos = await articulosPublicados();
+  return articulos.map((a) => ({ params: { slug: a.id }, props: { a } }));
+}
+const { a } = Astro.props;
+const { Content, headings } = await render(a);
+const d = a.data;
+const lectura = minutosLectura(a.body);
+const indice = headings.filter((h) => h.depth === 2);
+const sol = d.solucion ? getSolucion(d.solucion) : undefined;
+const sec = d.sector ? getSector(d.sector) : undefined;
+const url = `${SITE.url}/blog/${a.id}`;
+
+const jsonLd: object[] = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: d.title,
+    description: d.description,
+    datePublished: d.fecha.toISOString(),
+    dateModified: (d.actualizado ?? d.fecha).toISOString(),
+    author: { '@type': 'Person', name: d.autor },
+    publisher: { '@type': 'Organization', name: 'TuAgencia', logo: { '@type': 'ImageObject', url: `${SITE.url}/icon-512.png` } },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+    image: `${SITE.url}/og.png`,
+    inLanguage: 'es-ES',
+  },
+];
+if (d.faq?.length) {
+  jsonLd.push({
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: d.faq.map((f) => ({ '@type': 'Question', name: f.p, acceptedAnswer: { '@type': 'Answer', text: f.r } })),
+  });
+}
+---
+<Base title={d.title} description={d.description} jsonLd={jsonLd} noindex={d.draft}>
+  <article class="section-tight">
+    <div class="wrap art">
+      <header class="stack">
+        <p class="eyebrow"><a href="/blog">Blog</a></p>
+        <h1 class="h2">{d.title}</h1>
+        <p class="meta muted">Por {d.autor} · <time datetime={d.fecha.toISOString()}>{fechaLarga(d.fecha)}</time> · {lectura} min de lectura{d.draft && ' · BORRADOR'}</p>
+      </header>
+
+      {indice.length > 1 && (
+        <nav class="toc card" aria-label="Índice del artículo">
+          <p class="toc-t">En este artículo</p>
+          <ol>{indice.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}</ol>
+        </nav>
+      )}
+
+      <div class="prose"><Content /></div>
+
+      {(sol || sec) && (
+        <aside class="rel card" aria-label="Relacionado">
+          <p class="toc-t">Relacionado</p>
+          <ul>
+            {sol && <li>Solución: <a href={`/soluciones/${sol.slug}`}>{sol.nombre}</a></li>}
+            {sec && <li>Sector: <a href={`/sectores/${sec.slug}`}>{sec.nombre}</a></li>}
+            <li>Precios: <a href="/precios">planes y condiciones</a></li>
+          </ul>
+        </aside>
+      )}
+
+      <section class="fin card">
+        {d.cta === 'informe' ? (
+          <>
+            <h2 class="h3">¿Quieres saber qué dicen tus clientes de ti en Google?</h2>
+            <p class="muted">Te preparamos un informe gratis de tus reseñas y lo recibes en menos de 24 horas laborables.</p>
+            <a href="/informe-resenas" class="btn btn-primary">Pedir mi informe gratis</a>
+          </>
+        ) : (
+          <>
+            <h2 class="h3">¿Lo vemos aplicado a tu negocio?</h2>
+            <p class="muted">En una llamada gratis de 30 minutos miramos dónde pierdes tiempo y qué se puede automatizar.</p>
+            <a href="/reservar" class="btn btn-primary">Reserva una llamada gratis</a>
+          </>
+        )}
+      </section>
+    </div>
+  </article>
+</Base>
+<style>
+  .art { max-width: 760px; }
+  .art header { margin-bottom: 28px; }
+  .eyebrow a { color: var(--brand-2); }
+  .meta { margin: 0; font-size: 0.92rem; }
+  .toc, .rel { margin: 0 0 32px; padding: 22px 26px; background: var(--bg-soft); border: 0; }
+  .toc-t { margin: 0 0 8px; font-weight: 650; font-size: 0.95rem; }
+  .toc ol, .rel ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+  .toc a, .rel a { color: var(--brand-2); font-weight: 550; }
+  .prose :global(h2) { font-size: 1.6rem; letter-spacing: -0.02em; line-height: 1.2; margin: 44px 0 12px; scroll-margin-top: 80px; }
+  .prose :global(h3) { font-size: 1.2rem; margin: 28px 0 8px; }
+  .prose :global(p), .prose :global(li) { font-size: 1.05rem; line-height: 1.7; color: #3a3a3c; }
+  .prose :global(p) { margin: 0 0 16px; }
+  .prose :global(ul), .prose :global(ol) { margin: 0 0 18px; padding-left: 22px; display: grid; gap: 6px; }
+  .prose :global(a) { color: var(--brand-2); text-decoration: underline; text-underline-offset: 3px; }
+  .prose :global(table) { width: 100%; border-collapse: collapse; margin: 8px 0 22px; font-size: 0.95rem; display: block; overflow-x: auto; }
+  .prose :global(th), .prose :global(td) { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .prose :global(th) { font-weight: 650; color: var(--ink); }
+  .prose :global(blockquote) { margin: 0 0 18px; padding: 4px 0 4px 18px; border-left: 3px solid var(--brand-2); color: var(--muted); }
+  .rel { margin-top: 36px; }
+  .fin { margin-top: 36px; display: grid; gap: 12px; justify-items: start; background: var(--brand-soft); border: 0; }
+  .fin p { margin: 0; }
+</style>

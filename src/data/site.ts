@@ -24,6 +24,7 @@ export const NAV = [
   { href: '/sectores', label: 'Sectores' },
   { href: '/precios', label: 'Precios' },
   { href: '/equipo', label: 'Equipo' },
+  { href: '/blog', label: 'Blog' },
 ];
 
 // En la web solo se muestran nombre y rol (sin estudios).

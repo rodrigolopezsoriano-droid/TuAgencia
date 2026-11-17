@@ -1,0 +1,44 @@
+---
+import Base from '../../layouts/Base.astro';
+import CtaFinal from '../../components/CtaFinal.astro';
+import { articulosPublicados, fechaLarga, minutosLectura } from '../../data/blog';
+
+const articulos = await articulosPublicados();
+const hayPublicados = articulos.some((a) => !a.data.draft);
+---
+<Base
+  title="Blog de automatización para negocios locales"
+  description="Guías prácticas para automatizar tu negocio con IA: WhatsApp, citas, CRM, precios reales y casos. Escritas por el equipo de TuAgencia."
+  noindex={!hayPublicados}
+>
+  <section class="section center">
+    <div class="wrap stack">
+      <p class="eyebrow reveal">Blog</p>
+      <h1 class="display reveal reveal-d1">Guías para ahorrar tiempo.</h1>
+      <p class="lead reveal reveal-d2">Cómo automatizar las tareas que más tiempo roban a un negocio local, explicado sin humo.</p>
+    </div>
+  </section>
+  <section class="section-tight soft">
+    <div class="wrap">
+      {articulos.length === 0 ? (
+        <p class="center muted">Estamos preparando los primeros artículos. Mientras tanto, <a href="/reservar" class="enlace">reserva una llamada gratis</a> y lo hablamos.</p>
+      ) : (
+        <div class="grid g2">
+          {articulos.map((a, i) => (
+            <a href={`/blog/${a.id}`} class:list={['card card-link reveal', `reveal-d${(i % 2) + 1}`]}>
+              <p class="eyebrow" style="margin:0 0 8px">{fechaLarga(a.data.fecha)} · {minutosLectura(a.body)} min de lectura{a.data.draft && ' · BORRADOR (solo visible en local)'}</p>
+              <h2 class="h3">{a.data.title}</h2>
+              <p class="muted" style="margin:10px 0 0">{a.data.description}</p>
+              <p class="mas">Leer el artículo →</p>
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+  <CtaFinal />
+</Base>
+<style>
+  .mas { margin: 16px 0 0; color: var(--brand-2); font-weight: 600; }
+  .enlace { color: var(--brand-2); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+</style>
