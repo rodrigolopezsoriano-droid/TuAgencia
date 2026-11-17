@@ -30,8 +30,8 @@ const pOut = (y: number) => `M345 170 C405 170 405 ${y + 30} 470 ${y + 30}`;
       {salidas.map((s) => <path d={pOut(s.y)} />)}
     </svg>
 
-    {entradas.map((e, i) => <i class="m-luz entra" style={`offset-path: path('${pIn(e.y)}'); --d:${i * 1.2}s`}></i>)}
-    {salidas.map((s, i) => <i class="m-luz sale" style={`offset-path: path('${pOut(s.y)}'); --d:${i * 1.2}s`}></i>)}
+    {entradas.map((e, i) => <i class="m-luz entra" data-ruta={pIn(e.y)} style={`--d:${i * 1.2}`}></i>)}
+    {salidas.map((s, i) => <i class="m-luz sale" data-ruta={pOut(s.y)} style={`--d:${i * 1.2}`}></i>)}
 
     {entradas.map((e) => (
       <div class="m-caja in" style={`left:40px; top:${e.y}px`}>
@@ -59,20 +59,59 @@ const pOut = (y: number) => `M345 170 C405 170 405 ${y + 30} 470 ${y + 30}`;
 </div>
 
 <script>
-  // Inclinación suave con el ratón (solo con ratón y sin «reducir movimiento»)
   const m = document.querySelector<HTMLElement>('[data-m3d]');
-  if (m && matchMedia('(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)').matches) {
-    let raf = 0;
-    m.addEventListener('pointermove', (e) => {
-      const r = m.getBoundingClientRect();
-      const x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        m.style.setProperty('--rz', `${(-38 + x * 10).toFixed(2)}deg`);
-        m.style.setProperty('--rx', `${(56 - y * 8).toFixed(2)}deg`);
+  if (m) {
+    const animaciones: Animation[] = [];
+    const sinMovimiento = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Luces que viajan por las pistas. Se animan con transform y opacity (las anima la tarjeta gráfica, sin repintar):
+    // se muestrea el recorrido de cada pista y se reproduce con la API de animaciones web.
+    if (!sinMovimiento && 'animate' in m) {
+      const NS = 'http://www.w3.org/2000/svg';
+      const suave = (u: number) => 0.5 - 0.5 * Math.cos(Math.PI * u); // aproxima cubic-bezier(0.45, 0, 0.55, 1)
+      m.querySelectorAll<HTMLElement>('.m-luz').forEach((luz) => {
+        const ruta = document.createElementNS(NS, 'path');
+        ruta.setAttribute('d', luz.dataset.ruta ?? '');
+        const largo = ruta.getTotalLength();
+        const entra = luz.classList.contains('entra');
+        const [ini, fin] = entra ? [0, 0.34] : [0.38, 0.72]; // tramo del ciclo en el que viaja
+        const opacidad = (t: number) => (t <= ini ? 0 : t < ini + 0.04 ? (t - ini) / 0.04 : t <= fin - 0.04 ? 1 : t < fin ? (fin - t) / 0.04 : 0);
+        const pos = (p: number) => { const q = ruta.getPointAtLength(p * largo); return `translate3d(${(q.x - 6).toFixed(1)}px, ${(q.y - 6).toFixed(1)}px, 3px)`; };
+        const N = 24;
+        const frames: Keyframe[] = [];
+        if (ini > 0) frames.push({ offset: 0, opacity: 0, transform: pos(0) });
+        for (let k = 0; k <= N; k++) {
+          const o = ini + ((fin - ini) * k) / N;
+          frames.push({ offset: o, opacity: opacidad(o), transform: pos(suave(k / N)) });
+        }
+        frames.push({ offset: 1, opacity: 0, transform: pos(1) });
+        animaciones.push(luz.animate(frames, { duration: 3600, delay: Number(luz.style.getPropertyValue('--d') || 0) * 1000, iterations: Infinity, fill: 'both', easing: 'linear' }));
       });
-    });
-    m.addEventListener('pointerleave', () => { m.style.removeProperty('--rz'); m.style.removeProperty('--rx'); });
+    }
+
+    // Solo se anima mientras se ve en pantalla
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((entradas) => {
+        const visible = entradas[0].isIntersecting;
+        m.classList.toggle('pausada', !visible);
+        animaciones.forEach((an) => (visible ? an.play() : an.pause()));
+      }, { rootMargin: '80px' }).observe(m);
+    }
+
+    // Inclinación suave con el ratón (solo con ratón y sin «reducir movimiento»)
+    if (matchMedia('(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)').matches) {
+      let raf = 0;
+      m.addEventListener('pointermove', (e) => {
+        const r = m.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(() => {
+          m.style.setProperty('--rz', `${(-38 + x * 10).toFixed(2)}deg`);
+          m.style.setProperty('--rx', `${(56 - y * 8).toFixed(2)}deg`);
+        });
+      });
+      m.addEventListener('pointerleave', () => { m.style.removeProperty('--rz'); m.style.removeProperty('--rx'); });
+    }
   }
 </script>
 
@@ -131,29 +170,23 @@ const pOut = (y: number) => `M345 170 C405 170 405 ${y + 30} 470 ${y + 30}`;
 
   /* Luces que viajan por las pistas */
   .m-luz {
-    position: absolute; left: 0; top: 0; width: 12px; height: 12px; border-radius: 50%; transform: translateZ(3px);
-    offset-rotate: 0deg; offset-distance: 0%; opacity: 0;
-    background: #fff; box-shadow: 0 0 0 3px #818cf8, 0 0 18px 6px rgba(129, 140, 248, 0.75);
+    position: absolute; left: 0; top: 0; width: 12px; height: 12px; border-radius: 50%; transform: translate3d(-6px, -6px, 3px); opacity: 0; will-change: transform, opacity;
+    background: #fff; box-shadow: 0 0 0 3px #818cf8, 0 0 12px 3px rgba(129, 140, 248, 0.6);
   }
-  .m-luz.sale { box-shadow: 0 0 0 3px #22c55e, 0 0 18px 6px rgba(34, 197, 94, 0.55); }
+  .m-luz.sale { box-shadow: 0 0 0 3px #22c55e, 0 0 12px 3px rgba(34, 197, 94, 0.5); }
 
   @media (prefers-reduced-motion: no-preference) {
-    .m-luz.entra { animation: m-entra 3.6s cubic-bezier(0.45, 0, 0.55, 1) var(--d) infinite; }
-    .m-luz.sale { animation: m-sale 3.6s cubic-bezier(0.45, 0, 0.55, 1) var(--d) infinite; }
-    .m-pistas path { animation: m-corre 1.2s linear infinite; }
     .m-nucleo { animation: m-flota 3.6s ease-in-out infinite; }
-    .m-caja.ia .t { animation: m-late 1.2s ease-in-out infinite; }
     .m-anillo { animation: m-gira 9s linear infinite; }
-    .m-caja.out .t { animation: m-brilla 3.6s ease var(--d) infinite; }
+    .m-caja.out .t::after { animation: m-brilla 3.6s ease var(--d) infinite; }
     .m-caja.out .ok { animation: m-ok 3.6s ease var(--d) infinite; }
   }
-  @keyframes m-entra { 0% { offset-distance: 0%; opacity: 0; } 5% { opacity: 1; } 30% { opacity: 1; } 34% { offset-distance: 100%; opacity: 0; } 100% { offset-distance: 100%; opacity: 0; } }
-  @keyframes m-sale { 0%, 38% { offset-distance: 0%; opacity: 0; } 42% { opacity: 1; } 68% { opacity: 1; } 72% { offset-distance: 100%; opacity: 0; } 100% { offset-distance: 100%; opacity: 0; } }
-  @keyframes m-corre { to { stroke-dashoffset: -9; } }
   @keyframes m-flota { 0%, 100% { transform: translateZ(0); } 50% { transform: translateZ(10px); } }
-  @keyframes m-late { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.18); } }
   @keyframes m-gira { to { transform: rotate(360deg); } }
-  @keyframes m-brilla { 0%, 70%, 100% { box-shadow: inset 0 0 0 1px rgba(99, 102, 241, 0.16); } 76% { box-shadow: inset 0 0 0 2px #22c55e, 0 0 26px rgba(34, 197, 94, 0.45); } }
+  /* El resplandor verde es una capa que solo cambia de opacidad (más barato que animar box-shadow) */
+  .m-caja.out .t::after { content: ''; position: absolute; inset: 0; border-radius: 10px; opacity: 0; box-shadow: inset 0 0 0 2px #22c55e, 0 0 26px rgba(34, 197, 94, 0.45); }
+  @keyframes m-brilla { 0%, 70%, 100% { opacity: 0; } 76% { opacity: 1; } }
+  .m3d.pausada *, .m3d.pausada *::after { animation-play-state: paused !important; } /* fuera de pantalla no se anima nada */
   @keyframes m-ok { 0%, 70% { opacity: 0; transform: scale(0.4); } 75%, 92% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1); } }
 
   @media (prefers-reduced-motion: reduce) { .m-et .ok { opacity: 1; transform: none; } }

@@ -163,13 +163,11 @@ html.app-on #progreso { display: none; }
 @media (hover: hover) { .card-link:hover::after, .plan:hover::after { opacity: 1; } }
 
 @media (prefers-reduced-motion: no-preference) {
-  .grad { background-size: 220% 100%; animation: ta-desliza 9s ease-in-out infinite alternate; }
   .btn-primary { position: relative; overflow: hidden; }
   .btn-primary::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.38) 50%, transparent 70%); transform: translateX(-130%); }
   @media (hover: hover) { .btn-primary:hover::after { transform: translateX(130%); transition: transform 0.8s var(--ease); } }
   .card-link .icon-badge { transition: transform 0.4s var(--ease); }
   .card-link:hover .icon-badge { transform: rotate(-6deg) scale(1.08); }
 }
-@keyframes ta-desliza { to { background-position: 100% 0; } }
 @keyframes ta-flota { 0%, 100% { translate: 0 0; scale: 1; } 50% { translate: 34px -40px; scale: 1.08; } }
 @keyframes ta-flota-v { 0%, 100% { translate: 0 0; } 50% { translate: 0 -10px; } }
