@@ -42,6 +42,9 @@ export const TRABAJAMOS_CON = ['WhatsApp', 'Google Calendar', 'Google Meet', 'Sh
 // Rellénalo solo con un testimonio real y con permiso por escrito del cliente.
 export const TESTIMONIO = { texto: '', autor: '', negocio: '' };
 
+// Garantía (se usa en /precios y en las FAQ). Es la única promesa de "si no te ahorra": no hay devoluciones ni cobros condicionados.
+export const GARANTIA = 'Si en la auditoría no encontramos al menos 3 horas semanales de ahorro en tu negocio, te lo decimos y no te proponemos nada.';
+
 export const FAQ = [
   {
     p: '¿Necesito saber de tecnología?',
@@ -57,11 +60,11 @@ export const FAQ = [
   },
   {
     p: '¿Hay permanencia?',
-    r: 'No. Pagas la puesta en marcha y una cuota mensual que incluye mantenimiento y soporte. Puedes darte de baja cuando quieras.',
+    r: 'No. Pagas la puesta en marcha y una cuota mensual que incluye mantenimiento y soporte. Puedes darte de baja cuando quieras avisando con 30 días.',
   },
   {
     p: '¿Y si no me ahorra tiempo?',
-    r: 'La auditoría inicial es gratis. Si no vemos un ahorro claro para tu negocio, te lo decimos y no te cobramos nada.',
+    r: 'La auditoría inicial es gratis. Si en la auditoría no encontramos al menos 3 horas semanales de ahorro en tu negocio, te lo decimos y no te proponemos nada.',
   },
   {
     p: '¿Trabajáis fuera de Madrid?',

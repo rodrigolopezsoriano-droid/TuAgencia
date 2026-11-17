@@ -3,11 +3,13 @@ import Base from '../layouts/Base.astro';
 import Planes from '../components/Planes.astro';
 import Faq from '../components/Faq.astro';
 import CtaFinal from '../components/CtaFinal.astro';
+import { GARANTIA } from '../data/site';
 const faq = [
   { p: '¿Qué incluye la puesta en marcha?', r: 'El análisis de tu negocio, el diseño y la programación de la automatización, la conexión con tus herramientas y la formación de tu equipo.' },
   { p: '¿Qué incluye la cuota mensual?', r: 'Alojamiento, mantenimiento, ajustes cuando cambie tu negocio, soporte y el informe de horas ahorradas. El consumo normal de IA va incluido.' },
   { p: '¿Puedo combinar varias soluciones?', r: 'Sí. Si contratas más de una automatización te hacemos un precio conjunto con descuento.' },
   { p: '¿Los precios llevan IVA?', r: 'Los precios mostrados no incluyen IVA.' },
+  { p: '¿Hay alguna garantía?', r: GARANTIA + ' La auditoría es gratis y sin compromiso.' },
   { p: '¿Hay permanencia?', r: 'No. Puedes darte de baja cuando quieras avisando con 30 días.' },
 ];
 ---
@@ -24,6 +26,15 @@ const faq = [
       <Planes />
     </div>
   </section>
+  <section class="section-tight">
+    <div class="wrap">
+      <div class="garantia card reveal">
+        <h2 class="h3">Nuestra garantía</h2>
+        <p class="lead">{GARANTIA}</p>
+        <p class="muted">La auditoría es gratuita y sin compromiso. Todos los precios son sin IVA y sin permanencia.</p>
+      </div>
+    </div>
+  </section>
   <section class="section">
     <div class="wrap">
       <h2 class="h2 center" style="margin-bottom:40px">Dudas sobre precios.</h2>
@@ -32,3 +43,7 @@ const faq = [
   </section>
   <CtaFinal />
 </Base>
+<style>
+  .garantia { max-width: 760px; margin: 0 auto; text-align: center; display: grid; gap: 10px; background: var(--brand-soft); border: 0; }
+  .garantia p { margin: 0; }
+</style>
