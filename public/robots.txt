@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /area-cliente
+
+Sitemap: https://tuagencia.tech/sitemap-index.xml

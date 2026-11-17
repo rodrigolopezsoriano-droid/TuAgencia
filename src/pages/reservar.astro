@@ -1,0 +1,254 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../data/site';
+import { AGENDA } from '../data/agenda';
+---
+<Base title="Reservar una llamada" description={`Reserva una videollamada gratuita de ${AGENDA.duracionMin} minutos por Google Meet para ver qué puedes automatizar en tu negocio.`}>
+  <section class="section">
+    <div class="wrap layout">
+      <div class="stack intro">
+        <p class="eyebrow">Llamada gratuita</p>
+        <h1 class="h2">Reserva tu llamada de {AGENDA.duracionMin} minutos.</h1>
+        <p class="lead">Elige el día y la hora que mejor te vengan. Te enviamos la invitación con el enlace de Google Meet al instante.</p>
+        <ul class="list-check">
+          <li>Videollamada por Google Meet, sin instalar nada</li>
+          <li>Te llega la invitación a tu correo y se añade a tu calendario</li>
+          <li>Sin coste y sin compromiso</li>
+        </ul>
+        <p class="muted small">¿Prefieres escribirnos? <a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
+      </div>
+
+      <div class="card panel" data-agenda>
+        <p class="estado" data-estado role="status" aria-live="polite">Buscando huecos libres…</p>
+
+        <div data-paso="dia" hidden>
+          <h2 class="h3">1. Elige el día</h2>
+          <div class="chips dias" data-dias role="group" aria-label="Días disponibles"></div>
+        </div>
+
+        <div data-paso="hora" hidden>
+          <h2 class="h3">2. Elige la hora <span class="muted zona">(hora de Madrid)</span></h2>
+          <div class="chips horas" data-horas role="group" aria-label="Horas disponibles"></div>
+        </div>
+
+        <form data-paso="datos" hidden novalidate>
+          <h2 class="h3">3. Tus datos</h2>
+          <p class="resumen" data-resumen></p>
+          <div class="row">
+            <div class="field">
+              <label for="r-nombre">Nombre</label>
+              <input class="input" id="r-nombre" name="nombre" autocomplete="name" required maxlength="80" />
+            </div>
+            <div class="field">
+              <label for="r-email">Email</label>
+              <input class="input" id="r-email" name="email" type="email" autocomplete="email" required maxlength="120" />
+            </div>
+          </div>
+          <div class="field">
+            <label for="r-tel">Teléfono <span class="muted">(opcional)</span></label>
+            <input class="input" id="r-tel" name="telefono" type="tel" autocomplete="tel" inputmode="tel" maxlength="30" />
+          </div>
+          <div class="field">
+            <label for="r-msg">¿Qué te gustaría automatizar? <span class="muted">(opcional)</span></label>
+            <textarea class="input" id="r-msg" name="mensaje" rows="3" maxlength="500"></textarea>
+          </div>
+          <label class="check">
+            <input type="checkbox" name="consentimiento" required />
+            <span>He leído y acepto la <a href="/privacidad" target="_blank" rel="noopener">política de privacidad</a>. Entiendo que la reserva se gestiona con Google Calendar y Google Meet.</span>
+          </label>
+          <input type="text" name="web" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true" />
+          <div data-turnstile></div>
+          <button class="btn btn-primary" type="submit">Confirmar reserva</button>
+          <p class="aviso" role="alert" data-aviso></p>
+        </form>
+
+        <div data-paso="ok" hidden class="ok">
+          <div class="tick" aria-hidden="true">✓</div>
+          <h2 class="h3">¡Reserva confirmada!</h2>
+          <p data-ok-texto></p>
+          <p class="muted">Revisa tu correo: te hemos enviado la invitación de Google Calendar con el enlace de la videollamada.</p>
+          <a class="btn btn-dark" data-meet href="#" target="_blank" rel="noopener" hidden>Abrir Google Meet</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .layout { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 56px; align-items: start; }
+  .small { font-size: 0.92rem; }
+  .small a { color: var(--brand-2); font-weight: 600; }
+  .panel { padding: 36px; display: grid; gap: 28px; min-height: 260px; }
+  .panel [hidden] { display: none !important; }
+  .estado { margin: 0; color: var(--muted); }
+  .estado.err { color: #b91c1c; }
+  .zona { font-size: 0.85rem; font-weight: 500; }
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+  .dias { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); }
+  /* Los botones los crea el script, por eso los selectores son :global */
+  .chips :global(.chip) {
+    min-height: 48px; padding: 8px 12px; border-radius: 12px; border: 1px solid #d2d2d7; background: #fff;
+    font: inherit; font-weight: 550; color: var(--text); cursor: pointer; text-transform: capitalize;
+    transition: border-color 0.2s, background 0.2s, color 0.2s, transform 0.15s;
+  }
+  .chips :global(.chip:hover) { border-color: var(--brand); }
+  .chips :global(.chip:active) { transform: scale(0.97); }
+  .chips :global(.chip[aria-pressed='true']) { background: var(--brand-2); border-color: var(--brand-2); color: #fff; }
+  .horas :global(.chip) { min-width: 84px; font-variant-numeric: tabular-nums; text-transform: none; }
+  form { display: grid; gap: 18px; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .resumen { margin: 0; padding: 12px 16px; border-radius: 12px; background: var(--brand-soft); color: var(--brand-2); font-weight: 600; }
+  .check { display: flex; gap: 10px; align-items: flex-start; font-size: 0.88rem; color: var(--muted); }
+  .check input { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--brand); }
+  .check a { color: var(--brand-2); }
+  .hp { position: absolute; left: -9999px; }
+  .aviso { margin: 0; min-height: 1.4em; font-size: 0.95rem; color: #b91c1c; }
+  .ok { text-align: center; display: grid; gap: 14px; justify-items: center; }
+  .ok p { margin: 0; }
+  .tick { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background: var(--ok); color: #fff; font-size: 1.6rem; font-weight: 700; }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+  @media (max-width: 640px) { .row { grid-template-columns: 1fr; } .panel { padding: 22px; } }
+</style>
+
+<script>
+  import { autocompletar } from '../scripts/perfil';
+  const raiz = document.querySelector<HTMLElement>('[data-agenda]')!;
+  const q = <T extends HTMLElement>(s: string) => raiz.querySelector<T>(s)!;
+  const paso = (n: string) => q<HTMLElement>(`[data-paso="${n}"]`);
+  const estado = q<HTMLElement>('[data-estado]');
+  const aviso = q<HTMLElement>('[data-aviso]');
+  const form = q<HTMLFormElement>('form');
+  const SITEKEY = import.meta.env.PUBLIC_TURNSTILE_SITEKEY as string | undefined;
+
+  type Hueco = { inicio: string; hora: string };
+  let dias: Record<string, Hueco[]> = {};
+  let diaSel = '';
+  let huecoSel: Hueco | null = null;
+  let captcha = '';
+
+  const aFecha = (f: string) => { const [y, m, d] = f.split('-').map(Number); return new Date(Date.UTC(y, m - 1, d)); };
+  const corto = new Intl.DateTimeFormat('es-ES', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' });
+  const largo = new Intl.DateTimeFormat('es-ES', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' });
+
+  function mostrarError(t: string) {
+    estado.textContent = t; estado.className = 'estado err'; estado.hidden = false;
+    ['dia', 'hora', 'datos'].forEach((p) => (paso(p).hidden = true));
+  }
+
+  const mayus = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
+
+  async function cargar(aviso_previo = '') {
+    estado.className = 'estado'; estado.textContent = 'Buscando huecos libres…'; estado.hidden = false;
+    let r: Response;
+    try { r = await fetch('/api/disponibilidad', { headers: { accept: 'application/json' } }); }
+    catch { return mostrarError('No hemos podido cargar el calendario. Inténtalo de nuevo en un momento.'); }
+    if (!(r.headers.get('content-type') ?? '').includes('json')) {
+      return mostrarError('El calendario solo funciona en la web publicada. Escríbenos y buscamos hueco juntos.');
+    }
+    const j = await r.json().catch(() => null);
+    if (!r.ok || !j?.dias) return mostrarError(j?.error === 'agenda_no_configurada'
+      ? 'El calendario se está configurando. Escríbenos y buscamos hueco juntos.'
+      : 'Ahora mismo no podemos mostrar los huecos. Inténtalo de nuevo en unos minutos o escríbenos.');
+    dias = j.dias;
+    const fechas = Object.keys(dias).sort();
+    if (!fechas.length) return mostrarError('No quedan huecos libres en los próximos días. Escríbenos y lo arreglamos.');
+    diaSel = ''; huecoSel = null;
+    paso('hora').hidden = true; paso('datos').hidden = true;
+    estado.textContent = aviso_previo; estado.className = aviso_previo ? 'estado err' : 'estado'; estado.hidden = !aviso_previo;
+    pintarDias(fechas);
+    paso('dia').hidden = false;
+  }
+
+  function pintarDias(fechas: string[]) {
+    const cont = q<HTMLElement>('[data-dias]');
+    cont.replaceChildren(...fechas.map((f) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'chip'; b.dataset.fecha = f;
+      b.textContent = corto.format(aFecha(f)).replace(/\./g, '');
+      b.setAttribute('aria-pressed', String(f === diaSel));
+      b.addEventListener('click', () => elegirDia(f));
+      return b;
+    }));
+  }
+
+  function elegirDia(f: string) {
+    diaSel = f; huecoSel = null;
+    raiz.querySelectorAll<HTMLElement>('[data-dias] .chip').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.fecha === f)));
+    const cont = q<HTMLElement>('[data-horas]');
+    cont.replaceChildren(...dias[f].map((h) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'chip'; b.textContent = h.hora; b.dataset.inicio = h.inicio;
+      b.setAttribute('aria-pressed', 'false');
+      b.addEventListener('click', () => elegirHora(h));
+      return b;
+    }));
+    paso('hora').hidden = false; paso('datos').hidden = true; aviso.textContent = '';
+  }
+
+  function elegirHora(h: Hueco) {
+    huecoSel = h;
+    raiz.querySelectorAll<HTMLElement>('[data-horas] .chip').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.inicio === h.inicio)));
+    q<HTMLElement>('[data-resumen]').textContent = `${mayus(largo.format(aFecha(diaSel)))} · ${h.hora} (hora de Madrid)`;
+    paso('datos').hidden = false;
+    if (SITEKEY) montarCaptcha();
+    form.querySelector<HTMLInputElement>('#r-nombre')?.focus({ preventScroll: true });
+    paso('datos').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  let captchaMontado = false;
+  function montarCaptcha() {
+    if (captchaMontado) return;
+    captchaMontado = true;
+    const s = document.createElement('script');
+    s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+    s.async = true;
+    s.onload = () => (window as any).turnstile.render(q('[data-turnstile]'), { sitekey: SITEKEY, callback: (t: string) => (captcha = t), 'expired-callback': () => (captcha = '') });
+    document.head.appendChild(s);
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    aviso.textContent = '';
+    const d = Object.fromEntries(new FormData(form)) as Record<string, string>;
+    if (!huecoSel) return (aviso.textContent = 'Elige primero un día y una hora.');
+    if ((d.nombre ?? '').trim().length < 2) return (aviso.textContent = 'Escribe tu nombre.');
+    if (!/^\S+@\S+\.\S+$/.test(d.email ?? '')) return (aviso.textContent = 'Escribe un email válido: ahí te enviamos la invitación.');
+    if (!d.consentimiento) return (aviso.textContent = 'Necesitamos que aceptes la política de privacidad.');
+    if (SITEKEY && !captcha) return (aviso.textContent = 'Completa la comprobación de seguridad.');
+
+    const btn = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    btn.disabled = true; btn.textContent = 'Reservando…';
+    try {
+      const r = await fetch('/api/reservar', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ inicio: huecoSel.inicio, nombre: d.nombre, email: d.email, telefono: d.telefono, mensaje: d.mensaje, consentimiento: true, web: d.web, captcha }),
+      });
+      const j = await r.json().catch(() => ({}));
+      if (r.ok && j.ok) return confirmar(d.email, j.enlaceMeet);
+      if (r.status === 409) { await cargar('Ese hueco se acaba de ocupar. Elige otro, por favor.'); return; }
+      aviso.textContent = j.error === 'captcha_fallido'
+        ? 'No hemos podido validar la comprobación de seguridad. Recarga la página e inténtalo de nuevo.'
+        : `No hemos podido reservar. Inténtalo de nuevo o escríbenos a ${(document.querySelector('a[href^="mailto:"]') as HTMLAnchorElement | null)?.textContent ?? 'nuestro correo'}.`;
+    } catch {
+      aviso.textContent = 'Sin conexión. Revisa tu internet e inténtalo de nuevo.';
+    } finally {
+      btn.disabled = false; btn.textContent = 'Confirmar reserva';
+    }
+  });
+
+  function confirmar(email: string, meet?: string | null) {
+    ['dia', 'hora', 'datos'].forEach((p) => (paso(p).hidden = true));
+    estado.hidden = true;
+    q<HTMLElement>('[data-ok-texto]').textContent = `${mayus(largo.format(aFecha(diaSel)))} a las ${huecoSel!.hora} (hora de Madrid). Enviado a ${email}.`;
+    const a = q<HTMLAnchorElement>('[data-meet]');
+    if (meet && /^https:\/\/meet\.google\.com\//.test(meet)) { a.href = meet; a.hidden = false; }
+    paso('ok').hidden = false;
+    paso('ok').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  // Si ya has iniciado sesión, te rellenamos tus datos
+  autocompletar({ '#r-nombre': 'nombre', '#r-email': 'email', '#r-tel': 'telefono' });
+
+  cargar();
+</script>

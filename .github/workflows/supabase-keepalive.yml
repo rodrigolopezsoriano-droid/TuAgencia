@@ -1,0 +1,19 @@
+# Evita que Supabase pause el proyecto gratis por inactividad (lo hace a los 7 días).
+# Configura en GitHub > Settings > Secrets and variables > Actions:
+#   SUPABASE_URL  y  SUPABASE_ANON_KEY  (los mismos valores que en .env)
+name: Supabase keepalive
+on:
+  schedule:
+    - cron: '17 6 */3 * *'   # cada 3 días
+  workflow_dispatch:
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping a la base de datos
+        env:
+          URL: ${{ secrets.SUPABASE_URL }}
+          KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          if [ -z "$URL" ]; then echo "Faltan los secretos SUPABASE_URL / SUPABASE_ANON_KEY"; exit 0; fi
+          curl -fsS "$URL/rest/v1/keepalive?select=id" -H "apikey: $KEY" -H "Authorization: Bearer $KEY"

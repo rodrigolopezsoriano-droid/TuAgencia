@@ -1,0 +1,25 @@
+---
+import Base from '../../layouts/Base.astro';
+import CtaFinal from '../../components/CtaFinal.astro';
+import { SECTORES } from '../../data/sectores';
+---
+<Base title="Automatización por sectores" description="Automatizaciones con IA para peluquerías, peritos, tiendas online, clínicas, academias e inmobiliarias en Madrid y Alcalá.">
+  <section class="section center">
+    <div class="wrap stack">
+      <h1 class="display reveal">Tu sector. Tus problemas.</h1>
+      <p class="lead reveal reveal-d1">Cada negocio pierde el tiempo en cosas distintas. Elige el tuyo.</p>
+    </div>
+  </section>
+  <section class="section-tight soft">
+    <div class="wrap grid g3">
+      {SECTORES.map((s, i) => (
+        <a href={`/sectores/${s.slug}`} class:list={['card card-link reveal', `reveal-d${(i % 3) + 1}`]}>
+          <p class="eyebrow">{s.nombre}</p>
+          <h2 class="h3" style="margin:8px 0">{s.titular}</h2>
+          <p class="muted" style="margin:0">{s.problema}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+  <CtaFinal />
+</Base>

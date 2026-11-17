@@ -1,0 +1,39 @@
+---
+import { PLANES, MESES_INTRO } from '../data/precios';
+const eur = (n: number) => `${n.toLocaleString('es-ES')} €`;
+---
+<div class="planes">
+  {PLANES.map((p, i) => (
+    <article class:list={['plan card reveal', `reveal-d${i + 1}`, { top: p.destacado }]}>
+      {p.destacado && <span class="pill">Más elegido</span>}
+      <h3 class="h3">{p.nombre}</h3>
+      <p class="muted para">{p.para}</p>
+      <div class="price">
+        <span class="desde">desde</span>
+        <strong>{eur(p.mensualIntro ?? p.mensual)}</strong><span class="mes">/mes</span>
+      </div>
+      <p class="small muted">
+        {p.mensualIntro
+          ? <>Los {MESES_INTRO} primeros meses. Después {eur(p.mensual)}/mes.</>
+          : <>Mantenimiento y mejoras incluidos.</>}
+        <br />Puesta en marcha: {eur(p.setup)} (pago único)
+      </p>
+      <ul class="list-check">{p.incluye.map((x) => <li>{x}</li>)}</ul>
+      <a href={`/contacto?plan=${encodeURIComponent(p.nombre)}`} class:list={['btn', p.destacado ? 'btn-primary' : 'btn-dark']}>Empezar con {p.nombre}</a>
+    </article>
+  ))}
+</div>
+
+<style>
+  .planes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; align-items: stretch; }
+  .plan { display: flex; flex-direction: column; gap: 14px; position: relative; }
+  .plan.top { border: 2px solid var(--brand); box-shadow: 0 30px 60px -20px rgba(99, 102, 241, 0.35); }
+  .plan .pill { position: absolute; top: -13px; left: 32px; background: var(--brand-2); color: #fff; }
+  .para { margin: 0; min-height: 3em; }
+  .price { display: flex; align-items: baseline; gap: 6px; }
+  .price strong { font-size: 2.6rem; letter-spacing: -0.04em; color: var(--ink); }
+  .desde, .mes { color: var(--muted); font-size: 0.9rem; }
+  .small { font-size: 0.85rem; margin: 0; }
+  .list-check { font-size: 0.95rem; flex: 1; margin-block: 8px 12px; }
+  @media (max-width: 900px) { .planes { grid-template-columns: 1fr; max-width: 460px; margin-inline: auto; } }
+</style>

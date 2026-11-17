@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.astro/
+.env
+.env.*
+!.env.example
+
+# Material privado de clientes (originales sin censurar): nunca se sube a GitHub
+casos-privados/
+
+# Skills locales de Claude Code (no se suben)
+.claude/

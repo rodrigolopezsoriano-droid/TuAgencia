@@ -1,0 +1,93 @@
+---
+import Logo from './Logo.astro';
+import { NAV } from '../data/site';
+const { lang = 'es', altHref = '/en/' } = Astro.props;
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const en = lang === 'en';
+const nav = en
+  ? [{ href: '/en/#solutions', label: 'Solutions' }, { href: '/en/#pricing', label: 'Pricing' }, { href: '/en/#team', label: 'Team' }]
+  : NAV;
+---
+<header class="nav" data-nav>
+  <div class="wrap nav-in">
+    <a href={en ? '/en/' : '/'} class="brand" aria-label="TuAgencia, inicio">
+      <Logo size={26} />
+      <span>TuAgencia<span class="dot">.</span></span>
+    </a>
+
+    <nav class="links" aria-label="Principal">
+      {nav.map((n) => (
+        <a href={n.href} aria-current={path.startsWith(n.href) ? 'page' : undefined}>{n.label}</a>
+      ))}
+    </nav>
+
+    <div class="right">
+      <a class="lang" href={altHref} hreflang={en ? 'es' : 'en'}>
+        <span class:list={{ on: !en }}>ES</span><span class:list={{ on: en }}>EN</span><span class="sr-only">{en ? 'Ver en español' : 'View in English'}</span>
+      </a>
+      {!en && <a href="/area-cliente" class="login">Área cliente</a>}
+      <a href={en ? '/en/#contact' : '/contacto'} class="btn btn-primary btn-sm cta">{en ? 'Free audit' : 'Auditoría gratis'}</a>
+      <button class="burger" aria-label="Abrir menú" aria-expanded="false" data-burger>
+        <span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="sheet" data-sheet hidden>
+    <div class="wrap">
+      {nav.map((n) => <a href={n.href}>{n.label}</a>)}
+      {!en && <a href="/area-cliente">Área cliente</a>}
+      <a href={en ? '/en/#contact' : '/contacto'} class="btn btn-primary">{en ? 'Free audit' : 'Pide tu auditoría gratis'}</a>
+    </div>
+  </div>
+</header>
+
+<style>
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid transparent; transition: border-color 0.3s;
+  }
+  .nav.scrolled { border-bottom-color: var(--line); }
+  .nav-in { height: 60px; display: flex; align-items: center; gap: 24px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.1rem; letter-spacing: -0.02em; color: var(--ink); }
+  .dot { color: var(--brand-2); }
+  .links { display: flex; gap: 28px; margin-left: 24px; }
+  .links a { font-size: 0.92rem; color: var(--muted); transition: color 0.2s; }
+  .links a:hover, .links a[aria-current] { color: var(--ink); }
+  .right { margin-left: auto; display: flex; align-items: center; gap: 16px; }
+  .login { font-size: 0.92rem; color: var(--muted); }
+  .login:hover { color: var(--ink); }
+  .lang { position: relative; display: flex; font-size: 0.75rem; font-weight: 600; border: 1px solid var(--line); border-radius: 999px; padding: 2px; }
+  .lang span:not(.sr-only) { padding: 3px 8px; border-radius: 999px; color: var(--muted); }
+  .lang span.on { background: var(--ink); color: #fff; }
+  .burger { display: none; width: 40px; height: 40px; border: 0; background: none; position: relative; cursor: pointer; }
+  .burger span { position: absolute; left: 11px; right: 11px; height: 1.5px; background: var(--ink); transition: transform 0.3s var(--ease); }
+  .burger span:first-child { top: 16px; }
+  .burger span:last-child { top: 23px; }
+  .burger[aria-expanded='true'] span:first-child { transform: translateY(3.5px) rotate(45deg); }
+  .burger[aria-expanded='true'] span:last-child { transform: translateY(-3.5px) rotate(-45deg); }
+  .sheet { border-top: 1px solid var(--line); background: #fff; }
+  .sheet .wrap { display: grid; padding-block: 16px 24px; }
+  .sheet a:not(.btn) { padding: 14px 0; font-size: 1.25rem; font-weight: 600; letter-spacing: -0.02em; border-bottom: 1px solid var(--line); }
+  .sheet .btn { margin-top: 20px; }
+  @media (max-width: 900px) {
+    .links, .login, .cta { display: none; }
+    .burger { display: block; }
+  }
+</style>
+
+<script>
+  const nav = document.querySelector('[data-nav]');
+  const burger = document.querySelector('[data-burger]');
+  const sheet = document.querySelector('[data-sheet]');
+  const onScroll = () => nav?.classList.toggle('scrolled', window.scrollY > 8);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+  burger?.addEventListener('click', () => {
+    const open = burger.getAttribute('aria-expanded') === 'true';
+    burger.setAttribute('aria-expanded', String(!open));
+    if (sheet) sheet.hidden = open;
+  });
+</script>

@@ -1,0 +1,110 @@
+---
+import Base from '../../layouts/Base.astro';
+import CtaFinal from '../../components/CtaFinal.astro';
+import { CASO_MODA_CENSURADO, CASO_MODA_NOMBRE } from '../../data/casos';
+
+// Seguridad: sin nombre configurado, la página es siempre anónima y con imágenes censuradas.
+// Para cambiar de modo: npm run descensurar -- moda / npm run censurar -- moda (ver src/data/casos.ts).
+const censurado = CASO_MODA_CENSURADO || !CASO_MODA_NOMBRE;
+const marca = censurado ? 'una marca de moda' : CASO_MODA_NOMBRE;
+
+const bloques = [
+  { t: 'Registro con QR en los eventos', d: 'Quien escanea el QR se apunta a la comunidad en 20 segundos. Su ficha se crea sola en el CRM, con la etiqueta del evento, sin apuntar nada a mano.' },
+  { t: 'CRM con segmentos automáticos', d: 'Mejores clientes, recurrentes, inactivos, nuevos y asistentes a eventos, siempre al día. Cada persona tiene una ficha única con sus compras y su historial.' },
+  { t: 'Comunicaciones que se envían solas', d: 'Agradecimiento a las 24 horas del evento con fotos y vídeos, y avisos de cada lanzamiento solo para los miembros de la comunidad.' },
+  { t: 'Tallas y stock bajo control', d: 'Lista de espera cuando una talla se agota y aviso interno antes de quedarse sin stock, para no perder ventas.' },
+  { t: 'Informes sin abrir una hoja de cálculo', d: 'Crecimiento de la comunidad, registros por evento y rendimiento de cada automatización, listos cada semana.' },
+  { t: 'Tecnología sin preocupaciones', d: 'Revisión del dominio y del correo (SPF, DKIM y DMARC), velocidad en móvil, copias de seguridad y seguridad de los accesos a la tienda.' },
+];
+const fotos = [
+  { src: '/casos/moda/foto-1.webp', t: 'Resumen de la comunidad, el último evento y el estado de los sistemas' },
+  { src: '/casos/moda/foto-2.webp', t: 'CRM con fichas y segmentos automáticos' },
+  { src: '/casos/moda/foto-3.webp', t: 'Automatizaciones: del escaneo del QR a la bienvenida' },
+];
+---
+<Base
+  title={censurado ? 'Caso: tienda de moda con Shopify, CRM y comunidad de clientes' : `Caso: ${CASO_MODA_NOMBRE}, de los eventos a una comunidad de clientes`}
+  description={`Cómo preparamos para ${marca} con tienda Shopify un sistema que convierte a cada asistente a un evento en cliente registrado: QR, CRM y comunicaciones automáticas.`}
+>
+  <section class="section center">
+    <div class="wrap stack">
+      <p class="eyebrow reveal">Proyecto · {censurado ? 'Marca de moda con tienda Shopify' : `${CASO_MODA_NOMBRE} · tienda Shopify`}</p>
+      <h1 class="display reveal reveal-d1">De los eventos a una comunidad de clientes.</h1>
+      <p class="lead reveal reveal-d2">{censurado ? 'Una marca de moda de inspiración italiana' : CASO_MODA_NOMBRE} vende en Shopify y capta clientes en eventos presenciales. Preparamos el sistema que convierte a cada asistente en cliente registrado, sin trabajo manual.</p>
+      <p class="reveal reveal-d3"><span class="pill">Proyecto confirmado · en implantación</span></p>
+    </div>
+  </section>
+
+  <section class="section-tight soft">
+    <div class="wrap">
+      <div class="stack-tech card reveal">
+        <span><b>Tienda</b> Shopify</span>
+        <span><b>Clientes</b> CRM con segmentos</span>
+        <span><b>Procesos</b> Automatizaciones y avisos</span>
+        <span><b>Control</b> Panel e informes</span>
+      </div>
+      <div class="grid g3" style="margin-top:20px">
+        {bloques.map((b, i) => (
+          <div class:list={['card reveal', `reveal-d${(i % 3) + 1}`]}>
+            <h2 class="h3">{b.t}</h2>
+            <p class="muted" style="margin:10px 0 0">{b.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="wrap">
+      <h2 class="h3 center reveal">El panel, en imágenes</h2>
+      <div class="capturas">
+        {fotos.map((f, i) => (
+          <figure class:list={['reveal', `reveal-d${(i % 3) + 1}`]}>
+            <img src={f.src} alt={f.t} loading="lazy" width="1440" height="900" />
+            <figcaption class="muted">{f.t}</figcaption>
+          </figure>
+        ))}
+      </div>
+      <p class="muted center nota">
+        Capturas de una demostración con datos de ejemplo. {censurado && 'Nombre de la marca y de sus productos sustituidos para proteger su privacidad. '}Proyecto en implantación: todavía no hay resultados reales que publicar.
+      </p>
+    </div>
+  </section>
+
+  {/*
+    ── PREPARADO PARA CUANDO SE DESCENSURE Y HAYA RESULTADOS REALES ──────────────
+    Quitar este comentario SOLO cuando el cliente haya dado permiso y los datos sean reales y medidos.
+    No poner cifras de ejemplo. Rellenar los valores entre corchetes.
+
+  <section class="section-tight soft">
+    <div class="wrap">
+      <h2 class="h3 center reveal">Resultados</h2>
+      <div class="grid g3" style="margin-top:20px">
+        <div class="card reveal"><p class="display-sm">[cifra]</p><p class="muted">[qué se midió y en qué periodo]</p></div>
+        <div class="card reveal"><p class="display-sm">[cifra]</p><p class="muted">[qué se midió y en qué periodo]</p></div>
+        <div class="card reveal"><p class="display-sm">[cifra]</p><p class="muted">[qué se midió y en qué periodo]</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="wrap">
+      <figure class="card reveal" style="max-width:720px;margin:0 auto">
+        <blockquote class="lead" style="margin:0">«[testimonio literal, con permiso por escrito]»</blockquote>
+        <figcaption class="muted" style="margin-top:12px">[Nombre y cargo], {CASO_MODA_NOMBRE}</figcaption>
+      </figure>
+    </div>
+  </section>
+  */}
+
+  <CtaFinal titulo="¿Vendes online y quieres conocer mejor a tus clientes?" texto="Montamos un sistema parecido adaptado a tu tienda. Pide una auditoría y te enseñamos cómo quedaría." />
+</Base>
+<style>
+  .stack-tech { display: flex; flex-wrap: wrap; gap: 12px 32px; justify-content: center; font-size: 0.95rem; color: var(--muted); }
+  .stack-tech b { color: var(--ink); margin-right: 6px; }
+  .capturas { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 28px; }
+  .capturas figure { margin: 0; }
+  .capturas img { width: 100%; height: auto; border-radius: var(--radius-sm); border: 1px solid var(--line); box-shadow: var(--shadow); }
+  .capturas figcaption { margin-top: 10px; font-size: 0.9rem; }
+  .nota { margin: 24px auto 0; font-size: 0.9rem; max-width: 70ch; }
+</style>

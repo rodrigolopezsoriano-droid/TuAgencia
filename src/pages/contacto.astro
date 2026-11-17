@@ -1,0 +1,35 @@
+---
+import Base from '../layouts/Base.astro';
+import ContactForm from '../components/ContactForm.astro';
+import { SITE } from '../data/site';
+---
+<Base title="Auditoría gratis" description="Pide tu auditoría gratuita: te decimos qué puedes automatizar en tu negocio y te enseñamos una demo en 48 horas.">
+  <section class="section">
+    <div class="wrap layout">
+      <div class="stack intro">
+        <p class="eyebrow">Auditoría gratuita</p>
+        <h1 class="h2">Cuéntanos qué te quita tiempo.</h1>
+        <p class="lead">Te respondemos en menos de 24 horas laborables. En una llamada de 30 minutos vemos qué se puede automatizar y, si encaja, en 48 horas te enseñamos una demo con tu caso real.</p>
+        <ul class="list-check">
+          <li>Sin coste y sin compromiso</li>
+          <li>Si no hay ahorro claro, te lo decimos</li>
+          <li>Tus datos solo se usan para responderte</li>
+        </ul>
+        <div class="direct">
+          <p class="muted">¿Prefieres escribirnos?</p>
+          <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+          {SITE.whatsapp && <a href={`https://wa.me/${SITE.whatsapp}`}>WhatsApp</a>}
+          {SITE.agenda && <a href={SITE.agenda} class="btn btn-dark btn-sm">Reservar llamada</a>}
+        </div>
+      </div>
+      <ContactForm />
+    </div>
+  </section>
+</Base>
+<style>
+  .layout { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 56px; align-items: start; }
+  .direct { display: grid; gap: 6px; padding-top: 24px; border-top: 1px solid var(--line); }
+  .direct p { margin: 0; }
+  .direct a { color: var(--brand-2); font-weight: 600; }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+</style>

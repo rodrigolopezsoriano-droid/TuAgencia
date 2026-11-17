@@ -1,0 +1,20 @@
+---
+const { items } = Astro.props as { items: { p: string; r: string }[] };
+---
+<div class="faq">
+  {items.map((f) => (
+    <details>
+      <summary>{f.p}<span aria-hidden="true">+</span></summary>
+      <p>{f.r}</p>
+    </details>
+  ))}
+</div>
+<style>
+  .faq { max-width: 760px; margin-inline: auto; border-top: 1px solid var(--line); }
+  details { border-bottom: 1px solid var(--line); }
+  summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; gap: 20px; padding: 22px 0; font-weight: 600; font-size: 1.08rem; color: var(--ink); }
+  summary::-webkit-details-marker { display: none; }
+  summary span { font-size: 1.5rem; font-weight: 300; line-height: 1; color: var(--muted); transition: transform 0.3s var(--ease); }
+  details[open] summary span { transform: rotate(45deg); }
+  details p { margin: 0 0 22px; color: var(--muted); max-width: 62ch; }
+</style>

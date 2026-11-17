@@ -1,0 +1,62 @@
+---
+// Maqueta de un móvil con el chatbot reservando una cita. Puro HTML/CSS.
+const msgs = [
+  { de: 'c', t: 'Hola! ¿Tenéis hueco mañana por la tarde para un corte?' },
+  { de: 'b', t: '¡Hola, Sergio! 👋 Mañana tengo libre a las 17:00, 18:30 y 19:00. ¿Cuál te viene mejor?' },
+  { de: 'c', t: 'A las 18:30 perfecto' },
+  { de: 'b', t: 'Hecho ✅ Corte mañana a las 18:30 con Álex. Te enviaré un recordatorio 2 horas antes.' },
+];
+---
+<div class="phone" data-chat aria-label="Ejemplo de conversación con el chatbot">
+  <div class="screen">
+    <div class="top">
+      <div class="avatar">B</div>
+      <div><strong>Barbería · Asistente</strong><span>en línea</span></div>
+    </div>
+    <div class="msgs">
+      {msgs.map((m, i) => (
+        <div class:list={['msg', m.de === 'c' ? 'me' : 'bot']} style={`--d:${0.6 + i * 1.5}s`}>{m.t}</div>
+      ))}
+      <div class="event" style={`--d:${0.6 + msgs.length * 1.5}s`}>
+        <span class="cal">📅</span>
+        <div><strong>Cita añadida al calendario</strong><span>Mañana · 18:30 · Corte</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .phone {
+    width: min(330px, 86vw); aspect-ratio: 9 / 18.5; border-radius: 48px; padding: 12px;
+    background: linear-gradient(145deg, #2a2a33, #0b0b12); margin-inline: auto;
+    box-shadow: 0 0 0 1px rgba(255,255,255,.06) inset, 0 40px 80px -20px rgba(17, 17, 26, 0.45), 0 20px 40px -20px rgba(99,102,241,.35);
+  }
+  .screen { height: 100%; border-radius: 38px; overflow: hidden; background: #f2f2f7; display: flex; flex-direction: column; }
+  .top { display: flex; gap: 10px; align-items: center; padding: 34px 16px 12px; background: rgba(255,255,255,.9); border-bottom: 1px solid var(--line); font-size: 0.82rem; }
+  .top strong { display: block; color: var(--ink); }
+  .top span { color: var(--ok); font-size: 0.72rem; }
+  .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--ink); color: #fff; display: grid; place-items: center; font-weight: 700; }
+  .msgs { flex: 1; display: flex; flex-direction: column; gap: 8px; padding: 16px 12px; justify-content: flex-end; }
+  .msg, .event { opacity: 0; transform: translateY(10px) scale(0.98); animation: pop 0.5s var(--ease) var(--d) forwards; }
+  .msg { max-width: 82%; padding: 9px 13px; border-radius: 18px; font-size: 0.8rem; line-height: 1.35; }
+  .me { align-self: flex-end; background: var(--brand-2); color: #fff; border-bottom-right-radius: 6px; }
+  .bot { align-self: flex-start; background: #fff; color: var(--text); border-bottom-left-radius: 6px; box-shadow: 0 1px 1px rgba(0,0,0,.04); }
+  .event { display: flex; gap: 10px; align-items: center; background: #fff; border-radius: 16px; padding: 10px 12px; font-size: 0.75rem; box-shadow: 0 8px 20px rgba(0,0,0,.08); margin-top: 6px; }
+  .event strong { display: block; color: var(--ink); }
+  .event span { color: var(--muted); }
+  .cal { font-size: 1.2rem; }
+  @keyframes pop { to { opacity: 1; transform: none; } }
+  .phone.restart .msg, .phone.restart .event { animation: none; }
+</style>
+
+<script>
+  // Repite la conversación en bucle cada 14 s
+  const phone = document.querySelector('[data-chat]');
+  if (phone && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    setInterval(() => {
+      phone.classList.add('restart');
+      void (phone as HTMLElement).offsetWidth;
+      phone.classList.remove('restart');
+    }, 14000);
+  }
+</script>

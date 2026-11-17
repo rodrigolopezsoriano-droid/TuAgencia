@@ -1,0 +1,15 @@
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  X-Frame-Options: SAMEORIGIN
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Demos privadas para clientes: que no salgan en Google
+/spaceverona/*
+  X-Robots-Tag: noindex, nofollow
+/demo_spaceverona.html
+  X-Robots-Tag: noindex, nofollow
+/demo-spaceverona.html
+  X-Robots-Tag: noindex, nofollow

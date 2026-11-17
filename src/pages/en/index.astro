@@ -1,0 +1,56 @@
+---
+import Base from '../../layouts/Base.astro';
+import ChatDemo from '../../components/ChatDemo.astro';
+import { SITE, EQUIPO } from '../../data/site';
+// Versión en inglés (resumen). Las subpáginas se irán traduciendo más adelante.
+const sols = [
+  { i: '💬', t: 'WhatsApp & web chatbot', d: 'Answers customers 24/7 and books appointments straight into your calendar.' },
+  { i: '📇', t: 'Smart CRM', d: 'Every lead from your website, WhatsApp and Instagram in one place, with automatic follow-ups.' },
+  { i: '📄', t: 'AI-written reports', d: 'Upload photos, dictate a few notes and get a full report in your own template and style.' },
+  { i: '⭐', t: 'Review monitoring', d: 'Weekly AI analysis of your Google reviews with clear next steps.' },
+  { i: '⏰', t: 'No-show reminders', d: 'Automatic WhatsApp and email reminders with one-tap confirmation.' },
+  { i: '🗓️', t: 'Websites with booking', d: 'Online booking, customer accounts, loyalty club and a staff dashboard.' },
+];
+---
+<Base lang="en" altHref="/" title="TuAgencia — AI automation for local businesses in Madrid" description="AI chatbots, CRM and automated reports for local businesses in Madrid and Alcalá de Henares. Free audit and a working demo in 48 hours.">
+  <section class="section">
+    <div class="wrap hero-grid">
+      <div class="stack">
+        <p class="eyebrow">AI automation · Madrid & Alcalá de Henares</p>
+        <h1 class="display">Your business,<br /><span class="grad">on autopilot.</span></h1>
+        <p class="lead">Chatbots that book appointments, a CRM that follows up for you and reports that write themselves. You look after your customers. We handle the rest.</p>
+        <div class="actions" style="margin-top:32px"><a href="#contact" class="btn btn-primary">Get a free audit</a></div>
+      </div>
+      <ChatDemo />
+    </div>
+  </section>
+  <section class="section soft" id="solutions">
+    <div class="wrap">
+      <h2 class="h2 center" style="margin-bottom:48px">What we automate.</h2>
+      <div class="grid g3">{sols.map((s) => <div class="card"><div class="icon-badge">{s.i}</div><h3 class="h3">{s.t}</h3><p class="muted">{s.d}</p></div>)}</div>
+    </div>
+  </section>
+  <section class="section center" id="pricing">
+    <div class="wrap stack">
+      <h2 class="h2">Simple pricing. No lock-in.</h2>
+      <p class="lead">Plans from €79/month plus a one-off setup fee. Maintenance and support included.</p>
+    </div>
+  </section>
+  <section class="section soft center" id="team">
+    <div class="wrap stack">
+      <h2 class="h2">Three engineers. No fluff.</h2>
+      <p class="lead">{EQUIPO.map((m) => m.nombre).join(', ')} — a team from Alcalá de Henares.</p>
+    </div>
+  </section>
+  <section class="section dark center" id="contact">
+    <div class="wrap stack">
+      <h2 class="h2">Which task would you love to stop doing?</h2>
+      <p class="lead">Tell us. Within 48 hours we'll show you a working demo built on your own business.</p>
+      <div class="actions" style="margin-top:32px"><a href={`mailto:${SITE.email}?subject=Free audit`} class="btn btn-primary">Email us</a><a href="/contacto" class="btn btn-ghost" style="color:#c7d2fe">Contact form (Spanish) →</a></div>
+    </div>
+  </section>
+</Base>
+<style>
+  .hero-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 48px; align-items: center; }
+  @media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; } }
+</style>
