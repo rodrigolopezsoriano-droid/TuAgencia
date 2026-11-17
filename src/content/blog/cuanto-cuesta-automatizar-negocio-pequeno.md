@@ -2,7 +2,7 @@
 title: "Cuánto cuesta automatizar un negocio pequeño: precios reales en 2026"
 description: "Precios reales de automatizar un negocio pequeño con IA en 2026: puesta en marcha y cuota mensual de nuestros tres planes, qué incluye cada uno y cómo saber si compensa."
 fecha: 2026-11-18
-autor: "Jorge Jiménez Gutiérrez"
+autor: "Rodrigo López Soriano"
 draft: true
 solucion: "crm-inteligente"
 cta: "reservar"

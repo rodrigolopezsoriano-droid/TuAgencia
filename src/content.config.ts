@@ -11,7 +11,8 @@ const blog = defineCollection({
     description: z.string().min(50).max(170),
     fecha: z.coerce.date(),
     actualizado: z.coerce.date().optional(),
-    autor: z.enum(['Pablo Villalvilla Martín', 'Jorge Jiménez Gutiérrez', 'Rodrigo López Soriano']),
+    // Autores del blog: de momento solo Rodrigo y Pablo (añade aquí a Jorge cuando escriba)
+    autor: z.enum(['Pablo Villalvilla Martín', 'Rodrigo López Soriano']),
     draft: z.boolean().default(false),
     solucion: z.string().optional(), // slug de src/data/soluciones.ts
     sector: z.string().optional(), // slug de src/data/sectores.ts
