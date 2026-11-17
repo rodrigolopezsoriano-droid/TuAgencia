@@ -4,7 +4,6 @@
 export const TITULAR = {
   nombre: 'Pablo Villalvilla Martín',
   nif: '09121697N',
-  // Falta el número de portal: añadirlo cuando se confirme.
-  domicilio: 'Calle de la Aviación Española, 28805 Alcalá de Henares (Madrid)',
+  domicilio: 'Calle de la Aviación Española, 2, 28805 Alcalá de Henares (Madrid)',
   email: 'admin@tuagencia.tech',
 };
