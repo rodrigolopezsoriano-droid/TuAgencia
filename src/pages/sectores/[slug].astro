@@ -9,6 +9,8 @@ export function getStaticPaths() {
 }
 const s = getSector(Astro.params.slug!)!;
 const sols = s.soluciones.map(getSolucion).filter(Boolean);
+// Sectores en los que el informe gratis de reseñas de Google encaja especialmente
+const conInforme = ['clinicas', 'peluquerias-y-barberias'].includes(s.slug);
 ---
 <Base title={s.seo.title} description={s.seo.description}>
   <section class="section center">
@@ -44,10 +46,22 @@ const sols = s.soluciones.map(getSolucion).filter(Boolean);
       </div>
     </div>
   </section>
+  {conInforme && (
+    <section class="section-tight">
+      <div class="wrap">
+        <a href="/informe-resenas" class="banner reveal">
+          <span><strong>Informe gratis de tus reseñas de Google.</strong> Te decimos qué se repite en lo que opinan de tu negocio.</span>
+          <span class="banner-go">Pedir el informe →</span>
+        </a>
+      </div>
+    </section>
+  )}
   <CtaFinal />
 </Base>
 
 <style>
+  .banner { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 22px 28px; border-radius: 20px; background: var(--brand-soft); color: var(--ink); }
+  .banner-go { color: var(--brand-2); font-weight: 600; }
   .pains { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
   .pain { padding: 24px; border-radius: 18px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.1); font-weight: 550; }
 </style>

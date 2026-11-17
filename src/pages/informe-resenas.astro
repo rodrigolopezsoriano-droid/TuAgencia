@@ -1,0 +1,120 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../data/site';
+---
+<Base
+  title="Informe gratis de tus reseñas de Google"
+  description="Pide gratis un informe con lo que dicen tus clientes de ti en Google: qué elogian, qué se repite y qué mejorar. Lo recibes en menos de 24 horas laborables."
+>
+  <section class="section">
+    <div class="wrap layout">
+      <div class="stack intro">
+        <p class="eyebrow">Informe gratuito</p>
+        <h1 class="h2">Descubre qué dicen tus clientes en Google. Informe gratis en 24 h.</h1>
+        <p class="lead">Leemos las reseñas de tu negocio y te mandamos un informe corto: qué elogian, qué quejas se repiten y qué podrías mejorar primero.</p>
+        <ul class="list-check">
+          <li>Sin coste y sin compromiso</li>
+          <li>Lo preparamos nosotros y te lo enviamos por email</li>
+          <li>Lo recibes en menos de 24 horas laborables</li>
+        </ul>
+        <p class="muted small">¿Prefieres escribirnos? <a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
+      </div>
+
+      <form class="form card" data-informe novalidate>
+        <div class="row">
+          <div class="field">
+            <label for="i-nombre">Nombre</label>
+            <input class="input" id="i-nombre" name="nombre" autocomplete="name" required maxlength="120" />
+          </div>
+          <div class="field">
+            <label for="i-email">Email</label>
+            <input class="input" id="i-email" name="email" type="email" autocomplete="email" required maxlength="200" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label for="i-negocio">Nombre del negocio</label>
+            <input class="input" id="i-negocio" name="negocio" autocomplete="organization" required maxlength="160" placeholder="Ej.: Clínica Dental Centro" />
+          </div>
+          <div class="field">
+            <label for="i-ciudad">Ciudad</label>
+            <input class="input" id="i-ciudad" name="ciudad" autocomplete="address-level2" required maxlength="80" placeholder="Ej.: Alcalá de Henares" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="i-maps">Enlace de Google Maps <span class="muted">(opcional)</span></label>
+          <input class="input" id="i-maps" name="maps" type="url" inputmode="url" maxlength="300" placeholder="https://maps.app.goo.gl/…" />
+        </div>
+        <label class="check">
+          <input type="checkbox" name="acepta" required />
+          <span>He leído y acepto la <a href="/privacidad" target="_blank" rel="noopener">política de privacidad</a>.</span>
+        </label>
+        <input type="text" name="web" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true" />
+        <button class="btn btn-primary" type="submit">Quiero mi informe gratis</button>
+        <p class="status" role="status" aria-live="polite" data-status></p>
+      </form>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .layout { display: grid; grid-template-columns: 0.95fr 1.05fr; gap: 56px; align-items: start; }
+  .small { font-size: 0.92rem; }
+  .small a { color: var(--brand-2); font-weight: 600; }
+  .form { display: grid; gap: 18px; padding: 36px; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .check { display: flex; gap: 10px; align-items: flex-start; font-size: 0.88rem; color: var(--muted); }
+  .check input { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--brand); }
+  .check a { color: var(--brand-2); }
+  .hp { position: absolute; left: -9999px; }
+  .status { margin: 0; font-size: 0.95rem; min-height: 1.5em; }
+  .status.ok { color: #15803d; font-weight: 600; }
+  .status.err { color: #b91c1c; }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+  @media (max-width: 640px) { .row { grid-template-columns: 1fr; } .form { padding: 22px; } }
+</style>
+
+<script define:vars={{ email: SITE.email }}>
+  window.__TA_EMAIL = email;
+</script>
+<script>
+  import { enviarLead, emailValido } from '../scripts/leads';
+  import { autocompletar } from '../scripts/perfil';
+
+  const form = document.querySelector<HTMLFormElement>('[data-informe]')!;
+  const status = document.querySelector<HTMLElement>('[data-status]')!;
+  const say = (t: string, cls: 'ok' | 'err') => { status.textContent = t; status.className = `status ${cls}`; };
+
+  // Si ya has iniciado sesión, te rellenamos tus datos
+  autocompletar({ '#i-nombre': 'nombre', '#i-email': 'email', '#i-negocio': 'negocio' });
+
+  const urlValida = (v: string) => { try { const u = new URL(v); return u.protocol === 'https:' || u.protocol === 'http:'; } catch { return false; } };
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const d = Object.fromEntries(new FormData(form)) as Record<string, string>;
+    if (d.web) return; // bot
+    if (!d.nombre?.trim()) return say('Escribe tu nombre.', 'err');
+    if (!emailValido(d.email ?? '')) return say('Escribe un email válido: ahí te enviamos el informe.', 'err');
+    if (!d.negocio?.trim()) return say('Escribe el nombre de tu negocio.', 'err');
+    if (!d.ciudad?.trim()) return say('Escribe la ciudad de tu negocio.', 'err');
+    const maps = (d.maps ?? '').trim();
+    if (maps && !urlValida(maps)) return say('El enlace de Google Maps no parece válido. Puedes dejarlo vacío.', 'err');
+    if (!d.acepta) return say('Necesitamos que aceptes la política de privacidad.', 'err');
+
+    const mensaje = `Ciudad: ${d.ciudad.trim()}` + (maps ? `\nGoogle Maps: ${maps}` : '');
+    const btn = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    btn.disabled = true;
+    const r = await enviarLead({
+      nombre: d.nombre, email: d.email, negocio: d.negocio, mensaje,
+      interes: 'reputacion-online', origen: 'informe-resenas',
+    });
+    btn.disabled = false;
+    if (r === 'ok') { form.reset(); return say('Recibido. Te enviamos el informe en menos de 24 h laborables.', 'ok'); }
+    if (r === 'sin-servicio') {
+      location.href = `mailto:${(window as any).__TA_EMAIL}?subject=Informe gratis de reseñas&body=${encodeURIComponent(`Negocio: ${d.negocio}\n${mensaje}\nEmail: ${d.email}`)}`;
+      return;
+    }
+    say('No se ha podido enviar. Escríbenos a ' + (window as any).__TA_EMAIL, 'err');
+  });
+</script>
