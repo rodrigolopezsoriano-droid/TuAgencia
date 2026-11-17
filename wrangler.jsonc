@@ -6,6 +6,11 @@
   "compatibility_date": "2025-09-01",
   // Ping a Supabase cada 3 días para que no pause el proyecto gratis (usa SUPABASE_URL y SUPABASE_ANON_KEY).
   "triggers": { "crons": ["17 6 */3 * *"] },
+  // Valores PÚBLICOS (la misma URL y clave "publishable" que ya viajan en el JavaScript de la web). NUNCA pongas aquí la clave service_role.
+  "vars": {
+    "SUPABASE_URL": "https://qhlwojsmrbjbvejptrcq.supabase.co",
+    "SUPABASE_ANON_KEY": "sb_publishable_EB2lC5XyYmNLfvdNzg9l-g_Axu51R4j"
+  },
   // Chat con IA (DESACTIVADO, ver docs/CHATBOT.md): para activarlo, quita las // de la línea siguiente.
   // "ai": { "binding": "AI" },
   "assets": {

@@ -95,6 +95,8 @@ import { AGENDA } from '../data/agenda';
   .chips :global(.chip:active) { transform: scale(0.97); }
   .chips :global(.chip[aria-pressed='true']) { background: var(--brand-2); border-color: var(--brand-2); color: #fff; }
   .horas :global(.chip) { min-width: 84px; font-variant-numeric: tabular-nums; text-transform: none; }
+  .panel [data-paso] { scroll-margin-top: 76px; }
+  .layout > *, .panel > * { min-width: 0; } /* que la fila de días no ensanche la página */
   form { display: grid; gap: 18px; }
   .row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
   .resumen { margin: 0; padding: 12px 16px; border-radius: 12px; background: var(--brand-soft); color: var(--brand-2); font-weight: 600; }
@@ -107,7 +109,13 @@ import { AGENDA } from '../data/agenda';
   .ok p { margin: 0; }
   .tick { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background: var(--ok); color: #fff; font-size: 1.6rem; font-weight: 700; }
   @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
-  @media (max-width: 640px) { .row { grid-template-columns: 1fr; } .panel { padding: 22px; } }
+  @media (max-width: 640px) {
+    .row { grid-template-columns: 1fr; }
+    .panel { padding: 22px; }
+    /* Los días van en una sola fila que se desliza hacia los lados */
+    .dias { display: flex; flex-wrap: nowrap; overflow-x: auto; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; margin-inline: -22px; padding: 2px 22px 10px; scrollbar-width: thin; }
+    .dias :global(.chip) { flex: 0 0 auto; min-width: 92px; scroll-snap-align: start; }
+  }
 </style>
 
 <script>
@@ -183,6 +191,10 @@ import { AGENDA } from '../data/agenda';
       return b;
     }));
     paso('hora').hidden = false; paso('datos').hidden = true; aviso.textContent = '';
+    // En el móvil, al tocar un día bajamos con suavidad hasta las horas
+    const movil = matchMedia('(max-width: 640px)').matches;
+    const reducir = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    paso('hora').scrollIntoView({ behavior: reducir ? 'auto' : 'smooth', block: movil ? 'start' : 'nearest' });
   }
 
   function elegirHora(h: Hueco) {
