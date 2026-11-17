@@ -30,7 +30,7 @@ Estilo Apple (limpio, mucho espacio, color de marca `#6366F1`), SEO local y cost
 | Tablas y seguridad de la base de datos | `supabase/schema.sql` |
 | Redirecciones y cabeceras | `public/_redirects` · `public/_headers` |
 | Fotos y roles del equipo | `public/equipo/` (`pablo.webp`, `jorge.webp`, `rodrigo.webp`; si no existen se muestra la inicial) · `EQUIPO` en `src/data/site.ts` |
-| Testimonio de la portada (oculto si está vacío) · herramientas · garantía | `TESTIMONIO`, `TRABAJAMOS_CON`, `GARANTIA` en `src/data/site.ts` |
+| Testimonio de la portada (oculto si está vacío) · garantía | `TESTIMONIO`, `GARANTIA` en `src/data/site.ts` |
 | Informe gratis de reseñas | `src/pages/informe-resenas.astro` (guarda en `leads` con origen `informe-resenas`) |
 | Asistente de la web (sin IA de pago) | `src/components/Chatbot.astro` · `docs/CHATBOT.md` |
 | Blog (borradores con `draft: true`) | `src/content/blog/*.md` · `src/content.config.ts` |

@@ -8,7 +8,7 @@ import CtaFinal from '../components/CtaFinal.astro';
 import { SOLUCIONES } from '../data/soluciones';
 import { SECTORES } from '../data/sectores';
 import Avatar from '../components/Avatar.astro';
-import { EQUIPO, FAQ, SITE, TESTIMONIO, TRABAJAMOS_CON } from '../data/site';
+import { EQUIPO, FAQ, SITE, TESTIMONIO } from '../data/site';
 
 const destacadas = SOLUCIONES.filter((s) => s.destacado);
 const resto = SOLUCIONES.filter((s) => !s.destacado);
@@ -45,14 +45,6 @@ const faqLd = {
         </ul>
       </div>
       <div class="hero-visual reveal reveal-d2"><ChatDemo /></div>
-    </div>
-  </section>
-
-  <!-- HERRAMIENTAS -->
-  <section class="tools" aria-label="Herramientas con las que trabajamos">
-    <div class="wrap">
-      <p class="tools-t">Trabajamos con</p>
-      <ul class="tools-l">{TRABAJAMOS_CON.map((t) => <li>{t}</li>)}</ul>
     </div>
   </section>
 
@@ -254,10 +246,6 @@ const faqLd = {
   .team { display: flex; justify-content: center; gap: clamp(24px, 6vw, 72px); flex-wrap: wrap; margin: 48px 0 24px; }
   .member { display: grid; justify-items: center; gap: 6px; max-width: 220px; }
   .member .muted { font-size: 0.9rem; }
-  .tools { padding: 20px 0 4px; }
-  .tools .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 28px; }
-  .tools-t { margin: 0; font-size: 0.82rem; color: var(--muted); }
-  .tools-l { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 22px; color: #71717a; font-weight: 600; font-size: 0.95rem; letter-spacing: -0.01em; }
   .tile.small { position: relative; }
   .tile .cover { color: inherit; }
   .tile .cover::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }

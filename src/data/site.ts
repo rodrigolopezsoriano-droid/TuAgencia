@@ -36,9 +36,6 @@ export const EQUIPO = [
   { nombre: 'Rodrigo López Soriano', inicial: 'R', foto: 'rodrigo', rol: '' },
 ];
 
-// Herramientas con las que trabajamos (solo texto, sin logos de marcas).
-export const TRABAJAMOS_CON = ['WhatsApp', 'Google Calendar', 'Google Meet', 'Shopify', 'n8n', 'Supabase'];
-
 // Testimonio de un cliente. Mientras `texto` esté vacío NO se muestra nada en la web.
 // Rellénalo solo con un testimonio real y con permiso por escrito del cliente.
 export const TESTIMONIO = { texto: '', autor: '', negocio: '' };
