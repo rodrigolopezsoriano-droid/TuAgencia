@@ -1,0 +1,14 @@
+---
+// Foto del miembro del equipo si existe public/equipo/<foto>.webp; si no, círculo con la inicial.
+import { existsSync } from 'node:fs';
+import { resolve } from 'node:path';
+interface Props { foto: string; inicial: string; nombre: string; tam?: number }
+const { foto, inicial, nombre, tam = 88 } = Astro.props;
+const hayFoto = existsSync(resolve('public/equipo', foto + '.webp'));
+---
+{hayFoto
+  ? <img class="av" src={`/equipo/${foto}.webp`} alt={nombre} width={tam} height={tam} loading="lazy" style={`width:${tam}px;height:${tam}px`} />
+  : <div class="av" style={`width:${tam}px;height:${tam}px;font-size:${Math.round(tam * 0.4)}px`} aria-hidden="true">{inicial}</div>}
+<style>
+  .av { border-radius: 50%; display: grid; place-items: center; font-weight: 700; color: #fff; background: linear-gradient(135deg, var(--brand-2), #a855f7); object-fit: cover; margin: 0 auto 8px; }
+</style>

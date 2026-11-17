@@ -12,6 +12,7 @@ export const SITE = {
   email: 'admin@tuagencia.tech',
   // Número con prefijo y sin espacios.
   whatsapp: '34644102666',
+  whatsappVisible: '644 10 26 66', // cómo se escribe el número en pantalla
   instagram: 'https://www.instagram.com/tuagenciatech',
   zona: ['Alcalá de Henares', 'Madrid'],
   // Página propia de reservas, conectada a Google Calendar y Google Meet. Ver docs/AGENDA.md
@@ -25,12 +26,21 @@ export const NAV = [
   { href: '/equipo', label: 'Equipo' },
 ];
 
-// En la web solo se muestran los nombres (sin estudios ni cargos).
+// En la web solo se muestran nombre y rol (sin estudios).
+// foto: pon el archivo en public/equipo/<foto>.webp (cuadrado, mín. 400×400). Si no existe, se muestra la inicial.
+// rol: texto corto bajo el nombre (p. ej. "Automatizaciones"). Si está vacío, no se muestra.
 export const EQUIPO = [
-  { nombre: 'Pablo Villalvilla Martín', inicial: 'P' },
-  { nombre: 'Jorge Jiménez Gutiérrez', inicial: 'J' },
-  { nombre: 'Rodrigo López Soriano', inicial: 'R' },
+  { nombre: 'Pablo Villalvilla Martín', inicial: 'P', foto: 'pablo', rol: '' },
+  { nombre: 'Jorge Jiménez Gutiérrez', inicial: 'J', foto: 'jorge', rol: '' },
+  { nombre: 'Rodrigo López Soriano', inicial: 'R', foto: 'rodrigo', rol: '' },
 ];
+
+// Herramientas con las que trabajamos (solo texto, sin logos de marcas).
+export const TRABAJAMOS_CON = ['WhatsApp', 'Google Calendar', 'Google Meet', 'Shopify', 'n8n', 'Supabase'];
+
+// Testimonio de un cliente. Mientras `texto` esté vacío NO se muestra nada en la web.
+// Rellénalo solo con un testimonio real y con permiso por escrito del cliente.
+export const TESTIMONIO = { texto: '', autor: '', negocio: '' };
 
 export const FAQ = [
   {

@@ -7,6 +7,8 @@ const msgs = [
   { de: 'b', t: 'Hecho ✅ Corte mañana a las 18:30 con Álex. Te enviaré un recordatorio 2 horas antes.' },
 ];
 ---
+<div class="phone-wrap">
+<span class="ejemplo">Ejemplo</span>
 <div class="phone" data-chat aria-label="Ejemplo de conversación con el chatbot">
   <div class="screen">
     <div class="top">
@@ -24,8 +26,11 @@ const msgs = [
     </div>
   </div>
 </div>
+</div>
 
 <style>
+  .phone-wrap { display: grid; justify-items: center; gap: 12px; }
+  .ejemplo { padding: 4px 12px; border-radius: 999px; background: var(--ink); color: #fff; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
   .phone {
     width: min(330px, 86vw); aspect-ratio: 9 / 18.5; border-radius: 48px; padding: 12px;
     background: linear-gradient(145deg, #2a2a33, #0b0b12); margin-inline: auto;
@@ -34,7 +39,7 @@ const msgs = [
   .screen { height: 100%; border-radius: 38px; overflow: hidden; background: #f2f2f7; display: flex; flex-direction: column; }
   .top { display: flex; gap: 10px; align-items: center; padding: 34px 16px 12px; background: rgba(255,255,255,.9); border-bottom: 1px solid var(--line); font-size: 0.82rem; }
   .top strong { display: block; color: var(--ink); }
-  .top span { color: var(--ok); font-size: 0.72rem; }
+  .top span { color: #15803d; font-size: 0.72rem; }
   .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--ink); color: #fff; display: grid; place-items: center; font-weight: 700; }
   .msgs { flex: 1; display: flex; flex-direction: column; gap: 8px; padding: 16px 12px; justify-content: flex-end; }
   .msg, .event { opacity: 0; transform: translateY(10px) scale(0.98); animation: pop 0.5s var(--ease) var(--d) forwards; }

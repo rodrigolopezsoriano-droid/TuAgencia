@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import CtaFinal from '../components/CtaFinal.astro';
+import Avatar from '../components/Avatar.astro';
 import { EQUIPO } from '../data/site';
 ---
 <Base title="Equipo" description="Somos TuAgencia: tres personas de Alcalá de Henares que montan automatizaciones para negocios locales.">
@@ -14,9 +15,9 @@ import { EQUIPO } from '../data/site';
     <div class="wrap grid g3">
       {EQUIPO.map((m, i) => (
         <article class:list={['card center reveal', `reveal-d${i + 1}`]}>
-          <!-- Cambia el círculo por una foto: <img src="/equipo/pablo.webp" alt="Pablo" class="av" /> -->
-          <div class="av">{m.inicial}</div>
+          <Avatar foto={m.foto} inicial={m.inicial} nombre={m.nombre} tam={104} />
           <h2 class="h3">{m.nombre}</h2>
+          {m.rol && <p class="muted" style="margin:6px 0 0">{m.rol}</p>}
         </article>
       ))}
     </div>
@@ -31,6 +32,5 @@ import { EQUIPO } from '../data/site';
   <CtaFinal />
 </Base>
 <style>
-  .av { width: 104px; height: 104px; border-radius: 50%; margin: 0 auto 20px; display: grid; place-items: center; font-size: 2.4rem; font-weight: 700; color: #fff; background: linear-gradient(135deg, var(--brand), #a855f7); object-fit: cover; }
   .valores > div > * + * { margin-top: 10px; }
 </style>

@@ -7,7 +7,8 @@ import Faq from '../components/Faq.astro';
 import CtaFinal from '../components/CtaFinal.astro';
 import { SOLUCIONES } from '../data/soluciones';
 import { SECTORES } from '../data/sectores';
-import { EQUIPO, FAQ } from '../data/site';
+import Avatar from '../components/Avatar.astro';
+import { EQUIPO, FAQ, SITE, TESTIMONIO, TRABAJAMOS_CON } from '../data/site';
 
 const destacadas = SOLUCIONES.filter((s) => s.destacado);
 const resto = SOLUCIONES.filter((s) => !s.destacado);
@@ -36,7 +37,7 @@ const faqLd = {
         <h1 class="display reveal reveal-d1">Tu negocio,<br /><span class="grad">en piloto automático.</span></h1>
         <p class="lead reveal reveal-d2">Chatbots que reservan citas, un CRM que hace el seguimiento por ti e informes que se redactan solos. Tú atiendes a tus clientes. Nosotros nos encargamos del resto.</p>
         <div class="actions reveal reveal-d3">
-          <a href="/contacto" class="btn btn-primary">Pide tu auditoría gratis</a>
+          <a href="/reservar" class="btn btn-primary">Reserva una llamada gratis (30 min)</a>
           <a href="#soluciones" class="btn btn-ghost">Ver qué automatizamos →</a>
         </div>
         <ul class="trust reveal reveal-d3">
@@ -44,6 +45,14 @@ const faqLd = {
         </ul>
       </div>
       <div class="hero-visual reveal reveal-d2"><ChatDemo /></div>
+    </div>
+  </section>
+
+  <!-- HERRAMIENTAS -->
+  <section class="tools" aria-label="Herramientas con las que trabajamos">
+    <div class="wrap">
+      <p class="tools-t">Trabajamos con</p>
+      <ul class="tools-l">{TRABAJAMOS_CON.map((t) => <li>{t}</li>)}</ul>
     </div>
   </section>
 
@@ -84,11 +93,13 @@ const faqLd = {
           </a>
         ))}
         {resto.map((s, i) => (
-          <a href={`/soluciones/${s.slug}`} class:list={['card card-link tile small reveal', `reveal-d${i + 1}`]}>
+          <div class:list={['card card-link tile small reveal', `reveal-d${i + 1}`]}>
             <div class="icon-badge">{s.icono}</div>
-            <h3 class="h3">{s.nombre}</h3>
+            <h3 class="h3"><a href={`/soluciones/${s.slug}`} class="cover">{s.nombre}</a></h3>
             <p class="muted">{s.corto}</p>
-          </a>
+            <p class="muted detalle">{s.resultado}</p>
+            {s.slug === 'reputacion-online' && <a href="/informe-resenas" class="mas-link">Pide tu informe gratis →</a>}
+          </div>
         ))}
       </div>
     </div>
@@ -146,6 +157,17 @@ const faqLd = {
     </div>
   </section>
 
+  {TESTIMONIO.texto && (
+    <section class="section-tight soft">
+      <div class="wrap">
+        <figure class="testimonio card reveal">
+          <blockquote class="lead">«{TESTIMONIO.texto}»</blockquote>
+          <figcaption class="muted">{TESTIMONIO.autor}{TESTIMONIO.negocio && ` · ${TESTIMONIO.negocio}`}</figcaption>
+        </figure>
+      </div>
+    </section>
+  )}
+
   <!-- PRECIOS -->
   <section class="section soft" id="precios">
     <div class="wrap">
@@ -166,13 +188,23 @@ const faqLd = {
       <div class="team">
         {EQUIPO.map((m, i) => (
           <div class:list={['member reveal', `reveal-d${i + 1}`]}>
-            <div class="av">{m.inicial}</div>
+            <Avatar foto={m.foto} inicial={m.inicial} nombre={m.nombre} />
             <strong>{m.nombre}</strong>
-            <span class="muted">{m.rol}</span>
+            {m.rol && <span class="muted">{m.rol}</span>}
           </div>
         ))}
       </div>
       <a href="/equipo" class="btn btn-ghost">Conócenos →</a>
+    </div>
+  </section>
+
+  <!-- INFORME GRATIS -->
+  <section class="section-tight">
+    <div class="wrap">
+      <a href="/informe-resenas" class="banner reveal">
+        <span><strong>Informe gratis de tus reseñas de Google.</strong> Te decimos qué se repite en lo que opinan tus clientes.</span>
+        <span class="banner-go">Pedir el informe →</span>
+      </a>
     </div>
   </section>
 
@@ -222,7 +254,20 @@ const faqLd = {
   .team { display: flex; justify-content: center; gap: clamp(24px, 6vw, 72px); flex-wrap: wrap; margin: 48px 0 24px; }
   .member { display: grid; justify-items: center; gap: 6px; max-width: 220px; }
   .member .muted { font-size: 0.9rem; }
-  .av { width: 88px; height: 88px; border-radius: 50%; display: grid; place-items: center; font-size: 2rem; font-weight: 700; color: #fff; background: linear-gradient(135deg, var(--brand), #a855f7); margin-bottom: 8px; }
+  .tools { padding: 20px 0 4px; }
+  .tools .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 28px; }
+  .tools-t { margin: 0; font-size: 0.82rem; color: var(--muted); }
+  .tools-l { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 22px; color: #71717a; font-weight: 600; font-size: 0.95rem; letter-spacing: -0.01em; }
+  .tile.small { position: relative; }
+  .tile .cover { color: inherit; }
+  .tile .cover::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
+  .tile .detalle { font-size: 0.9rem; }
+  .tile .mas-link { position: relative; z-index: 2; color: var(--brand-2); font-weight: 600; font-size: 0.92rem; margin-top: auto; }
+  .banner { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 22px 28px; border-radius: 20px; background: var(--brand-soft); color: var(--ink); }
+  .banner-go { color: var(--brand-2); font-weight: 600; }
+  .testimonio { max-width: 760px; margin: 0 auto; text-align: center; display: grid; gap: 14px; }
+  .testimonio blockquote { margin: 0; }
+  .testimonio figcaption { margin: 0; }
   @media (max-width: 900px) {
     .hero-grid, .caso { grid-template-columns: 1fr; }
     .hero-copy { text-align: center; }

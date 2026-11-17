@@ -139,6 +139,8 @@ const enHref = lang === 'en' ? Astro.url.pathname : altHref ?? '/en/';
       @media (prefers-reduced-motion: reduce) { #preloader { display: none; } }
     </style>
     <style>
+      main { padding-bottom: 0; }
+      @media (max-width: 900px) { main { padding-bottom: 72px; } } /* deja sitio a los botones flotantes */
       .wa { position: fixed; right: 20px; bottom: calc(20px + env(safe-area-inset-bottom)); width: 56px; height: 56px; border-radius: 50%; background: #25d366; display: grid; place-items: center; box-shadow: 0 10px 30px rgba(37, 211, 102, 0.4); z-index: 60; transition: transform 0.25s var(--ease); }
       .wa:active { transform: scale(0.94); }
     </style>
