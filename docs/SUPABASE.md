@@ -92,3 +92,24 @@ insert into public.staff (email, nombre, rol) values ('nueva@tuagencia.tech', 'N
 > 3. En *Authentication*: deja **Confirm email activado**, pon la longitud mínima de contraseña en **10**, *Site URL* = `https://tuagencia.tech` y añade como *Redirect URLs* `https://tuagencia.tech/area-cliente` y `http://localhost:4321/area-cliente`.
 > 4. **No toques** nada más (ni claves, ni el plan, ni facturación) y **no uses la clave service_role** para nada.
 > 5. Al terminar, dime solo: la *Project URL*, qué has configurado y qué falta (por ejemplo el SMTP propio, que lo configuro yo). Las claves las copio yo desde *Project Settings → API*.
+
+---
+
+## El panel del área de cliente (tres roles)
+
+Al iniciar sesión en `/area-cliente` cada persona ve su panel, con menú lateral, y puede **cerrar sesión** o **cambiar de cuenta** desde el menú:
+
+| Rol | Quién | Qué ve |
+|---|---|---|
+| **Cliente** | cualquiera que se registre | Resumen (horas ahorradas, valor, automatizaciones), Automatizaciones, Resultados por mes, Informes, Solicitudes (con respuestas), Ayuda y Mi cuenta |
+| **Equipo** | `pablo@`, `jorge@`, `rodrigo@tuagencia.tech` | Resumen con pendientes y embudo, Contactos (estados, notas, WhatsApp/email), Solicitudes (responder y cerrar), Clientes (ficha con automatizaciones, métricas, informes y notas), Métricas, Equipo y Mi cuenta |
+| **Administrador** | `admin@tuagencia.tech` | Todo lo del equipo + **Ingresos** (estimación) y poder cambiar el plan y la tarifa de cada cliente |
+
+El rol lo decide la base de datos (tabla `staff`, con el email **verificado**): la pantalla solo muestra u oculta botones; la seguridad real son las políticas RLS.
+
+### Actualizar la base de datos (una sola vez tras esta versión)
+La versión nueva añade las **notas internas** del equipo, `mi_rol()` y `equipo()`. En Supabase → *SQL Editor* → *New query*, pega **todo** `supabase/schema.sql` → *Run*. Es seguro repetirlo: no borra datos.
+Mientras no lo hagas, el panel funciona igual, pero las notas y la lista de equipo mostrarán un aviso.
+
+### Datos que se mueven solos
+Los paneles se actualizan cada minuto mientras la pestaña está abierta (y con el botón de actualizar). Lo que añadáis a un cliente (automatizaciones, métricas, informes) lo ve él en su panel.

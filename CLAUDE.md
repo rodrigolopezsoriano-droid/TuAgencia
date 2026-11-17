@@ -26,7 +26,7 @@ Estilo Apple (limpio, mucho espacio, color de marca `#6366F1`), SEO local y cost
 | Cuentas, roles y base de datos | `supabase/schema.sql` · `docs/SUPABASE.md` |
 | Colores y tipografía | `src/styles/global.css` |
 | Portada / versión en inglés | `src/pages/index.astro` · `src/pages/en/index.astro` |
-| Área de cliente | `src/pages/area-cliente.astro` · `src/scripts/supabase.ts` |
+| Área de cliente (acceso + paneles de cliente, equipo y admin) | `src/pages/area-cliente.astro` · `src/scripts/area/` (app, vistas-cliente, vistas-equipo, datos) · pruebas en `tests/e2e/` |
 | Tablas y seguridad de la base de datos | `supabase/schema.sql` |
 | Redirecciones y cabeceras | `public/_redirects` · `public/_headers` |
 | Fotos y roles del equipo | `public/equipo/` (`pablo.webp`, `jorge.webp`, `rodrigo.webp`; si no existen se muestra la inicial) · `EQUIPO` en `src/data/site.ts` |
