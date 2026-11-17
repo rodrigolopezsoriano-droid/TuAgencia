@@ -14,15 +14,15 @@ const year = new Date().getFullYear();
         <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
       </div>
       <div>
-        <h4>Soluciones</h4>
+        <p class="ft">Soluciones</p>
         {SOLUCIONES.map((s) => <a href={`/soluciones/${s.slug}`}>{s.nombre}</a>)}
       </div>
       <div>
-        <h4>Sectores</h4>
+        <p class="ft">Sectores</p>
         {SECTORES.map((s) => <a href={`/sectores/${s.slug}`}>{s.nombre}</a>)}
       </div>
       <div>
-        <h4>Agencia</h4>
+        <p class="ft">Agencia</p>
         <a href="/precios">Precios</a>
         <a href="/equipo">Equipo</a>
         <a href="/casos">Casos de éxito</a>
@@ -44,7 +44,7 @@ const year = new Date().getFullYear();
   .cols > div { display: grid; gap: 10px; align-content: start; }
   .brand { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 1rem; color: var(--ink); }
   .about p { margin: 0; max-width: 32ch; }
-  h4 { margin: 0 0 4px; font-size: 0.8rem; font-weight: 600; color: var(--ink); }
+  .ft { margin: 0 0 4px; font-size: 0.8rem; font-weight: 600; color: var(--ink); }
   .cols a { color: var(--muted); }
   .cols a:hover { color: var(--ink); }
   .legal { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); }

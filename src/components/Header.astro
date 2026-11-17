@@ -22,8 +22,8 @@ const nav = en
     </nav>
 
     <div class="right">
-      <a class="lang" href={altHref} hreflang={en ? 'es' : 'en'} aria-label={en ? 'Ver en español' : 'View in English'}>
-        <span class:list={{ on: !en }}>ES</span><span class:list={{ on: en }}>EN</span>
+      <a class="lang" href={altHref} hreflang={en ? 'es' : 'en'}>
+        <span class:list={{ on: !en }}>ES</span><span class:list={{ on: en }}>EN</span><span class="sr-only">{en ? 'Ver en español' : 'View in English'}</span>
       </a>
       {!en && <a href="/area-cliente" class="login">Área cliente</a>}
       <a href={en ? '/en/#contact' : '/contacto'} class="btn btn-primary btn-sm cta">{en ? 'Free audit' : 'Auditoría gratis'}</a>
@@ -59,8 +59,8 @@ const nav = en
   .right { margin-left: auto; display: flex; align-items: center; gap: 16px; }
   .login { font-size: 0.92rem; color: var(--muted); }
   .login:hover { color: var(--ink); }
-  .lang { display: flex; font-size: 0.75rem; font-weight: 600; border: 1px solid var(--line); border-radius: 999px; padding: 2px; }
-  .lang span { padding: 3px 8px; border-radius: 999px; color: var(--muted); }
+  .lang { position: relative; display: flex; font-size: 0.75rem; font-weight: 600; border: 1px solid var(--line); border-radius: 999px; padding: 2px; }
+  .lang span:not(.sr-only) { padding: 3px 8px; border-radius: 999px; color: var(--muted); }
   .lang span.on { background: var(--ink); color: #fff; }
   .burger { display: none; width: 40px; height: 40px; border: 0; background: none; position: relative; cursor: pointer; }
   .burger span { position: absolute; left: 11px; right: 11px; height: 1.5px; background: var(--ink); transition: transform 0.3s var(--ease); }
