@@ -31,3 +31,37 @@ test('/api/reservar acepta la barra final y rechaza orígenes ajenos', async () 
   });
   assert.ok([400, 403].includes(r.status), 'estado ' + r.status);
 });
+
+test('el cron hace GET a la tabla keepalive de Supabase con la clave pública', async () => {
+  const real = globalThis.fetch;
+  const llamadas: { url: string; h: Record<string, string> }[] = [];
+  globalThis.fetch = (async (u: string, init?: RequestInit) => {
+    llamadas.push({ url: String(u), h: init?.headers as Record<string, string> });
+    return new Response('[]', { status: 200 });
+  }) as typeof fetch;
+  try {
+    const pendientes: Promise<unknown>[] = [];
+    await worker.scheduled({}, { ASSETS, SUPABASE_URL: 'https://x.supabase.co/', SUPABASE_ANON_KEY: 'sb_publishable_x' }, { waitUntil: (p) => pendientes.push(p) });
+    await Promise.all(pendientes);
+    assert.equal(llamadas.length, 1);
+    assert.equal(llamadas[0].url, 'https://x.supabase.co/rest/v1/keepalive?select=id');
+    assert.equal(llamadas[0].h.apikey, 'sb_publishable_x');
+  } finally {
+    globalThis.fetch = real;
+  }
+});
+
+test('el cron falla de forma visible si faltan las variables o Supabase responde error', async () => {
+  const real = globalThis.fetch;
+  try {
+    const p1: Promise<unknown>[] = [];
+    await worker.scheduled({}, { ASSETS }, { waitUntil: (p) => p1.push(p) });
+    await assert.rejects(Promise.all(p1), /faltan SUPABASE_URL/);
+    globalThis.fetch = (async () => new Response('x', { status: 401 })) as typeof fetch;
+    const p2: Promise<unknown>[] = [];
+    await worker.scheduled({}, { ASSETS, SUPABASE_URL: 'https://x.supabase.co', SUPABASE_ANON_KEY: 'k' }, { waitUntil: (p) => p2.push(p) });
+    await assert.rejects(Promise.all(p2), /401/);
+  } finally {
+    globalThis.fetch = real;
+  }
+});

@@ -4,8 +4,9 @@
 import { onRequestGet as disponibilidad } from '../functions/api/disponibilidad.ts';
 import { onRequestPost as reservar } from '../functions/api/reservar.ts';
 import type { Env } from '../functions/_lib/google.ts';
+import { keepalive, type KeepaliveEnv } from '../functions/_lib/keepalive.ts';
 
-interface WorkerEnv extends Env {
+interface WorkerEnv extends Env, KeepaliveEnv {
   ASSETS: { fetch: (request: Request) => Promise<Response> };
 }
 
@@ -31,5 +32,10 @@ export default {
     if (ruta.startsWith('/api/')) return respuesta(404, 'no_encontrado');
 
     return env.ASSETS.fetch(request);
+  },
+
+  // Cron Trigger (wrangler.jsonc): ping periódico a Supabase para que no se pause.
+  async scheduled(_evento: unknown, env: WorkerEnv, ctx: { waitUntil: (p: Promise<unknown>) => void }): Promise<void> {
+    ctx.waitUntil(keepalive(env).then((m) => console.log(m)));
   },
 };

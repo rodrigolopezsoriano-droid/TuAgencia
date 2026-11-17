@@ -4,6 +4,8 @@
   "name": "tuagencia",
   "main": "worker/index.ts",
   "compatibility_date": "2025-09-01",
+  // Ping a Supabase cada 3 días para que no pause el proyecto gratis (usa SUPABASE_URL y SUPABASE_ANON_KEY).
+  "triggers": { "crons": ["17 6 */3 * *"] },
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",
