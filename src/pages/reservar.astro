@@ -15,7 +15,7 @@ import { AGENDA } from '../data/agenda';
           <li>Te llega la invitación a tu correo y se añade a tu calendario</li>
           <li>Sin coste y sin compromiso</li>
         </ul>
-        <p class="muted small">¿Prefieres escribirnos? <a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
+        <p class="muted small">¿Prefieres escribirnos? <a href={`mailto:${SITE.email}`}>{SITE.email}</a>{SITE.whatsapp && <> o por <a href={`https://wa.me/${SITE.whatsapp}`} target="_blank" rel="noopener">WhatsApp</a></>}</p>
       </div>
 
       <div class="card panel" data-agenda>

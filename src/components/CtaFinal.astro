@@ -1,4 +1,5 @@
 ---
+import { SITE } from '../data/site';
 const { titulo = '¿Qué tarea te gustaría no volver a hacer?', texto = 'Cuéntanosla. En 48 horas te enseñamos una demo funcionando sobre tu propio negocio. Sin coste y sin compromiso.' } = Astro.props;
 ---
 <section class="section dark center">
@@ -9,5 +10,10 @@ const { titulo = '¿Qué tarea te gustaría no volver a hacer?', texto = 'Cuént
       <a href="/contacto" class="btn btn-primary">Pide tu auditoría gratis</a>
       <a href="/precios" class="btn btn-ghost" style="color:#c7d2fe">Ver precios →</a>
     </div>
+    {SITE.whatsapp && <p class="wa-cta reveal reveal-d2">¿Prefieres hablar ya? <a href={`https://wa.me/${SITE.whatsapp}`} target="_blank" rel="noopener">Escríbenos por WhatsApp · {SITE.whatsappVisible}</a></p>}
   </div>
 </section>
+<style>
+  .wa-cta { margin: 20px 0 0; color: #a1a1aa; font-size: 0.95rem; }
+  .wa-cta a { color: #c7d2fe; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+</style>

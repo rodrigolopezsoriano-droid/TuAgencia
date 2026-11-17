@@ -18,7 +18,7 @@ import { SITE } from '../data/site';
         <div class="direct">
           <p class="muted">¿Prefieres escribirnos?</p>
           <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
-          {SITE.whatsapp && <a href={`https://wa.me/${SITE.whatsapp}`}>WhatsApp</a>}
+          {SITE.whatsapp && <a href={`https://wa.me/${SITE.whatsapp}`} target="_blank" rel="noopener">WhatsApp · {SITE.whatsappVisible}</a>}
           {SITE.agenda && <a href={SITE.agenda} class="btn btn-dark btn-sm">Reservar llamada</a>}
         </div>
       </div>

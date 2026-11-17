@@ -46,14 +46,14 @@ const json = JSON.stringify(datos).replace(/</g, '\\u003c');
   .cb { --cb-z: 61; }
   .cb[hidden], .cb [hidden] { display: none !important; }
   .cb-open {
-    position: fixed; right: 20px; bottom: calc(88px + env(safe-area-inset-bottom)); z-index: var(--cb-z);
+    position: fixed; right: 20px; bottom: calc(20px + env(safe-area-inset-bottom)); z-index: var(--cb-z);
     display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 18px; border: 0; border-radius: 999px;
     background: var(--brand-2); color: #fff; font: inherit; font-weight: 600; font-size: 0.92rem; cursor: pointer;
     box-shadow: 0 10px 30px rgba(79, 70, 229, 0.38);
   }
   .cb-open:active { transform: scale(0.97); }
   .cb-panel {
-    position: fixed; right: 20px; bottom: calc(88px + env(safe-area-inset-bottom)); z-index: 70;
+    position: fixed; right: 20px; bottom: calc(20px + env(safe-area-inset-bottom)); z-index: 70;
     width: min(380px, calc(100vw - 24px)); height: min(560px, calc(100dvh - 120px));
     display: flex; flex-direction: column; background: #fff; border-radius: 20px; overflow: hidden;
     box-shadow: 0 30px 80px -10px rgba(17, 17, 26, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.06);
