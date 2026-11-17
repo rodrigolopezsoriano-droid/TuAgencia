@@ -65,3 +65,19 @@ test('el cron falla de forma visible si faltan las variables o Supabase responde
     globalThis.fetch = real;
   }
 });
+
+test('www.tuagencia.tech redirige con 301 a tuagencia.tech conservando ruta y parámetros', async () => {
+  const r = await worker.fetch(new Request('https://www.tuagencia.tech/precios?plan=Esencial&x=1'), { ASSETS });
+  assert.equal(r.status, 301);
+  assert.equal(r.headers.get('location'), 'https://tuagencia.tech/precios?plan=Esencial&x=1');
+  const raiz = await worker.fetch(new Request('https://www.tuagencia.tech/'), { ASSETS });
+  assert.equal(raiz.headers.get('location'), 'https://tuagencia.tech/');
+  // una petición POST (p. ej. a la API) se redirige sin cambiar de método
+  const post = await worker.fetch(new Request('https://www.tuagencia.tech/api/reservar', { method: 'POST', body: '{}' }), { ASSETS });
+  assert.equal(post.status, 308);
+});
+
+test('tuagencia.tech (sin www) no se redirige', async () => {
+  const r = await llamar('/precios');
+  assert.equal(r.status, 200);
+});

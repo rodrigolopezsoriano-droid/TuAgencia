@@ -18,7 +18,16 @@ const respuesta = (status: number, error: string, extra: Record<string, string> 
 
 export default {
   async fetch(request: Request, env: WorkerEnv): Promise<Response> {
-    const { pathname } = new URL(request.url);
+    const url = new URL(request.url);
+    const { pathname } = url;
+
+    // www.tuagencia.tech → tuagencia.tech (301, conservando ruta y parámetros) para que Google vea una sola web.
+    // Para que llegue aquí hay que añadir www.tuagencia.tech como dominio personalizado del Worker en Cloudflare.
+    if (url.hostname === 'www.tuagencia.tech') {
+      const destino = `https://tuagencia.tech${pathname}${url.search}`;
+      return Response.redirect(destino, request.method === 'GET' || request.method === 'HEAD' ? 301 : 308);
+    }
+
     const ruta = pathname.length > 1 ? pathname.replace(/\/+$/, '') : pathname;
 
     if (ruta === '/api/disponibilidad') {

@@ -69,7 +69,7 @@ import Base from '../layouts/Base.astro';
 
       <!-- NUEVA CONTRASEÑA (llega desde el enlace del correo) -->
       <div class="login card" data-view="recovery" hidden>
-        <h1 class="h2">Nueva contraseña</h1>
+        <p role="heading" aria-level="1" class="h2">Nueva contraseña</p>
         <form data-form="recovery" class="stack" novalidate>
           <div class="field">
             <label for="n-pass">Elige tu nueva contraseña <span class="muted">(mínimo 10 caracteres)</span></label>
@@ -86,7 +86,7 @@ import Base from '../layouts/Base.astro';
         <div class="top">
           <div>
             <p class="eyebrow" data-negocio>Tu negocio</p>
-            <h1 class="h2">Hola, <span data-nombre>cliente</span>.</h1>
+            <p role="heading" aria-level="1" class="h2">Hola, <span data-nombre>cliente</span>.</p>
             <p class="muted plan" data-plan></p>
           </div>
           <button class="btn btn-sm" style="background:#fff" data-logout>Salir</button>
@@ -167,7 +167,7 @@ import Base from '../layouts/Base.astro';
         <div class="top">
           <div>
             <p class="eyebrow" data-staff-rol>Equipo</p>
-            <h1 class="h2">Panel de gestión</h1>
+            <p role="heading" aria-level="1" class="h2">Panel de gestión</p>
             <p class="muted plan" data-staff-quien></p>
           </div>
           <button class="btn btn-sm" style="background:#fff" data-logout>Salir</button>
