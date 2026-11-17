@@ -1,4 +1,5 @@
 ---
+import Motor3D from '../components/Motor3D.astro';
 import Base from '../layouts/Base.astro';
 import ChatDemo from '../components/ChatDemo.astro';
 import Calculadora from '../components/Calculadora.astro';
@@ -57,6 +58,18 @@ const faqLd = {
       <div class="chips reveal reveal-d1">
         {SECTORES.map((s) => <a href={`/sectores/${s.slug}`} class="chip">{s.nombre}</a>)}
       </div>
+    </div>
+  </section>
+
+  <!-- CÓMO FUNCIONA (escena 3D) -->
+  <section class="section motor">
+    <div class="wrap">
+      <div class="head center">
+        <p class="eyebrow reveal">Así funciona</p>
+        <h2 class="h2 reveal reveal-d1">Entra un mensaje.<br />Sale una tarea hecha.</h2>
+        <p class="lead reveal reveal-d2">Lo que te llega por WhatsApp, tu web o Instagram pasa por la IA, que lo entiende y lo convierte en citas, fichas de cliente y avisos para tu equipo. Sin que toques nada.</p>
+      </div>
+      <div class="reveal reveal-esc reveal-d2"><Motor3D /></div>
     </div>
   </section>
 
@@ -252,6 +265,8 @@ const faqLd = {
   .steps .n { font-size: 0.85rem; font-weight: 600; color: #a5b4fc; font-variant-numeric: tabular-nums; }
   .steps p { margin: 0; font-size: 0.95rem; }
   .caso { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 48px; align-items: center; }
+  .motor { padding-bottom: clamp(24px, 4vw, 48px); overflow: hidden; }
+  .motor .head { margin-bottom: 0; }
   .caso-card { padding: 40px; background: linear-gradient(160deg, #0b0b12, #23233a); color: #e4e4e7; border: 0; }
   .team { display: flex; justify-content: center; gap: clamp(24px, 6vw, 72px); flex-wrap: wrap; margin: 48px 0 24px; }
   .member { display: grid; justify-items: center; gap: 6px; max-width: 220px; }

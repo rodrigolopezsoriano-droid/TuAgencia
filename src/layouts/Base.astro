@@ -79,9 +79,9 @@ const enHref = lang === 'en' ? Astro.url.pathname : altHref ?? '/en/';
       try {
         var h = document.documentElement, ss = sessionStorage;
         if (ss.getItem('ta_pre') === '1') h.classList.add('no-pre'); // ya se vio la intro en esta visita
-        var n = +ss.getItem('ta_nav'); // venimos de pulsar un enlace de la propia web: la pantalla de carga sigue puesta
-        if (n && Date.now() - n < 6000) h.classList.add('carga-nav');
-        ss.removeItem('ta_nav');
+        var n = +ss.getItem('ta_inicio'); // venimos de pulsar «Inicio» (el logotipo): se repite la pantalla de carga
+        if (n && Date.now() - n < 6000) h.classList.add('carga-inicio');
+        ss.removeItem('ta_inicio');
       } catch (e) {}
     </script>
   </head>

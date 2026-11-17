@@ -1,0 +1,164 @@
+---
+// Escena 3D (solo CSS, sin librerías ni imágenes): una plataforma en perspectiva isométrica con
+// tres entradas (WhatsApp, web, Instagram), el «motor» de IA en el centro y tres salidas
+// (cita, CRM, aviso). Los mensajes viajan como luces por las pistas, entran en el motor y salen
+// convertidos en tareas hechas. Con el ratón la escena se inclina un poco.
+// Con «reducir movimiento» se queda quieta (se ve igual de clara, sin luces viajando).
+const entradas = [
+  { y: 50, t: 'WhatsApp', i: '💬' },
+  { y: 150, t: 'Tu web', i: '🌐' },
+  { y: 250, t: 'Instagram', i: '📸' },
+];
+const salidas = [
+  { y: 50, t: 'Cita reservada', i: '📅' },
+  { y: 150, t: 'Ficha en el CRM', i: '📇' },
+  { y: 250, t: 'Aviso a tu equipo', i: '🔔' },
+];
+// Pistas (coordenadas del suelo: 600 × 340). Entradas → motor (x 255, y 170) → salidas
+const pIn = (y: number) => `M130 ${y + 30} C195 ${y + 30} 195 170 255 170`;
+const pOut = (y: number) => `M345 170 C405 170 405 ${y + 30} 470 ${y + 30}`;
+---
+<div class="m3d" data-m3d aria-hidden="true">
+  <div class="m-suelo">
+    <svg class="m-pistas" viewBox="0 0 600 340" width="600" height="340">
+      <defs>
+        <linearGradient id="m-pista" x1="0" x2="1">
+          <stop offset="0" stop-color="#c7d2fe" /><stop offset="0.5" stop-color="#a5b4fc" /><stop offset="1" stop-color="#c7d2fe" />
+        </linearGradient>
+      </defs>
+      {entradas.map((e) => <path d={pIn(e.y)} />)}
+      {salidas.map((s) => <path d={pOut(s.y)} />)}
+    </svg>
+
+    {entradas.map((e, i) => <i class="m-luz entra" style={`offset-path: path('${pIn(e.y)}'); --d:${i * 1.2}s`}></i>)}
+    {salidas.map((s, i) => <i class="m-luz sale" style={`offset-path: path('${pOut(s.y)}'); --d:${i * 1.2}s`}></i>)}
+
+    {entradas.map((e) => (
+      <div class="m-caja in" style={`left:40px; top:${e.y}px`}>
+        <b class="t"></b><b class="n"></b><b class="s"></b><b class="e"></b><b class="w"></b>
+        <span class="m-et"><em>{e.i}</em>{e.t}</span>
+      </div>
+    ))}
+
+    <div class="m-anillo"></div>
+    <div class="m-nucleo">
+      <div class="m-caja ia">
+        <b class="t"><svg viewBox="0 0 64 64" fill="none"><path d="M32 8 L56 52 H44 L32 28 L20 52 H8 Z" stroke="#fff" stroke-width="4" stroke-linejoin="round" /><path d="M18 40 H46" stroke="#fff" stroke-width="4" stroke-linecap="round" /><circle cx="32" cy="28" r="4.5" fill="#fff" /></svg></b>
+        <b class="n"></b><b class="s"></b><b class="e"></b><b class="w"></b>
+        <span class="m-et ia-et">IA trabajando</span>
+      </div>
+    </div>
+
+    {salidas.map((s, i) => (
+      <div class="m-caja out" style={`left:470px; top:${s.y}px; --d:${i * 1.2}s`}>
+        <b class="t"></b><b class="n"></b><b class="s"></b><b class="e"></b><b class="w"></b>
+        <span class="m-et"><em>{s.i}</em>{s.t}<i class="ok">✓</i></span>
+      </div>
+    ))}
+  </div>
+</div>
+
+<script>
+  // Inclinación suave con el ratón (solo con ratón y sin «reducir movimiento»)
+  const m = document.querySelector<HTMLElement>('[data-m3d]');
+  if (m && matchMedia('(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)').matches) {
+    let raf = 0;
+    m.addEventListener('pointermove', (e) => {
+      const r = m.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        m.style.setProperty('--rz', `${(-38 + x * 10).toFixed(2)}deg`);
+        m.style.setProperty('--rx', `${(56 - y * 8).toFixed(2)}deg`);
+      });
+    });
+    m.addEventListener('pointerleave', () => { m.style.removeProperty('--rz'); m.style.removeProperty('--rx'); });
+  }
+</script>
+
+<style>
+  .m3d {
+    --rx: 56deg; --rz: -38deg; --s: 1;
+    position: relative; height: 460px; perspective: 1400px; perspective-origin: 50% 40%;
+  }
+  .m-suelo {
+    position: absolute; left: 50%; top: 50%; width: 600px; height: 340px; margin: -170px 0 0 -300px;
+    transform-style: preserve-3d; border-radius: 28px;
+    transform: scale(var(--s)) rotateX(var(--rx)) rotateZ(var(--rz));
+    transition: transform 0.5s var(--ease);
+    background:
+      radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.14), transparent 55%),
+      linear-gradient(rgba(99, 102, 241, 0.07) 1px, transparent 1px) 0 0 / 34px 34px,
+      linear-gradient(90deg, rgba(99, 102, 241, 0.07) 1px, transparent 1px) 0 0 / 34px 34px,
+      #fbfbff;
+    box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.1), 0 40px 80px rgba(49, 46, 129, 0.16);
+  }
+  .m-pistas { position: absolute; inset: 0; overflow: visible; transform: translateZ(1px); }
+  .m-pistas path { fill: none; stroke: url(#m-pista); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 2 7; }
+
+  /* Cajas 3D: cara de arriba (t) y cuatro laterales (n, s, e, w) */
+  .m-caja { --w: 90px; --dd: 60px; --h: 22px; position: absolute; width: var(--w); height: var(--dd); transform-style: preserve-3d; }
+  .m-caja b { position: absolute; display: block; }
+  .m-caja .t { inset: 0; transform: translateZ(var(--h)); background: #fff; border-radius: 10px; box-shadow: inset 0 0 0 1px rgba(99, 102, 241, 0.16); }
+  .m-caja .s { left: 0; top: 100%; width: 100%; height: var(--h); transform-origin: top; transform: rotateX(90deg); background: #dcdcf0; }
+  .m-caja .n { left: 0; bottom: 100%; width: 100%; height: var(--h); transform-origin: bottom; transform: rotateX(-90deg); background: #e8e8f6; }
+  .m-caja .e { left: 100%; top: 0; width: var(--h); height: 100%; transform-origin: left; transform: rotateY(-90deg); background: #cfcfe8; }
+  .m-caja .w { right: 100%; top: 0; width: var(--h); height: 100%; transform-origin: right; transform: rotateY(90deg); background: #e2e2f3; }
+
+  /* Etiquetas siempre de frente a la cámara (deshacen el giro del suelo) */
+  .m-et {
+    position: absolute; left: 50%; top: 50%; white-space: nowrap;
+    transform: translateZ(calc(var(--h) + 2px)) rotateZ(calc(-1 * var(--rz))) rotateX(calc(-1 * var(--rx))) translate(-50%, -75%);
+    display: flex; align-items: center; gap: 6px; padding: 6px 11px; border-radius: 999px;
+    background: #fff; color: var(--ink); font-size: 13px; font-weight: 600; box-shadow: 0 6px 18px rgba(17, 17, 26, 0.1);
+    transition: transform 0.5s var(--ease);
+  }
+  .m-et em { font-style: normal; }
+  .m-et .ok { font-style: normal; display: grid; place-items: center; width: 17px; height: 17px; border-radius: 50%; background: #16a34a; color: #fff; font-size: 10px; opacity: 0; transform: scale(0.4); }
+
+  /* Motor de IA: cubo morado que flota, con un anillo que gira debajo */
+  .m-nucleo { position: absolute; left: 255px; top: 125px; width: 90px; height: 90px; transform-style: preserve-3d; }
+  .m-caja.ia { --w: 90px; --dd: 90px; --h: 76px; }
+  .m-caja.ia .t { background: linear-gradient(135deg, #818cf8, #6366f1 55%, #a855f7); box-shadow: none; border-radius: 14px; display: grid; place-items: center; }
+  .m-caja.ia .t svg { width: 46px; height: 46px; }
+  .m-caja.ia .s { background: #4f46e5; } .m-caja.ia .n { background: #6366f1; }
+  .m-caja.ia .e { background: #4338ca; } .m-caja.ia .w { background: #5b5bf0; }
+  .ia-et { background: var(--ink); color: #fff; font-size: 12px; letter-spacing: 0.02em; }
+  .m-anillo {
+    position: absolute; left: 230px; top: 100px; width: 140px; height: 140px; border-radius: 50%;
+    border: 2px dashed rgba(99, 102, 241, 0.45); box-shadow: 0 0 30px rgba(99, 102, 241, 0.25), inset 0 0 30px rgba(99, 102, 241, 0.15);
+  }
+
+  /* Luces que viajan por las pistas */
+  .m-luz {
+    position: absolute; left: 0; top: 0; width: 12px; height: 12px; border-radius: 50%; transform: translateZ(3px);
+    offset-rotate: 0deg; offset-distance: 0%; opacity: 0;
+    background: #fff; box-shadow: 0 0 0 3px #818cf8, 0 0 18px 6px rgba(129, 140, 248, 0.75);
+  }
+  .m-luz.sale { box-shadow: 0 0 0 3px #22c55e, 0 0 18px 6px rgba(34, 197, 94, 0.55); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .m-luz.entra { animation: m-entra 3.6s cubic-bezier(0.45, 0, 0.55, 1) var(--d) infinite; }
+    .m-luz.sale { animation: m-sale 3.6s cubic-bezier(0.45, 0, 0.55, 1) var(--d) infinite; }
+    .m-pistas path { animation: m-corre 1.2s linear infinite; }
+    .m-nucleo { animation: m-flota 3.6s ease-in-out infinite; }
+    .m-caja.ia .t { animation: m-late 1.2s ease-in-out infinite; }
+    .m-anillo { animation: m-gira 9s linear infinite; }
+    .m-caja.out .t { animation: m-brilla 3.6s ease var(--d) infinite; }
+    .m-caja.out .ok { animation: m-ok 3.6s ease var(--d) infinite; }
+  }
+  @keyframes m-entra { 0% { offset-distance: 0%; opacity: 0; } 5% { opacity: 1; } 30% { opacity: 1; } 34% { offset-distance: 100%; opacity: 0; } 100% { offset-distance: 100%; opacity: 0; } }
+  @keyframes m-sale { 0%, 38% { offset-distance: 0%; opacity: 0; } 42% { opacity: 1; } 68% { opacity: 1; } 72% { offset-distance: 100%; opacity: 0; } 100% { offset-distance: 100%; opacity: 0; } }
+  @keyframes m-corre { to { stroke-dashoffset: -9; } }
+  @keyframes m-flota { 0%, 100% { transform: translateZ(0); } 50% { transform: translateZ(10px); } }
+  @keyframes m-late { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.18); } }
+  @keyframes m-gira { to { transform: rotate(360deg); } }
+  @keyframes m-brilla { 0%, 70%, 100% { box-shadow: inset 0 0 0 1px rgba(99, 102, 241, 0.16); } 76% { box-shadow: inset 0 0 0 2px #22c55e, 0 0 26px rgba(34, 197, 94, 0.45); } }
+  @keyframes m-ok { 0%, 70% { opacity: 0; transform: scale(0.4); } 75%, 92% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1); } }
+
+  @media (prefers-reduced-motion: reduce) { .m-et .ok { opacity: 1; transform: none; } }
+
+  @media (max-width: 900px) { .m3d { --s: 0.82; height: 400px; } }
+  @media (max-width: 640px) { .m3d { --s: 0.6; height: 300px; } }
+  @media (max-width: 400px) { .m3d { --s: 0.52; height: 270px; } }
+</style>

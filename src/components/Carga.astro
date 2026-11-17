@@ -1,114 +1,76 @@
 ---
-// Pantalla de carga con el logo en 3D (solo CSS 3D: sin librerías ni imágenes, pesa casi nada).
-//  · Primera visita de la sesión → intro completa con el logo girando, anillos orbitando y el nombre.
-//  · Al cambiar de página → versión corta (el logo 3D pequeño) que tapa el salto y se retira sola.
-// Se ve solo con JavaScript y si la persona no ha pedido "reducir movimiento".
+// Pantalla de carga: el logo se dibuja con su trazo y gira suavemente en 3D hasta quedar de frente.
+// Solo aparece en dos casos:
+//  · la primera vez que se entra a la web en la sesión;
+//  · al pulsar «Inicio» (el logotipo de la cabecera o del pie, enlaces con [data-inicio]).
+// Al pulsar cualquier otro enlace NO aparece. Sin JavaScript o con «reducir movimiento» no se muestra.
 ---
 <div id="carga" aria-hidden="true">
-  <svg width="0" height="0" style="position:absolute" focusable="false">
-    <defs>
-      <linearGradient id="c-grad" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stop-color="#a5b4fc" />
-        <stop offset="0.55" stop-color="#818cf8" />
-        <stop offset="1" stop-color="#e879f9" />
-      </linearGradient>
-    </defs>
-  </svg>
-  <div class="c-fondo"></div>
-  <div class="c-rejilla"></div>
-  <div class="c-particulas" id="c-particulas"></div>
   <div class="c-escena">
-    <div class="c-halo"></div>
-    <div class="c-anillo a1"></div>
-    <div class="c-anillo a2"></div>
-    <div class="c-logo" id="c-logo"></div>
-    <div class="c-suelo"></div>
+    <div class="c-logo">
+      <svg class="c-sombra" viewBox="0 0 64 64" fill="none">
+        <path d="M32 8 L56 52 H44 L32 28 L20 52 H8 Z" stroke="#312e81" stroke-width="2.5" stroke-linejoin="round" />
+      </svg>
+      <svg class="c-frente" viewBox="0 0 64 64" fill="none">
+        <path class="c-trazo" d="M32 8 L56 52 H44 L32 28 L20 52 H8 Z" stroke="#6366F1" stroke-width="2.5" stroke-linejoin="round" />
+        <path class="c-trazo c-d" d="M18 40 H46" stroke="#6366F1" stroke-width="2.5" stroke-linecap="round" />
+        <circle class="c-punto" cx="32" cy="28" r="3" fill="#6366F1" />
+      </svg>
+    </div>
   </div>
   <div class="c-pal">TUAGENCIA<span>.</span></div>
-  <div class="c-barra"><i></i></div>
 </div>
-
-<!-- Genera las capas del logo (así el HTML de cada página no engorda) antes del primer pintado -->
-<script is:inline>
-  (function () {
-    var l = document.getElementById('c-logo'), p = document.getElementById('c-particulas');
-    if (!l || !p) return;
-    var N = 18, h = '', i;
-    for (i = 0; i < N; i++) {
-      var z = ((i - (N - 1) / 2) * 1.7).toFixed(1), frente = i === N - 1;
-      h += '<svg class="c-capa" viewBox="0 0 64 64" style="transform:translateZ(' + z + 'px)">' +
-        '<path d="M32 8 L56 52 H44 L32 28 L20 52 H8 Z" fill="' + (frente ? 'url(#c-grad)' : 'hsl(243 ' + (62 + i) + '% ' + (22 + i * 1.6).toFixed(0) + '%)') + '"/>' +
-        (frente ? '<path d="M18 40 H46" stroke="#fff" stroke-width="3" stroke-linecap="round" fill="none"/><circle cx="32" cy="28" r="3.2" fill="#fff"/>' : '') + '</svg>';
-    }
-    l.innerHTML = h;
-    var s = '';
-    for (i = 0; i < 14; i++) s += '<i style="--x:' + ((i * 37 + 8) % 100) + '%;--d:' + ((i * 0.37) % 3).toFixed(2) + 's;--t:' + (4 + (i % 5)) + 's;--s:' + (2 + (i % 3)) + 'px"></i>';
-    p.innerHTML = s;
-  })();
-</script>
 
 <style is:global>
   #carga {
-    position: fixed; inset: 0; z-index: 9999; background: #050508; overflow: hidden;
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: clamp(26px, 6vmin, 54px);
+    position: fixed; inset: 0; z-index: 9999; background: #050508;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px;
     opacity: 0; visibility: hidden; pointer-events: none;
-    transition: opacity 0.55s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.55s;
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.6s;
   }
-  /* Visible desde el primer pintado: en la primera visita (intro) o al llegar tras pulsar un enlace (cambio de página) */
-  html:not(.no-pre) #carga, html.carga-nav #carga, #carga.on { opacity: 1; visibility: visible; pointer-events: auto; }
-  #carga.on { transition-duration: 0.22s; }
-  html:not(.no-pre) #carga:not(.fin), html.carga-nav #carga:not(.fin) { animation: c-salida 0.6s ease 6s forwards; } /* red de seguridad si el script no llega a ejecutarse */
+  /* Visible desde el primer pintado: primera visita (aún sin no-pre) o al llegar desde «Inicio» */
+  html:not(.no-pre) #carga, html.carga-inicio #carga, #carga.on { opacity: 1; visibility: visible; pointer-events: auto; }
+  #carga.on { transition-duration: 0.25s; }
+  html:not(.no-pre) #carga:not(.fin), html.carga-inicio #carga:not(.fin) { animation: c-salida 0.6s ease 4.5s forwards; } /* red de seguridad */
   html #carga.fin { opacity: 0; visibility: hidden; pointer-events: none; }
   html.no-js #carga { display: none; }
   @media (prefers-reduced-motion: reduce) { #carga { display: none !important; } }
 
-  .c-fondo { position: absolute; inset: 0; background: radial-gradient(55% 48% at 50% 42%, rgba(99, 102, 241, 0.3), transparent 70%), radial-gradient(40% 40% at 82% 88%, rgba(168, 85, 247, 0.2), transparent 70%), linear-gradient(180deg, #07070d, #050508); }
-  .c-rejilla {
-    position: absolute; left: -60%; right: -60%; bottom: -8%; height: 52%; opacity: 0.55;
-    background: linear-gradient(rgba(129, 140, 248, 0.32) 1px, transparent 1px) 0 0 / 100% 52px, linear-gradient(90deg, rgba(129, 140, 248, 0.32) 1px, transparent 1px) 0 0 / 52px 100%;
-    transform: perspective(520px) rotateX(64deg); -webkit-mask-image: linear-gradient(to top, #000 15%, transparent 85%); mask-image: linear-gradient(to top, #000 15%, transparent 85%);
-    animation: c-rej 1.6s linear infinite;
-  }
-  .c-particulas i { position: absolute; bottom: -10px; left: var(--x); width: var(--s); height: var(--s); border-radius: 50%; background: #a5b4fc; box-shadow: 0 0 10px 2px rgba(129, 140, 248, 0.7); opacity: 0; animation: c-sube var(--t) linear var(--d) infinite; }
+  /* El toque 3D: el logo llega girado y con perspectiva, y se endereza mientras se dibuja */
+  .c-escena { perspective: 600px; }
+  .c-logo { position: relative; width: 64px; height: 64px; transform-style: preserve-3d; transform: rotateY(-50deg) rotateX(14deg); }
+  .c-logo svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .c-sombra { transform: translateZ(-7px); opacity: 0; filter: blur(0.4px); }
+  .c-frente { filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.35)); }
+  .c-trazo { stroke-dasharray: 200; stroke-dashoffset: 200; }
+  .c-punto { opacity: 0; }
+  .c-pal { font-weight: 700; font-size: 18px; letter-spacing: 0.08em; color: #8887a8; opacity: 0; }
+  .c-pal span { color: #6366f1; }
 
-  .c-escena {
-    position: relative; width: min(42vmin, 250px); aspect-ratio: 1; perspective: 900px; transform-style: preserve-3d;
-    animation: c-flota 3.2s ease-in-out infinite;
-  }
-  .c-logo { position: absolute; inset: 0; transform-style: preserve-3d; animation: c-giro 6s linear infinite; }
-  .c-capa { position: absolute; inset: 0; width: 100%; height: 100%; backface-visibility: visible; }
-  .c-halo { position: absolute; inset: -45%; background: radial-gradient(circle, rgba(99, 102, 241, 0.4), transparent 60%); transform: translateZ(-60px); animation: c-pulso 2.4s ease-in-out infinite; }
-  .c-anillo { position: absolute; inset: -14%; border-radius: 50%; border: 1.5px solid rgba(165, 180, 252, 0.4); transform: rotateX(74deg); }
-  .c-anillo::after { content: ''; position: absolute; top: -5px; left: 50%; width: 9px; height: 9px; margin-left: -4px; border-radius: 50%; background: #c7d2fe; box-shadow: 0 0 16px 5px rgba(129, 140, 248, 0.85); }
-  .c-anillo.a1 { animation: c-orb 3.6s linear infinite; }
-  .c-anillo.a2 { inset: -30%; border-color: rgba(232, 121, 249, 0.3); animation: c-orb 5.6s linear infinite reverse; }
-  .c-anillo.a2::after { background: #f5d0fe; box-shadow: 0 0 16px 5px rgba(232, 121, 249, 0.8); }
-  .c-suelo { position: absolute; left: 6%; right: 6%; bottom: -26%; height: 16%; background: radial-gradient(ellipse, rgba(99, 102, 241, 0.6), transparent 70%); animation: c-pulso 3.2s ease-in-out infinite; }
+  /* Se reinicia cada vez que se muestra (clase .anim) */
+  #carga.anim .c-logo { animation: c-gira 1.3s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+  #carga.anim .c-sombra { animation: c-aparece 0.6s ease 0.5s forwards; }
+  #carga.anim .c-trazo { animation: c-dibuja 1s cubic-bezier(0.4, 0, 0.2, 1) 0.1s forwards; }
+  #carga.anim .c-d { animation-delay: 0.4s; }
+  #carga.anim .c-punto { animation: c-sube 0.3s ease 0.9s forwards; }
+  #carga.anim .c-pal { animation: c-sube 0.5s ease 0.8s forwards; }
 
-  .c-pal { font-weight: 700; font-size: clamp(15px, 2.4vmin, 19px); letter-spacing: 0.34em; color: #9a99bd; opacity: 0; animation: c-sube-t 0.7s ease 0.5s forwards; }
-  .c-pal span { color: #818cf8; }
-  .c-barra { width: min(230px, 52vw); height: 3px; border-radius: 3px; background: rgba(255, 255, 255, 0.12); overflow: hidden; }
-  .c-barra i { display: block; height: 100%; transform-origin: 0 50%; transform: scaleX(0); background: linear-gradient(90deg, #6366f1, #a855f7, #ec4899); animation: c-barra 1.9s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
-  #carga.listo .c-barra i { animation: none; transform: scaleX(1); transition: transform 0.25s ease; }
-
-  /* Versión corta (cambio de página): logo más pequeño, sin nombre */
-  #carga.nav .c-pal, html.carga-nav #carga .c-pal, #carga.nav .c-particulas, html.carga-nav #carga .c-particulas { display: none; }
-  #carga.nav .c-escena, html.carga-nav #carga .c-escena { width: min(26vmin, 150px); }
-  #carga.nav .c-barra i, html.carga-nav #carga .c-barra i { animation-duration: 0.9s; }
-
-  @keyframes c-giro { from { transform: rotateX(-13deg) rotateY(0deg); } to { transform: rotateX(-13deg) rotateY(360deg); } }
-  @keyframes c-orb { from { transform: rotateX(74deg) rotateZ(0deg); } to { transform: rotateX(74deg) rotateZ(360deg); } }
-  @keyframes c-flota { 0%, 100% { translate: 0 -6px; } 50% { translate: 0 8px; } }
-  @keyframes c-pulso { 0%, 100% { opacity: 0.65; scale: 0.94; } 50% { opacity: 1; scale: 1.06; } }
-  @keyframes c-rej { to { background-position: 0 52px, 52px 0; } }
-  @keyframes c-sube { 0% { transform: translateY(0); opacity: 0; } 12% { opacity: 0.9; } 100% { transform: translateY(-78vh); opacity: 0; } }
-  @keyframes c-sube-t { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
-  @keyframes c-barra { to { transform: scaleX(0.92); } }
+  @keyframes c-gira { to { transform: rotateY(0deg) rotateX(0deg); } }
+  @keyframes c-dibuja { to { stroke-dashoffset: 0; } }
+  @keyframes c-aparece { to { opacity: 0.8; } }
+  @keyframes c-sube { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
   @keyframes c-salida { to { opacity: 0; visibility: hidden; } }
 </style>
 
+<!-- Arranca la animación antes del primer pintado si la pantalla va a verse -->
+<script is:inline>
+  (function () {
+    var h = document.documentElement, el = document.getElementById('carga');
+    if (el && (!h.classList.contains('no-pre') || h.classList.contains('carga-inicio'))) el.classList.add('anim');
+  })();
+</script>
+
 <script>
-  // Controla cuándo se muestra y se oculta la pantalla de carga
   const html = document.documentElement;
   const el = document.getElementById('carga');
   const reducir = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -116,51 +78,48 @@
 
   const cargada = new Promise<void>((ok) => (document.readyState === 'complete' ? ok() : addEventListener('load', () => ok(), { once: true })));
   const esperar = (ms: number) => new Promise<void>((ok) => setTimeout(ok, ms));
+  // Se ve como mínimo lo que dura la animación del logo (1,3 s) y como máximo 4 s
+  const mostrarHasta = () => Promise.race([Promise.all([cargada, esperar(Math.max(0, 1300 - (performance.now() - t0)))]), esperar(4000)]);
 
-  function ocultar(guardarPrimeraVisita: boolean) {
+  function ocultar() {
     if (!el) return;
-    el.classList.add('listo');
-    setTimeout(() => {
-      el.classList.add('fin');
-      el.classList.remove('on', 'nav');
-      html.classList.add('no-pre');
-      html.classList.remove('carga-nav');
-      if (guardarPrimeraVisita) { try { sessionStorage.setItem('ta_pre', '1'); } catch { /* sin almacenamiento */ } }
-      setTimeout(() => el.classList.remove('listo'), 700);
-    }, 220);
+    el.classList.add('fin');
+    el.classList.remove('on');
+    html.classList.add('no-pre');
+    html.classList.remove('carga-inicio');
+    try { sessionStorage.setItem('ta_pre', '1'); } catch { /* sin almacenamiento */ }
+    setTimeout(() => { if (el.classList.contains('fin')) el.classList.remove('anim'); }, 700);
   }
 
   if (el) {
     if (reducir) {
       try { sessionStorage.setItem('ta_pre', '1'); } catch { /* sin almacenamiento */ }
-    } else if (!html.classList.contains('no-pre')) {
-      // Primera visita de la sesión: intro (mínimo 1,8 s para que se disfrute; máximo 4,5 s por si algo tarda)
-      Promise.race([Promise.all([cargada, esperar(Math.max(0, 1800 - (performance.now() - t0)))]), esperar(4500)]).then(() => ocultar(true));
-    } else if (html.classList.contains('carga-nav')) {
-      // Llegamos desde otra página de la web: la retiramos en cuanto cargue (o a los 0,9 s)
-      Promise.race([Promise.all([cargada, esperar(380)]), esperar(900)]).then(() => ocultar(false));
+    } else if (!html.classList.contains('no-pre') || html.classList.contains('carga-inicio')) {
+      mostrarHasta().then(ocultar);
     }
 
-    // Al pulsar un enlace interno, mostramos la pantalla de carga y navegamos
+    // Solo el botón de inicio (logotipo) vuelve a mostrar la pantalla de carga
     document.addEventListener('click', (e) => {
       if (reducir || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-      const a = (e.target as Element | null)?.closest?.('a');
-      if (!a || !a.href) return;
-      if ((a.target && a.target !== '_self') || a.hasAttribute('download')) return;
-      let u: URL;
-      try { u = new URL(a.href, location.href); } catch { return; }
-      if (u.origin !== location.origin) return; // enlaces externos, mailto:, tel:…
-      if (u.pathname === location.pathname && u.search === location.search) return; // solo cambia el # (anclas, panel)
-      if (/\.[a-z0-9]{2,5}$/i.test(u.pathname)) return; // archivos (PDF, demos en HTML suelto…): no llevan nuestro script
+      const a = (e.target as Element | null)?.closest?.<HTMLAnchorElement>('a[data-inicio]');
+      if (!a) return;
       e.preventDefault();
-      try { sessionStorage.setItem('ta_nav', String(Date.now())); } catch { /* sin almacenamiento */ }
-      el.classList.remove('fin', 'listo');
-      el.classList.add('on', 'nav');
-      setTimeout(() => location.assign(u.href), 240);
-      setTimeout(() => { if (document.visibilityState === 'visible') ocultar(false); }, 9000); // por si la navegación no llega a ocurrir
+      el.classList.remove('fin', 'anim');
+      void el.offsetWidth; // reinicia la animación
+      el.classList.add('on', 'anim');
+      const destino = new URL(a.href, location.href);
+      if (destino.pathname === location.pathname) {
+        // Ya estamos en la portada: animación encima, subimos arriba sin saltos y se retira
+        setTimeout(() => { scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior }); if (location.hash) history.replaceState(null, '', location.pathname); }, 300);
+        setTimeout(ocultar, 1400);
+      } else {
+        try { sessionStorage.setItem('ta_inicio', String(Date.now())); } catch { /* sin almacenamiento */ }
+        setTimeout(() => location.assign(destino.href), 280);
+        setTimeout(() => { if (document.visibilityState === 'visible') ocultar(); }, 9000); // por si la navegación no llega a ocurrir
+      }
     });
 
-    // Al volver con el botón "atrás" desde la caché, no debe quedar la pantalla de carga encima
-    addEventListener('pageshow', (e) => { if ((e as PageTransitionEvent).persisted) ocultar(false); });
+    // Al volver con «atrás» desde la caché no debe quedar encima
+    addEventListener('pageshow', (e) => { if ((e as PageTransitionEvent).persisted) ocultar(); });
   }
 </script>
