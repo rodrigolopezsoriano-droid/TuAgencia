@@ -36,5 +36,6 @@ with sync_playwright() as p:
     check("recargar en la misma visita: no repite", not vis(pg))
     check("sin errores JS", not errs, str(errs)); ctx.close()
     rm = br.new_context(reduced_motion="reduce"); q = rm.new_page(); q.goto(B + "/"); q.wait_for_timeout(300)
-    check("reducir movimiento: nunca se muestra", not vis(q)); rm.close(); br.close()
+    check("reducir movimiento: se ve la versión tranquila (logo quieto)", vis(q) and q.evaluate("getComputedStyle(document.querySelector('.c-logo')).transform") in ("none", "matrix(1, 0, 0, 1, 0, 0)"))
+    q.wait_for_timeout(2600); check("reducir movimiento: se retira sola", not vis(q)); rm.close(); br.close()
 print("\n".join(res)); sys.exit(0 if all(r.startswith("OK") for r in res) else 1)
