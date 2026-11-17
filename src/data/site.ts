@@ -10,8 +10,8 @@ export const SITE = {
   descripcion:
     'Chatbots, CRM y automatizaciones con IA para negocios locales de Madrid y Alcalá de Henares. Recupera horas cada semana sin cambiar tu forma de trabajar.',
   email: 'admin@tuagencia.tech',
-  // PENDIENTE: cuando tengáis WhatsApp Business, pon el número con prefijo y sin espacios, p. ej. '34600111222'
-  whatsapp: '',
+  // Número con prefijo y sin espacios.
+  whatsapp: '34644102666',
   instagram: 'https://www.instagram.com/tuagenciatech',
   zona: ['Alcalá de Henares', 'Madrid'],
   // Página propia de reservas, conectada a Google Calendar y Google Meet. Ver docs/AGENDA.md

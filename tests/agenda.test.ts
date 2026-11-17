@@ -28,19 +28,20 @@ test('fechaLocal y fechaValida', () => {
 });
 
 // ── huecos ────────────────────────────────────────────────────
-test('un lunes normal ofrece 14 huecos de 30 min (10-14 y 16-19)', () => {
+test('un lunes normal ofrece 22 huecos de 30 min (9:00-20:00)', () => {
   const h = generarHuecos(LUNES, [], AHORA);
-  assert.equal(h.length, 14);
-  assert.equal(h[0].hora, '10:00');
-  assert.equal(h[7].hora, '13:30');
-  assert.equal(h[8].hora, '16:00');
-  assert.equal(h[13].hora, '18:30');
-  assert.equal(h[0].inicio, '2026-11-23T09:00:00.000Z');
+  assert.equal(h.length, 22);
+  assert.equal(h[0].hora, '09:00');
+  assert.equal(h[21].hora, '19:30');
+  assert.equal(h[0].inicio, '2026-11-23T08:00:00.000Z');
 });
 
-test('fines de semana sin huecos', () => {
+test('el sábado hay huecos de 9:00 a 15:00 y el domingo no', () => {
+  const sab = generarHuecos('2026-11-28', [], AHORA);
+  assert.equal(sab.length, 12);
+  assert.equal(sab[0].hora, '09:00');
+  assert.equal(sab[11].hora, '14:30');
   assert.deepEqual(generarHuecos('2026-11-22', [], AHORA), []); // domingo
-  assert.deepEqual(generarHuecos('2026-11-28', [], AHORA), []); // sábado
 });
 
 test('un evento del calendario tapa los huecos que toca (aunque solo roce)', () => {
@@ -61,7 +62,7 @@ test('respeta la antelación mínima de 12 h', () => {
 
 test('huecosEnRango solo devuelve días con huecos y no pasa de 30 días', () => {
   const r = huecosEnRango('2026-11-16', 31, [], AHORA);
-  assert.ok(!('2026-11-22' in r) && !('2026-11-28' in r));
+  assert.ok(!('2026-11-22' in r) && '2026-11-28' in r); // domingo no, sábado sí
   assert.ok('2026-11-17' in r);
   assert.ok(Object.keys(r).every((f) => f <= '2026-12-17'));
 });
