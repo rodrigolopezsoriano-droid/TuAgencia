@@ -14,7 +14,7 @@ test('actualizar de v1 a v2 conserva los datos y crea el perfil de las cuentas q
   await db.exec(`
     create role anon nologin; create role authenticated nologin;
     create schema auth;
-    create table auth.users (id uuid primary key, email text, email_confirmed_at timestamptz, raw_user_meta_data jsonb default '{}'::jsonb);
+    create table auth.users (id uuid primary key, email text, email_confirmed_at timestamptz, raw_user_meta_data jsonb default '{}'::jsonb, last_sign_in_at timestamptz);
     create function auth.uid() returns uuid language sql stable as $$ select nullif(nullif(current_setting('request.jwt.claims', true), '')::jsonb ->> 'sub', '')::uuid $$;
     create function auth.jwt() returns jsonb language sql stable as $$ select coalesce(nullif(current_setting('request.jwt.claims', true), '')::jsonb, '{}'::jsonb) $$;
     grant usage on schema public, auth to anon, authenticated;

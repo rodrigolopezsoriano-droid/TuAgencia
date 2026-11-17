@@ -113,6 +113,17 @@ alter table public.tickets add column if not exists respuesta   text check (char
 alter table public.tickets add column if not exists actualizado timestamptz not null default now();
 create index if not exists tickets_user on public.tickets (user_id, creado desc);
 
+-- ── 9) NOTAS INTERNAS: historial de notas del equipo sobre un contacto o un cliente (el cliente NUNCA las ve) ──
+create table if not exists public.notas (
+  id     bigint generated always as identity primary key,
+  tipo   text not null check (tipo in ('lead', 'cliente')),
+  ref    bigint not null,
+  texto  text not null check (char_length(texto) between 1 and 2000),
+  autor  text not null default lower(coalesce(auth.jwt() ->> 'email', '')),
+  creado timestamptz not null default now()
+);
+create index if not exists notas_ref on public.notas (tipo, ref, creado desc);
+
 -- ── Tabla para el "ping" que evita que el proyecto gratis se pause ──
 create table if not exists public.keepalive (id int primary key default 1, ultimo timestamptz);
 insert into public.keepalive (id, ultimo) values (1, now()) on conflict (id) do nothing;
@@ -137,6 +148,22 @@ language sql stable security definer set search_path = public, auth as $$
 $$;
 
 -- id de la ficha de cliente de quien ha iniciado sesión
+-- Rol y nombre de quien ha iniciado sesión si es del equipo (si no, no devuelve filas). Solo con email verificado.
+create or replace function public.mi_rol() returns table (rol text, nombre text)
+language sql stable security definer set search_path = public, auth as $$
+  select s.rol, s.nombre from public.staff s join auth.users u on lower(u.email) = s.email
+  where u.id = auth.uid() and u.email_confirmed_at is not null
+$$;
+
+-- Lista del equipo con su último acceso (solo la pueden pedir el equipo y el admin)
+create or replace function public.equipo() returns table (email text, nombre text, rol text, ultimo_acceso timestamptz, confirmado boolean)
+language sql stable security definer set search_path = public, auth as $$
+  select s.email, s.nombre, s.rol, u.last_sign_in_at, (u.email_confirmed_at is not null)
+  from public.staff s left join auth.users u on lower(u.email) = s.email
+  where public.es_staff()
+  order by (s.rol = 'admin') desc, s.nombre
+$$;
+
 create or replace function public.mi_cliente_id() returns bigint
 language sql stable security definer set search_path = public as $$
   select id from public.clientes where user_id = auth.uid()
@@ -208,6 +235,7 @@ alter table public.metricas         enable row level security;
 alter table public.informes         enable row level security;
 alter table public.tickets          enable row level security;
 alter table public.keepalive        enable row level security;
+alter table public.notas            enable row level security;
 
 -- Permisos a nivel de tabla: lo mínimo imprescindible (RLS decide después qué filas)
 revoke all on all tables in schema public from anon;
@@ -273,6 +301,12 @@ create policy "ver mis informes" on public.informes for select to authenticated 
 create policy "informes: equipo" on public.informes for all to authenticated
   using (public.es_staff()) with check (public.es_staff());
 
+-- NOTAS INTERNAS: solo el equipo las ve y las escribe, y cada nota queda firmada con el email de quien la escribe
+drop policy if exists "notas: equipo" on public.notas;
+create policy "notas: equipo" on public.notas for all to authenticated
+  using (public.es_staff())
+  with check (public.es_staff() and autor = lower(coalesce(auth.jwt() ->> 'email', '')));
+
 -- TICKETS: el cliente crea y ve los suyos (siempre "abierto" y sin respuesta); el equipo ve todos y responde
 drop policy if exists "mis tickets"          on public.tickets;
 drop policy if exists "ver mis tickets"      on public.tickets;
@@ -298,6 +332,10 @@ revoke execute on function public.mi_cliente_id() from anon, public;
 grant  execute on function public.es_staff()     to authenticated;
 grant  execute on function public.es_admin()     to authenticated;
 grant  execute on function public.mi_cliente_id() to authenticated;
+revoke execute on function public.mi_rol()       from anon, public;
+revoke execute on function public.equipo()       from anon, public;
+grant  execute on function public.mi_rol()       to authenticated;
+grant  execute on function public.equipo()       to authenticated;
 
 -- ════════════════════════════════════════════════════════════════
 --  CUENTAS QUE YA EXISTÍAN antes de esta versión: se les crea su perfil y su ficha de cliente

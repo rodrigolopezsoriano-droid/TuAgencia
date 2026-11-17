@@ -38,7 +38,7 @@ before(async () => {
   await db.exec(`
     create role anon nologin; create role authenticated nologin;
     create schema auth;
-    create table auth.users (id uuid primary key, email text, email_confirmed_at timestamptz, raw_user_meta_data jsonb default '{}'::jsonb);
+    create table auth.users (id uuid primary key, email text, email_confirmed_at timestamptz, raw_user_meta_data jsonb default '{}'::jsonb, last_sign_in_at timestamptz);
     create function auth.uid() returns uuid language sql stable as $$ select nullif(nullif(current_setting('request.jwt.claims', true), '')::jsonb ->> 'sub', '')::uuid $$;
     create function auth.jwt() returns jsonb language sql stable as $$ select coalesce(nullif(current_setting('request.jwt.claims', true), '')::jsonb, '{}'::jsonb) $$;
     grant usage on schema public, auth to anon, authenticated;
@@ -211,4 +211,47 @@ test('borrar una cuenta elimina su perfil y sus solicitudes (derecho de supresi�
   await db.query(`delete from auth.users where id = $1`, [ids.bob]);
   assert.equal((await q(`select count(*)::int n from public.perfiles where user_id = $1`, [ids.bob]))[0].n, 0);
   assert.equal((await q(`select count(*)::int n from public.tickets where user_id = $1`, [ids.bob]))[0].n, 0);
+});
+
+test('mi_rol() y equipo(): el equipo se identifica por email verificado; clientes, impostor y anónimos no obtienen nada', async () => {
+  await como(pablo, async () => {
+    const r = await q('select rol, nombre from public.mi_rol()');
+    assert.deepEqual(r, [{ rol: 'equipo', nombre: 'Pablo Villalvilla Martín' }]);
+    const eq = await q('select email, rol from public.equipo()');
+    assert.equal(eq.length, 4);
+    assert.equal(eq[0].rol, 'admin'); // el admin sale primero
+  });
+  await como(alice, async () => {
+    assert.equal((await q('select count(*)::int n from public.mi_rol()'))[0].n, 0);
+    assert.equal((await q('select count(*)::int n from public.equipo()'))[0].n, 0); // un cliente no ve quién es del equipo
+  });
+  await como({ id: ids.falso, email: 'admin@tuagencia.tech' }, async () => {
+    assert.equal((await q('select count(*)::int n from public.mi_rol()'))[0].n, 0); // email sin verificar
+    assert.equal((await q('select count(*)::int n from public.equipo()'))[0].n, 0);
+  });
+  await como(null, async () => {
+    await assert.rejects(q('select * from public.mi_rol()'), denegado);
+    await assert.rejects(q('select * from public.equipo()'), denegado);
+  });
+});
+
+test('notas internas: solo el equipo las lee y las escribe, firmadas con su email', async () => {
+  await como(pablo, async () => {
+    await q(`insert into public.notas (tipo, ref, texto) values ('lead', 1, 'Llamar el lunes')`);
+    const n = (await q(`select autor, texto from public.notas`))[0];
+    assert.deepEqual(n, { autor: 'pablo@tuagencia.tech', texto: 'Llamar el lunes' });
+    // no se puede firmar como otra persona
+    await assert.rejects(q(`insert into public.notas (tipo, ref, texto, autor) values ('cliente', 1, 'x', 'admin@tuagencia.tech')`), denegado);
+    // validaciones
+    await assert.rejects(q(`insert into public.notas (tipo, ref, texto) values ('otro', 1, 'x')`), /violates|check/i);
+    await assert.rejects(q(`insert into public.notas (tipo, ref, texto) values ('lead', 1, '')`), /violates|check/i);
+  });
+  // un cliente (aunque sea el dueño del contacto) ni las ve ni las crea
+  await como(alice, async () => {
+    assert.equal((await q('select count(*)::int n from public.notas'))[0].n, 0);
+    await assert.rejects(q(`insert into public.notas (tipo, ref, texto) values ('lead', 1, 'hola')`), denegado);
+  });
+  await como(null, async () => {
+    await assert.rejects(q('select * from public.notas'), denegado);
+  });
 });
