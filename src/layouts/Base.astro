@@ -41,6 +41,9 @@ const org = {
   sameAs: [SITE.instagram],
   priceRange: '€€',
 };
+// Clave donde supabase-js guarda la sesión: sirve para saber, antes de pintar, si hay alguien con sesión iniciada
+let claveSb = '';
+try { claveSb = `sb-${new URL(import.meta.env.PUBLIC_SUPABASE_URL as string).hostname.split('.')[0]}-auth-token`; } catch { /* sin Supabase */ }
 const extra = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 const esHref = lang === 'es' ? Astro.url.pathname : altHref ?? '/';
 const enHref = lang === 'en' ? Astro.url.pathname : altHref ?? '/en/';
@@ -69,8 +72,9 @@ const enHref = lang === 'en' ? Astro.url.pathname : altHref ?? '/en/';
     <meta property="og:image" content={ogImage} />
     <meta name="twitter:card" content="summary_large_image" />
     <script type="application/ld+json" set:html={JSON.stringify([org, ...extra])} />
-    <script is:inline>
+    <script is:inline define:vars={{ claveSb }}>
       document.documentElement.classList.remove('no-js');
+      try { if (claveSb && localStorage.getItem(claveSb)) document.documentElement.classList.add('ta-logueado'); } catch (e) {}
       try { if (sessionStorage.getItem('ta_pre') === '1') document.documentElement.classList.add('no-pre'); } catch (e) {}
     </script>
   </head>

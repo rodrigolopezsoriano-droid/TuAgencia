@@ -3,6 +3,7 @@
 import type { Session, User } from '@supabase/supabase-js';
 import { supabase } from '../supabase';
 import { limpiarPerfil } from '../perfil';
+import { borrarSesion, guardarSesion } from '../sesion';
 import { S, cargarCliente, cargarEquipo, resolverRol, type Rol } from './datos';
 import { ACT, FORM, puente, type Ruta, type Vista } from './nucleo';
 import { RUTAS_CLIENTE, vistaCliente } from './vistas-cliente';
@@ -16,6 +17,7 @@ const memoria = {
 };
 
 const show = (v: 'auth' | 'recovery' | 'app') => {
+  document.documentElement.classList.remove('ta-cargando'); // ya sabemos qué pantalla toca: fuera el "cargando"
   $$('[data-view]').forEach((el) => (el.hidden = el.dataset.view !== v));
   document.documentElement.classList.toggle('app-on', v === 'app');
 };
@@ -34,7 +36,8 @@ function pestana(t: string) {
 function iniciarAcceso() {
   $$('[data-tab]').forEach((b) => b.addEventListener('click', () => pestana(b.dataset.tab!)));
   if (location.hash === '#registro' || new URLSearchParams(location.search).has('registro')) pestana('registro');
-  $<HTMLInputElement>('#l-email').value = memoria.get('ta_email');
+  const emailInicial = $<HTMLInputElement>('#l-email');
+  if (!emailInicial.value) emailInicial.value = memoria.get('ta_email'); // sin pisar lo que ya hayas escrito
 
   $<HTMLFormElement>('[data-form="login"]').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -45,14 +48,16 @@ function iniciarAcceso() {
     if (!supabase) return decir('login', 'El acceso no está disponible ahora mismo. Inténtalo más tarde o escríbenos.', 'err');
     if (!/^\S+@\S+\.\S+$/.test(email) || !password) return decir('login', 'Escribe tu email y tu contraseña.', 'err');
     decir('login', 'Entrando…');
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    redirigiendo = true; // al iniciar sesión se vuelve a la web (no se abre el panel de golpe)
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
+      redirigiendo = false;
       if (/confirm/i.test(error.message)) { $('[data-reenviar]').hidden = false; return decir('login', 'Primero tienes que confirmar tu correo: revisa tu bandeja de entrada.', 'err'); }
       return decir('login', 'Email o contraseña incorrectos.', 'err');
     }
     memoria.set('ta_email', email);
-    decir('login', '');
-    f.reset(); // la sesión nueva dispara la carga del panel
+    f.reset();
+    await volverALaWeb(data.user);
   });
 
   $('[data-reenviar]').addEventListener('click', async () => {
@@ -82,16 +87,19 @@ function iniciarAcceso() {
     if (password.length < MIN_PASS) return decir('registro', `La contraseña debe tener al menos ${MIN_PASS} caracteres.`, 'err');
     if (!(f.elements.namedItem('acepta') as HTMLInputElement).checked) return decir('registro', 'Necesitamos que aceptes la política de privacidad.', 'err');
     decir('registro', 'Creando tu cuenta…');
+    redirigiendo = true;
     const { data, error } = await supabase.auth.signUp({
       email, password,
       options: { data: { nombre, negocio, telefono }, emailRedirectTo: location.origin + '/area-cliente' },
     });
     if (error) {
+      redirigiendo = false;
       return decir('registro', /password|weak|short/i.test(error.message) ? 'Esa contraseña es demasiado débil. Prueba con otra más larga.' : 'No hemos podido crear la cuenta. Inténtalo de nuevo en unos minutos.', 'err');
     }
     memoria.set('ta_email', email);
     f.reset();
-    if (data.session) return; // sin confirmación por correo: ya has entrado
+    if (data.session && data.user) return volverALaWeb(data.user); // sin confirmación por correo: ya has entrado
+    redirigiendo = false;
     // Mismo mensaje exista o no la cuenta (así no se puede averiguar qué emails están registrados)
     decir('registro', 'Casi está: te hemos enviado un correo para confirmar tu cuenta. Si ya tenías una, inicia sesión.', 'ok');
   });
@@ -208,6 +216,7 @@ function menuUsuario(abrir: boolean) {
 
 // ── Cerrar sesión / cambiar de cuenta ──
 function limpiarTodo() {
+  borrarSesion();
   S.ctx = null; S.cli = null; S.eq = null; S.actualizado = 0;
   limpiarPerfil();
   $('#ap-contenido').innerHTML = '';
@@ -321,6 +330,27 @@ function eventos() {
 }
 
 // ──────────────────────────── ENTRADA ────────────────────────────
+let redirigiendo = false;
+
+/** Tras iniciar sesión: guardamos nombre y rol para la cabecera y volvemos a donde estabas (o a la portada). */
+async function volverALaWeb(user: User) {
+  try {
+    const { rol, nombre } = await resolverRol(user);
+    let nom = nombre;
+    if (!nom && supabase) {
+      const { data } = await supabase.from('perfiles').select('nombre').eq('user_id', user.id).maybeSingle();
+      nom = (data as { nombre?: string } | null)?.nombre || '';
+    }
+    guardarSesion({ nombre: nom || (user.email ?? '').split('@')[0], rol, email: (user.email ?? '').toLowerCase() });
+  } catch { /* la cabecera lo completará al abrir el menú */ }
+  decir('login', 'Listo. Te llevamos a la web…', 'ok');
+  let destino = '/';
+  try {
+    const r = new URL(document.referrer);
+    if (r.origin === location.origin && !r.pathname.startsWith('/area-cliente')) destino = r.pathname + r.search + r.hash;
+  } catch { /* sin referrer */ }
+  location.assign(destino);
+}
 // Si llegas desde el enlace "contraseña olvidada", primero toca elegir la nueva (no cargar el panel todavía)
 let recuperando = /type=recovery/.test(location.hash);
 let ocupado = false;
@@ -344,6 +374,7 @@ async function abrirPanel(user: User) {
   const { rol, nombre } = await resolverRol(user);
   S.ctx = { user, rol, nombre, email: (user.email ?? '').toLowerCase() };
   await cargarDatos();
+  guardarSesion({ nombre: S.ctx.nombre, rol, email: S.ctx.email });
   if (!location.hash.startsWith('#/')) history.replaceState(null, '', location.pathname + '#/resumen');
   show('app');
   enrutar();
@@ -352,13 +383,14 @@ async function abrirPanel(user: User) {
 export function iniciar() {
   iniciarAcceso();
   eventos();
-  if (!supabase) { $('[data-aviso-config]').hidden = false; show('auth'); return; }
+  if (!supabase) { $('[data-aviso-config]').hidden = false; borrarSesion(); show('auth'); return; }
   supabase.auth.onAuthStateChange((evento: string, session: Session | null) => {
     // (no se llama a Supabase directamente dentro de este callback)
     if (evento === 'PASSWORD_RECOVERY') { recuperando = true; show('recovery'); return; }
     if (recuperando) return; // mientras eliges la contraseña nueva no se carga el panel
+    if (redirigiendo && evento === 'SIGNED_IN') return; // acabas de iniciar sesión: te llevamos a la web, no al panel
     if (evento === 'SIGNED_OUT') { if (S.ctx) { limpiarTodo(); show('auth'); } return; }
-    if (evento === 'INITIAL_SESSION' && !session) { show('auth'); return; }
+    if (evento === 'INITIAL_SESSION' && !session) { borrarSesion(); show('auth'); return; }
     if (evento === 'INITIAL_SESSION' || evento === 'SIGNED_IN') {
       if (session && S.ctx && session.user.id === S.ctx.user.id) return; // ya cargado (p. ej. al volver a la pestaña)
       setTimeout(entrar, 0);

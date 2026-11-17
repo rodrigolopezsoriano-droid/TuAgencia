@@ -25,7 +25,13 @@ const nav = en
       <a class="lang" href={altHref} hreflang={en ? 'es' : 'en'}>
         <span class:list={{ on: !en }}>ES</span><span class:list={{ on: en }}>EN</span><span class="sr-only">{en ? 'Ver en español' : 'View in English'}</span>
       </a>
-      {!en && <a href="/area-cliente" class="login">Área cliente</a>}
+      {!en && <a href="/area-cliente" class="login" data-login-link>Área cliente</a>}
+      {!en && (
+        <div class="cta-wrap" data-cuenta hidden>
+          <button type="button" class="cta-btn" data-cuenta-btn aria-haspopup="menu" aria-expanded="false" aria-controls="cta-menu" aria-label="Menú de tu cuenta"></button>
+          <div class="cta-menu" id="cta-menu" data-cuenta-menu role="menu" hidden></div>
+        </div>
+      )}
       <a href={en ? '/en/#contact' : '/contacto'} class="btn btn-primary btn-sm cta">{en ? 'Free audit' : 'Auditoría gratis'}</a>
       <button class="burger" aria-label="Abrir menú" aria-expanded="false" data-burger>
         <span></span><span></span>
@@ -36,7 +42,8 @@ const nav = en
   <div class="sheet" data-sheet hidden>
     <div class="wrap">
       {nav.map((n) => <a href={n.href}>{n.label}</a>)}
-      {!en && <a href="/area-cliente">Área cliente</a>}
+      {!en && <a href="/area-cliente" data-login-sheet>Área cliente</a>}
+      {!en && <div class="cta-sheet" data-cuenta-sheet hidden></div>}
       <a href={en ? '/en/#contact' : '/contacto'} class="btn btn-primary">{en ? 'Free audit' : 'Pide tu auditoría gratis'}</a>
     </div>
   </div>
@@ -78,6 +85,31 @@ const nav = en
   }
 </style>
 
+<style is:global>
+  /* Menú de cuenta (aparece cuando hay sesión iniciada) */
+  .login[hidden], .cta-wrap[hidden], .cta-menu[hidden], .cta-sheet[hidden], [data-login-sheet][hidden] { display: none !important; }
+  html.ta-logueado [data-login-link], html.ta-logueado [data-login-sheet] { display: none; }
+  .cta-wrap { position: relative; }
+  .cta-btn { display: flex; align-items: center; gap: 8px; height: 38px; padding: 0 10px 0 4px; border-radius: 999px; border: 1px solid var(--line); background: #fff; cursor: pointer; font: inherit; font-size: 0.9rem; font-weight: 600; color: var(--ink); transition: box-shadow 0.2s; }
+  .cta-btn:hover { box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); }
+  .cta-av { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(135deg, #6366f1, #a855f7); color: #fff; font-weight: 700; font-size: 0.85rem; }
+  .cta-btn svg { color: var(--muted); }
+  .cta-menu { position: absolute; right: 0; top: 46px; width: 268px; background: #fff; border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 24px 60px -10px rgba(0, 0, 0, 0.28); padding: 8px; display: grid; gap: 2px; z-index: 70; }
+  .cta-rol { margin: 0; padding: 8px 10px 10px; font-size: 0.8rem; color: var(--muted); border-bottom: 1px solid var(--line); margin-bottom: 4px; word-break: break-all; }
+  .cta-menu a, .cta-menu button { display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 9px; border: 0; background: none; font: inherit; font-size: 0.92rem; font-weight: 550; color: var(--ink); cursor: pointer; text-align: left; }
+  .cta-menu a:hover, .cta-menu button:hover, .cta-menu a:focus-visible, .cta-menu button:focus-visible { background: var(--bg-soft); }
+  .cta-menu hr { border: 0; border-top: 1px solid var(--line); margin: 4px 0; }
+  .cta-menu .cta-salir { color: #b91c1c; }
+  .cta-sheet { display: grid; padding: 4px 0 8px; }
+  .cta-sheet-t { margin: 8px 0 0; font-size: 0.85rem; color: var(--muted); font-weight: 600; }
+  .cta-sheet button { padding: 14px 0; font: inherit; font-size: 1.25rem; font-weight: 600; letter-spacing: -0.02em; text-align: left; background: none; border: 0; color: #b91c1c; cursor: pointer; }
+  @media (max-width: 900px) { .cta-n, .cta-btn svg { display: none; } .cta-btn { padding: 0 4px; } }
+</style>
+
+<script>
+  import { iniciarMenuCuenta } from '../scripts/cuenta-menu';
+  iniciarMenuCuenta();
+</script>
 <script>
   const nav = document.querySelector('[data-nav]');
   const burger = document.querySelector('[data-burger]');
