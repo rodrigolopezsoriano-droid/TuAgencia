@@ -13,6 +13,8 @@ with sync_playwright() as p:
     ctx = br.new_context(viewport={"width": 1280, "height": 800}); pg = ctx.new_page(); errs = []
     pg.on("pageerror", lambda e: errs.append(str(e)))
     pg.goto(B + "/", wait_until="commit"); pg.wait_for_timeout(600)
+    fondo = pg.evaluate("getComputedStyle(document.getElementById('carga')).backgroundColor"); r, g, b = [int(x) for x in re.findall(r"\d+", fondo)[:3]]
+    check("fondo claro (como la web), sin contraste fuerte", min(r, g, b) >= 245, fondo)
     check("primera visita: se ve la pantalla de carga", vis(pg)); pg.screenshot(path=f"{SC}/shots/carga-intro.png")
     pg.wait_for_timeout(2200)
     check("primera visita: se retira sola", not vis(pg))
